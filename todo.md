@@ -150,6 +150,8 @@
 - [x] **Campos obrigatórios** - CEP, Número, Complemento, Bairro (NOVO)
 - [x] **Busca inline** - Barra de busca movida para baixo dos cabeçalhos (NOVO)
 - [x] **Alinhamento de campos** - Profissão e Indicado por alinhados (NOVO)
+- [x] **Busca com resultados em linha** - Ao digitar, mostra linha completa com ações (NOVO)
+- [x] **API data_nascimento** - Corrigido erro na geração de Planilha RT (NOVO)
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status
