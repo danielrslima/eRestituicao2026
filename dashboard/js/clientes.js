@@ -1716,11 +1716,16 @@ function buscarClienteInput(valor) {
         return;
     }
     
-    // Filtrar clientes cujo NOME COMEÇA com o termo digitado (não contém, mas inicia)
-    let clientesFiltrados = CLIENTES.filter(c => 
-        c.nome.toLowerCase().startsWith(termo) || 
-        c.cpf.replace(/\D/g, '').startsWith(termo.replace(/\D/g, ''))
-    );
+    // Filtrar clientes cujo NOME COMEÇA com o termo digitado
+    // IMPORTANTE: Usar apenas startsWith para filtrar por início do nome
+    let clientesFiltrados = [];
+    for (let i = 0; i < CLIENTES.length; i++) {
+        const cliente = CLIENTES[i];
+        const nomeMinusculo = cliente.nome.toLowerCase();
+        if (nomeMinusculo.substring(0, termo.length) === termo) {
+            clientesFiltrados.push(cliente);
+        }
+    }
     
     // Ordenar alfabeticamente (A → Z)
     clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
