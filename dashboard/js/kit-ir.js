@@ -139,6 +139,9 @@ function buscarCliente(termo) {
         c.cpf.includes(termo)
     );
     
+    // Ordenar resultados alfabeticamente
+    resultados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    
     if (resultados.length === 0) {
         resultsContainer.innerHTML = '<div class="search-result-item"><p class="text-muted">Nenhum cliente encontrado</p></div>';
     } else {

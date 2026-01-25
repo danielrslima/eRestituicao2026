@@ -197,6 +197,9 @@ function inicializarBuscaCliente() {
             c.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
         );
         
+        // Ordenar resultados alfabeticamente
+        clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+        
         if (clientesFiltrados.length > 0) {
             resultados.innerHTML = clientesFiltrados.map(c => `
                 <div class="resultado-item" onclick="selecionarCliente('${c.id}')">

@@ -219,6 +219,9 @@ function carregarClientes() {
         clientes = clientes.filter(c => c.parceiro === usuario.id);
     }
     
+    // Ordenar clientes alfabeticamente
+    clientes.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    
     // Atualizar métricas
     atualizarMetricas(clientes);
     
@@ -410,6 +413,9 @@ function filtrarClientes() {
     if (tipo) {
         clientes = clientes.filter(c => c.tipo === tipo);
     }
+    
+    // Ordenar clientes alfabeticamente
+    clientes.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
     
     renderizarKanban(clientes);
     renderizarLista(clientes);

@@ -125,7 +125,8 @@
                             <th>Telefone</th>
                             <th>Status</th>
                             <th>Valor Restituição</th>
-                            <th>Data</th>
+                            <th>Data Cálculo</th>
+                            <th>Data Inclusão</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -363,13 +364,14 @@
                             <div class="form-group">
                                 <label for="numeroMeses">Número de Meses *</label>
                                 <input type="number" id="numeroMeses" name="numeroMeses" placeholder="Ex: 24" min="1" max="480" tabindex="206">
+                                <small class="campo-info" style="display: block; margin-top: 5px;">📅 Quantidade de meses de acumulação dos rendimentos (essencial para o cálculo)</small>
                             </div>
                             <div class="form-group">
                                 <label for="valorINSS">Valor de INSS</label>
                                 <input type="text" id="valorINSS" name="valorINSS" placeholder="R$ 0,00" class="input-moeda" tabindex="207">
+                                <small class="campo-info" style="display: block; margin-top: 5px;">💰 Valor do INSS Reclamante (opcional)</small>
                             </div>
                         </div>
-                        <small class="campo-info" style="display: block; margin-top: -10px; margin-bottom: 15px;">📅 Número de Meses: Quantidade de meses de acumulação dos rendimentos (essencial para o cálculo) | 💰 INSS: Valor do INSS Reclamante (opcional)</small>
                         
                         <h4>Alvarás</h4>
                         <div id="containerAlvaras">

@@ -31,6 +31,7 @@ let CLIENTES = [
             { numero: '(11) 99999-1234', tipo: 'proprio', nomeResponsavel: '' }
         ],
         dataNascimento: '1975-05-15',
+        dataInclusao: '2026-01-20 09:30:15',
         casos: [
             {
                 casoId: 'CLI-0001-0001234',
@@ -52,6 +53,7 @@ let CLIENTES = [
             { numero: '(11) 98888-5678', tipo: 'proprio', nomeResponsavel: '' }
         ],
         dataNascimento: '1982-08-22',
+        dataInclusao: '2026-01-21 14:22:08',
         casos: [
             {
                 casoId: 'CLI-0002-0007890',
@@ -73,6 +75,7 @@ let CLIENTES = [
             { numero: '(21) 97777-9012', tipo: 'proprio', nomeResponsavel: '' }
         ],
         dataNascimento: '1990-03-10',
+        dataInclusao: '2026-01-22 10:45:33',
         casos: [
             {
                 casoId: 'CLI-0003-0005555',
@@ -95,6 +98,7 @@ let CLIENTES = [
             { numero: '(31) 98765-4321', tipo: 'outro', nomeResponsavel: 'João (Filho)' }
         ],
         dataNascimento: '1988-11-30',
+        dataInclusao: '2026-01-23 16:18:42',
         casos: [],
         tipo: 'externo',
         parceiroId: null
@@ -108,6 +112,7 @@ let CLIENTES = [
             { numero: '(41) 95555-7890', tipo: 'proprio', nomeResponsavel: '' }
         ],
         dataNascimento: '1978-07-05',
+        dataInclusao: '2026-01-24 08:55:19',
         casos: [
             {
                 casoId: 'CLI-0005-0009999',
@@ -227,10 +232,13 @@ function carregarClientes() {
         });
     }
     
+    // Ordenar alfabeticamente por nome
+    clientes.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    
     if (clientes.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align: center; padding: 40px; color: var(--gray-600);">
+                <td colspan="9" style="text-align: center; padding: 40px; color: var(--gray-600);">
                     Nenhum cliente encontrado.
                 </td>
             </tr>
@@ -275,6 +283,7 @@ function carregarClientes() {
                 <td><span class="status-badge ${status.classe}">${status.texto}</span></td>
                 <td>${valorRestituicao > 0 ? formatarMoeda(valorRestituicao) : '-'}</td>
                 <td>${dataCalculo}</td>
+                <td><small>${cliente.dataInclusao || '-'}</small></td>
                 <td>
                     <div class="btn-group-acoes">
                         <button class="btn btn-secondary btn-sm btn-icon" onclick="verCliente('${cliente.id}')" title="Ver detalhes">
@@ -1022,7 +1031,7 @@ function salvarCliente() {
         tipo: 'interno',
         parceiroId: auth.getNivel() === 'parceiro' ? auth.getUsuario().id : null,
         documentos: documentosParaUpload.map(f => f.name),
-        dataCadastro: new Date().toISOString()
+        dataInclusao: new Date().toLocaleString('pt-BR').replace(',', '')
     };
     
     // Verificar se tem dados do processo
@@ -1119,7 +1128,7 @@ function salvarECalcular() {
         tipo: 'interno',
         parceiroId: auth.getNivel() === 'parceiro' ? auth.getUsuario().id : null,
         documentos: documentosParaUpload.map(f => f.name),
-        dataCadastro: new Date().toISOString()
+        dataInclusao: new Date().toLocaleString('pt-BR').replace(',', '')
     };
     
     // Adicionar à lista

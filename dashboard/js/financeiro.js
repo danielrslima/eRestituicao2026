@@ -420,12 +420,14 @@ function renderizarResumoAnual() {
     document.getElementById('totalAnualSaldo').innerHTML = `<strong style="color: ${totalReceitas - totalDespesas >= 0 ? '#10b981' : '#ef4444'}">${formatarMoeda(totalReceitas - totalDespesas)}</strong>`;
 }
 
-// Preencher select de clientes
+// Preencher select de clientes (ordenado alfabeticamente)
 function preencherSelectClientes() {
     const select = document.getElementById('receitaCliente');
     if (select) {
+        // Ordenar clientes alfabeticamente
+        const clientesOrdenados = [...clientesMock].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
         select.innerHTML = '<option value="">Selecione o cliente...</option>' +
-            clientesMock.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            clientesOrdenados.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
     }
 }
 
