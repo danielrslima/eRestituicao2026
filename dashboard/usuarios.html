@@ -222,7 +222,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tipo de Usuário *</label>
-                            <select id="usuarioTipo" required onchange="mostrarCamposParceiro()">
+                            <select id="usuarioTipo" required onchange="mostrarCamposComissao()">
                                 <option value="">Selecione...</option>
                                 <option value="admin">Administrador</option>
                                 <option value="operador">Operador</option>
@@ -231,21 +231,57 @@
                         </div>
                     </div>
                     
-                    <!-- Campos específicos para Parceiro -->
-                    <div id="camposParceiro" style="display: none;">
+                    <!-- Campos específicos para Parceiro/Funcionário (Comissão) -->
+                    <div id="camposComissao" style="display: none;">
+                        <div class="form-section-title">💰 Configuração de Comissão</div>
+                        
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Código do Parceiro</label>
+                                <label>Código do Parceiro/Vendedor</label>
                                 <input type="text" id="parceiroCodigo" placeholder="Ex: JOAO2026">
                             </div>
                             <div class="form-group">
-                                <label>Taxa de Comissão (%)</label>
-                                <input type="number" id="parceiroComissao" value="10" min="0" max="100">
+                                <label>Tipo de Comissão *</label>
+                                <select id="tipoComissao" onchange="mostrarCamposTipoComissao()">
+                                    <option value="sem">Sem Comissão</option>
+                                    <option value="percentual" selected>Percentual (%)</option>
+                                    <option value="fixo">Valor Fixo (R$)</option>
+                                </select>
                             </div>
                         </div>
+                        
+                        <div class="form-row" id="camposValorComissao">
+                            <div class="form-group" id="grupoPercentual">
+                                <label>Percentual de Comissão (%)</label>
+                                <input type="number" id="percentualComissao" value="10" min="0" max="100" step="0.5">
+                                <small>Ex: 10% sobre o valor pago pelo cliente</small>
+                            </div>
+                            <div class="form-group" id="grupoValorFixo" style="display: none;">
+                                <label>Valor Fixo por Venda (R$)</label>
+                                <input type="text" id="valorFixoComissao" value="5,00" placeholder="0,00">
+                                <small>Valor fixo por cada venda convertida</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Comissão sobre quais produtos?</label>
+                            <div class="checkbox-group-horizontal">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="comissaoBasico" checked> Descubra seu Valor (R$ 5,99)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="comissaoKitIR" checked> Kit IR (R$ 15,99)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="comissaoContrato"> Contrato Especialista
+                                </label>
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <label>Chave PIX para Pagamento</label>
-                            <input type="text" id="parceiroPix" placeholder="CPF, Email ou Telefone">
+                            <input type="text" id="parceiroPix" placeholder="CPF, Email, Telefone ou Chave Aleatória">
+                            <small>Chave PIX para receber as comissões</small>
                         </div>
                     </div>
                     

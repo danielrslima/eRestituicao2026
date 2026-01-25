@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/configuracoes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="calculos.html" class="nav-item">
+                        <span class="nav-item-icon">🧮</span>
+                        Cálculos
+                    </a>
+                    <a href="kit-ir.html" class="nav-item">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item active">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <h1 class="header-title">🔧 Configurações</h1>
+                <div class="header-info">
+                    <span id="dataAtual"></span>
+                    <div class="user-badge" id="userBadge">Admin</div>
+                </div>
+            </header>
+
+            <!-- Conteúdo Principal -->
+            <div class="config-container">
+                <!-- Navegação de Configurações -->
+                <div class="config-nav">
+                    <button class="config-nav-item active" data-section="empresa">
+                        <span class="nav-icon">🏢</span>
+                        <span class="nav-text">Dados da Empresa</span>
+                    </button>
+                    <button class="config-nav-item" data-section="sistema">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Sistema</span>
+                    </button>
+                    <button class="config-nav-item" data-section="pagamentos">
+                        <span class="nav-icon">💳</span>
+                        <span class="nav-text">Pagamentos</span>
+                    </button>
+                    <button class="config-nav-item" data-section="notificacoes">
+                        <span class="nav-icon">🔔</span>
+                        <span class="nav-text">Notificações</span>
+                    </button>
+                    <button class="config-nav-item" data-section="integracao">
+                        <span class="nav-icon">🔗</span>
+                        <span class="nav-text">Integrações</span>
+                    </button>
+                    <button class="config-nav-item" data-section="backup">
+                        <span class="nav-icon">💾</span>
+                        <span class="nav-text">Backup</span>
+                    </button>
+                </div>
+
+                <!-- Seções de Configuração -->
+                <div class="config-content">
+                    <!-- Seção: Dados da Empresa -->
+                    <section class="config-section active" id="sectionEmpresa">
+                        <h2>🏢 Dados da Empresa</h2>
+                        <div class="config-form">
+                            <div class="form-group">
+                                <label>Nome da Empresa</label>
+                                <input type="text" id="nomeEmpresa" value="e-Restituição">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>CNPJ</label>
+                                    <input type="text" id="cnpjEmpresa" value="00.000.000/0001-00" placeholder="00.000.000/0001-00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <input type="text" id="telefoneEmpresa" value="(11) 93713-9391" placeholder="(00) 00000-0000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" id="emailEmpresa" value="contato@erestituicao.com.br">
+                            </div>
+                            <div class="form-group">
+                                <label>Endereço</label>
+                                <input type="text" id="enderecoEmpresa" value="Av. Paulista, 1000 - CJ.51 - São Paulo/SP">
+                            </div>
+                            <div class="form-group">
+                                <label>WhatsApp para Atendimento</label>
+                                <input type="text" id="whatsappEmpresa" value="+55 11 93713-9391">
+                            </div>
+                            <div class="form-group">
+                                <label>Logo da Empresa</label>
+                                <div class="logo-upload">
+                                    <img src="assets/logo_e_restituicao.jpg" alt="Logo" class="logo-preview" id="logoPreview">
+                                    <button class="btn-secondary" id="btnAlterarLogo">📷 Alterar Logo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção: Sistema -->
+                    <section class="config-section" id="sectionSistema">
+                        <h2>⚙️ Configurações do Sistema</h2>
+                        <div class="config-form">
+                            <div class="form-group">
+                                <label>Fuso Horário</label>
+                                <select id="fusoHorario">
+                                    <option value="America/Sao_Paulo" selected>Brasília (GMT-3)</option>
+                                    <option value="America/Manaus">Manaus (GMT-4)</option>
+                                    <option value="America/Fortaleza">Fernando de Noronha (GMT-2)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Formato de Data</label>
+                                <select id="formatoData">
+                                    <option value="DD/MM/YYYY" selected>DD/MM/AAAA</option>
+                                    <option value="MM/DD/YYYY">MM/DD/AAAA</option>
+                                    <option value="YYYY-MM-DD">AAAA-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Moeda</label>
+                                <select id="moeda">
+                                    <option value="BRL" selected>Real (R$)</option>
+                                    <option value="USD">Dólar (US$)</option>
+                                    <option value="EUR">Euro (€)</option>
+                                </select>
+                            </div>
+                            <div class="config-toggle">
+                                <label>Modo Escuro</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="modoEscuro">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="config-toggle">
+                                <label>Notificações Sonoras</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notificacoesSonoras" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção: Pagamentos -->
+                    <section class="config-section" id="sectionPagamentos">
+                        <h2>💳 Configurações de Pagamentos</h2>
+                        <div class="config-form">
+                            <div class="config-card">
+                                <h3>💰 Preços dos Produtos</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Descubra seu Valor (Básico)</label>
+                                        <input type="text" id="precoBasico" value="R$ 5,99">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Kit IR Completo</label>
+                                        <input type="text" id="precoKitIR" value="R$ 15,99">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Valor do Abatimento</label>
+                                    <input type="text" id="valorAbatimento" value="R$ 5,99">
+                                    <small>Valor descontado do Kit IR para quem já pagou o básico</small>
+                                </div>
+                            </div>
+                            <div class="config-card">
+                                <h3>🏦 Asaas - Gateway de Pagamento</h3>
+                                <div class="form-group">
+                                    <label>API Key (Produção)</label>
+                                    <input type="password" id="asaasApiKey" value="••••••••••••••••••••">
+                                    <button class="btn-icon" id="btnMostrarApiKey">👁️</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ambiente</label>
+                                    <select id="asaasAmbiente">
+                                        <option value="sandbox">Sandbox (Testes)</option>
+                                        <option value="producao" selected>Produção</option>
+                                    </select>
+                                </div>
+                                <div class="config-toggle">
+                                    <label>PIX Habilitado</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="pixHabilitado" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="config-toggle">
+                                    <label>Cartão de Crédito Habilitado</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="cartaoHabilitado" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção: Notificações -->
+                    <section class="config-section" id="sectionNotificacoes">
+                        <h2>🔔 Configurações de Notificações</h2>
+                        <div class="config-form">
+                            <div class="config-card">
+                                <h3>📧 E-mail</h3>
+                                <div class="config-toggle">
+                                    <label>Notificar novos clientes</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notifNovoCliente" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="config-toggle">
+                                    <label>Notificar pagamentos recebidos</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notifPagamento" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="config-toggle">
+                                    <label>Resumo diário por e-mail</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notifResumoDiario">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="config-card">
+                                <h3>📱 WhatsApp</h3>
+                                <div class="config-toggle">
+                                    <label>Enviar Kit IR por WhatsApp</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="whatsappKitIR" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="config-toggle">
+                                    <label>Confirmação de pagamento por WhatsApp</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="whatsappPagamento" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção: Integrações -->
+                    <section class="config-section" id="sectionIntegracao">
+                        <h2>🔗 Integrações</h2>
+                        <div class="config-form">
+                            <div class="integration-card">
+                                <div class="integration-info">
+                                    <span class="integration-icon">💳</span>
+                                    <div>
+                                        <h4>Asaas</h4>
+                                        <p>Gateway de pagamentos</p>
+                                    </div>
+                                </div>
+                                <span class="integration-status conectado">✅ Conectado</span>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-info">
+                                    <span class="integration-icon">📱</span>
+                                    <div>
+                                        <h4>WhatsApp Business</h4>
+                                        <p>Envio de mensagens automáticas</p>
+                                    </div>
+                                </div>
+                                <span class="integration-status pendente">⏳ Pendente</span>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-info">
+                                    <span class="integration-icon">📧</span>
+                                    <div>
+                                        <h4>SMTP (E-mail)</h4>
+                                        <p>Envio de e-mails transacionais</p>
+                                    </div>
+                                </div>
+                                <span class="integration-status pendente">⏳ Pendente</span>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-info">
+                                    <span class="integration-icon">✍️</span>
+                                    <div>
+                                        <h4>Assinatura Eletrônica</h4>
+                                        <p>Contratos digitais</p>
+                                    </div>
+                                </div>
+                                <span class="integration-status desconectado">❌ Não configurado</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção: Backup -->
+                    <section class="config-section" id="sectionBackup">
+                        <h2>💾 Backup e Restauração</h2>
+                        <div class="config-form">
+                            <div class="config-card">
+                                <h3>📤 Exportar Dados</h3>
+                                <p>Faça backup de todos os dados do sistema.</p>
+                                <div class="backup-actions">
+                                    <button class="btn-primary" id="btnFazerBackup">
+                                        📦 Exportar Tudo (ZIP)
+                                    </button>
+                                    <button class="btn-secondary" id="btnExportarClientes">
+                                        👥 Exportar Clientes (CSV)
+                                    </button>
+                                    <button class="btn-secondary" id="btnExportarFinanceiro">
+                                        💵 Exportar Financeiro (CSV)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="config-card">
+                                <h3>📥 Importar Dados</h3>
+                                <p>Restaure dados de um backup anterior.</p>
+                                <div class="backup-actions">
+                                    <button class="btn-warning" id="btnRestaurar">
+                                        📂 Selecionar Arquivo de Backup
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="config-card">
+                                <h3>🕐 Último Backup</h3>
+                                <p><strong>Data:</strong> 25/01/2026 às 13:30</p>
+                                <p><strong>Tamanho:</strong> 1.2 MB</p>
+                                <p><strong>Status:</strong> <span class="status-ok">✅ Completo</span></p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Botão Salvar Flutuante -->
+            <div class="save-bar">
+                <button class="btn-primary btn-save" id="btnSalvarConfig">
+                    💾 Salvar Configurações
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/configuracoes.js"></script>
+</body>
+</html>

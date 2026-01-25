@@ -34,9 +34,10 @@ let usuarios = [
         status: 'ativo',
         ultimoAcesso: '2026-01-24 16:45',
         codigoParceiro: 'JOAO2026',
-        tipoComissao: 'porcentagem',
+        tipoComissao: 'percentual',
         valorComissao: 10,
         chavePix: 'joao@parceiro.com.br',
+        comissaoProdutos: { basico: true, kitIR: true, contrato: false },
         permissoes: ['clientes']
     },
     {
@@ -49,8 +50,9 @@ let usuarios = [
         ultimoAcesso: '2026-01-23 14:20',
         codigoParceiro: 'ANA2026',
         tipoComissao: 'fixo',
-        valorComissao: 50,
+        valorComissao: 5.00,
         chavePix: '123.456.789-00',
+        comissaoProdutos: { basico: true, kitIR: true, contrato: true },
         permissoes: ['clientes']
     },
     {
@@ -72,9 +74,10 @@ let usuarios = [
         status: 'pendente',
         ultimoAcesso: null,
         codigoParceiro: 'PEDRO2026',
-        tipoComissao: 'porcentagem',
+        tipoComissao: 'percentual',
         valorComissao: 8,
         chavePix: '(31) 98888-7777',
+        comissaoProdutos: { basico: true, kitIR: false, contrato: false },
         permissoes: ['clientes']
     }
 ];
@@ -250,14 +253,35 @@ function editarUsuario(id) {
     document.getElementById('usuarioStatus').value = usuario.status;
     document.getElementById('usuarioSenha').value = '';
     
-    // Campos de parceiro
-    if (usuario.tipo === 'parceiro') {
-        document.getElementById('camposParceiro').style.display = 'block';
+    // Campos de comissão (parceiro e operador)
+    const camposComissao = document.getElementById('camposComissao');
+    if (usuario.tipo === 'parceiro' || usuario.tipo === 'operador') {
+        if (camposComissao) camposComissao.style.display = 'block';
         document.getElementById('parceiroCodigo').value = usuario.codigoParceiro || '';
-        document.getElementById('parceiroComissao').value = usuario.valorComissao || 10;
+        document.getElementById('tipoComissao').value = usuario.tipoComissao || 'sem';
+        
+        if (usuario.tipoComissao === 'percentual') {
+            document.getElementById('percentualComissao').value = usuario.valorComissao || 10;
+        } else if (usuario.tipoComissao === 'fixo') {
+            document.getElementById('valorFixoComissao').value = (usuario.valorComissao || 0).toFixed(2).replace('.', ',');
+        }
+        
         document.getElementById('parceiroPix').value = usuario.chavePix || '';
+        
+        // Produtos com comissão
+        if (usuario.comissaoProdutos) {
+            document.getElementById('comissaoBasico').checked = usuario.comissaoProdutos.basico !== false;
+            document.getElementById('comissaoKitIR').checked = usuario.comissaoProdutos.kitIR !== false;
+            document.getElementById('comissaoContrato').checked = usuario.comissaoProdutos.contrato === true;
+        } else {
+            document.getElementById('comissaoBasico').checked = true;
+            document.getElementById('comissaoKitIR').checked = true;
+            document.getElementById('comissaoContrato').checked = false;
+        }
+        
+        mostrarCamposTipoComissao();
     } else {
-        document.getElementById('camposParceiro').style.display = 'none';
+        if (camposComissao) camposComissao.style.display = 'none';
     }
     
     // Permissões
@@ -273,10 +297,39 @@ function editarUsuario(id) {
     abrirModal('modalUsuario');
 }
 
-// Mostrar campos de parceiro
-function mostrarCamposParceiro() {
+// Mostrar campos de comissão (parceiro e operador)
+function mostrarCamposComissao() {
     const tipo = document.getElementById('usuarioTipo').value;
-    document.getElementById('camposParceiro').style.display = tipo === 'parceiro' ? 'block' : 'none';
+    // Mostrar campos de comissão para parceiro e operador (não para admin)
+    const camposComissao = document.getElementById('camposComissao');
+    if (camposComissao) {
+        camposComissao.style.display = (tipo === 'parceiro' || tipo === 'operador') ? 'block' : 'none';
+    }
+}
+
+// Mostrar campos conforme tipo de comissão selecionado
+function mostrarCamposTipoComissao() {
+    const tipoComissao = document.getElementById('tipoComissao').value;
+    const grupoPercentual = document.getElementById('grupoPercentual');
+    const grupoValorFixo = document.getElementById('grupoValorFixo');
+    const camposValorComissao = document.getElementById('camposValorComissao');
+    
+    if (tipoComissao === 'sem') {
+        if (camposValorComissao) camposValorComissao.style.display = 'none';
+    } else if (tipoComissao === 'percentual') {
+        if (camposValorComissao) camposValorComissao.style.display = 'flex';
+        if (grupoPercentual) grupoPercentual.style.display = 'block';
+        if (grupoValorFixo) grupoValorFixo.style.display = 'none';
+    } else if (tipoComissao === 'fixo') {
+        if (camposValorComissao) camposValorComissao.style.display = 'flex';
+        if (grupoPercentual) grupoPercentual.style.display = 'none';
+        if (grupoValorFixo) grupoValorFixo.style.display = 'block';
+    }
+}
+
+// Manter compatibilidade com função antiga
+function mostrarCamposParceiro() {
+    mostrarCamposComissao();
 }
 
 // Salvar usuário
@@ -315,11 +368,28 @@ function salvarUsuario() {
         ultimoAcesso: null
     };
     
-    // Campos de parceiro
-    if (tipo === 'parceiro') {
-        usuarioData.codigoParceiro = document.getElementById('parceiroCodigo').value;
-        usuarioData.valorComissao = parseFloat(document.getElementById('parceiroComissao').value) || 10;
-        usuarioData.chavePix = document.getElementById('parceiroPix').value;
+    // Campos de comissão (parceiro e operador)
+    if (tipo === 'parceiro' || tipo === 'operador') {
+        usuarioData.codigoParceiro = document.getElementById('parceiroCodigo').value || '';
+        usuarioData.tipoComissao = document.getElementById('tipoComissao').value || 'sem';
+        
+        if (usuarioData.tipoComissao === 'percentual') {
+            usuarioData.valorComissao = parseFloat(document.getElementById('percentualComissao').value) || 0;
+        } else if (usuarioData.tipoComissao === 'fixo') {
+            const valorFixoStr = document.getElementById('valorFixoComissao').value || '0';
+            usuarioData.valorComissao = parseFloat(valorFixoStr.replace(',', '.')) || 0;
+        } else {
+            usuarioData.valorComissao = 0;
+        }
+        
+        usuarioData.chavePix = document.getElementById('parceiroPix').value || '';
+        
+        // Produtos com comissão
+        usuarioData.comissaoProdutos = {
+            basico: document.getElementById('comissaoBasico').checked,
+            kitIR: document.getElementById('comissaoKitIR').checked,
+            contrato: document.getElementById('comissaoContrato').checked
+        };
     }
     
     if (id) {
