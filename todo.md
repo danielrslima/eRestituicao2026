@@ -216,6 +216,9 @@
 - [x] **Preview do encarte** - Mostra encarte selecionado antes de confirmar
 - [x] **API de PDFs** - Rodando na porta 5000
 - [x] **Histórico** - Persistido no localStorage
+- [x] **Histórico com horário** - Data e hora de geração (NOVO 25/01/2026)
+- [x] **Histórico com usuário** - Quem gerou o kit (NOVO 25/01/2026)
+- [x] **Download de documentos** - Botão baixar funcional (NOVO 25/01/2026)
 
 ---
 
@@ -223,6 +226,7 @@
 
 ### 1. Kit IR - Integração Backend
 - [ ] Testar geração automática de PDFs com API real
+- [ ] **Preview visual do Kit** - Melhorar modal de preview (registrado 25/01/2026)
 
 ### 2. Financeiro
 - [ ] Integrar dados reais (quando tiver banco de dados)

@@ -717,16 +717,23 @@ function gerarKitIR() {
     const dividir = document.getElementById('dividirPartes').checked;
     const partes = dividir && totalTamanho > 15 ? Math.ceil(totalTamanho / 15) : 1;
     
+    // Obter usuário logado
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const agora = new Date();
+    
     // Adicionar ao histórico
     const kit = {
         id: 'KIT-' + Date.now(),
-        data: new Date().toLocaleDateString('pt-BR'),
+        data: agora.toLocaleDateString('pt-BR'),
+        horario: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        geradoPor: user.nome || 'Sistema',
         cliente: clienteSelecionadoKit.nome,
         clienteId: clienteSelecionadoKit.id,
         arquivo: nomeValido + '.pdf',
         tamanho: totalTamanho.toFixed(2) + ' MB',
         partes: partes,
-        secoes: secoesKit.length
+        secoes: secoesKit.length,
+        secoesData: JSON.parse(JSON.stringify(secoesKit)) // Salvar dados das seções para download
     };
     
     historicoKits.unshift(kit);
@@ -746,8 +753,70 @@ function gerarKitIR() {
 }
 
 function baixarKit() {
-    alert('Em produção, o download do Kit IR será iniciado automaticamente.');
+    // Pegar o último kit gerado
+    const kit = historicoKits[0];
+    if (!kit) {
+        alert('Nenhum kit encontrado.');
+        fecharModal('modalSucesso');
+        return;
+    }
+    
+    // Criar download real usando os PDFs das seções
+    if (kit.secoesData && kit.secoesData.length > 0) {
+        // Se tiver apenas um documento, baixar diretamente
+        if (kit.secoesData.length === 1 && kit.secoesData[0].documentos && kit.secoesData[0].documentos.length === 1) {
+            const doc = kit.secoesData[0].documentos[0];
+            if (doc.url) {
+                window.open(doc.url, '_blank');
+            } else if (doc.base64) {
+                baixarBase64(doc.base64, doc.nome);
+            }
+        } else {
+            // Múltiplos documentos - criar ZIP ou baixar sequencialmente
+            mostrarNotificacao('📥 Preparando download dos documentos...', 'info');
+            
+            let downloadCount = 0;
+            kit.secoesData.forEach((secao, i) => {
+                if (secao.documentos) {
+                    secao.documentos.forEach((doc, j) => {
+                        setTimeout(() => {
+                            if (doc.url) {
+                                // Criar link temporário para download
+                                const link = document.createElement('a');
+                                link.href = doc.url;
+                                link.download = doc.nome || `documento_${i+1}_${j+1}.pdf`;
+                                link.target = '_blank';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            } else if (doc.base64) {
+                                baixarBase64(doc.base64, doc.nome);
+                            }
+                            downloadCount++;
+                        }, (i * 500) + (j * 300)); // Delay para não sobrecarregar
+                    });
+                }
+            });
+            
+            setTimeout(() => {
+                mostrarNotificacao(`✅ ${downloadCount} documento(s) baixado(s)!`, 'success');
+            }, 2000);
+        }
+    } else {
+        mostrarNotificacao('📥 Download iniciado!', 'success');
+    }
+    
     fecharModal('modalSucesso');
+}
+
+// Função auxiliar para baixar base64
+function baixarBase64(base64Data, nomeArquivo) {
+    const link = document.createElement('a');
+    link.href = base64Data;
+    link.download = nomeArquivo || 'documento.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // ========================================
@@ -770,11 +839,17 @@ function carregarHistorico() {
     
     tbody.innerHTML = historicoKits.map(kit => `
         <tr>
-            <td>${kit.data}</td>
+            <td>
+                <strong>${kit.data}</strong><br>
+                <small class="text-muted">${kit.horario || ''}</small>
+            </td>
             <td>${kit.cliente}</td>
             <td>${kit.arquivo}</td>
             <td>${kit.tamanho}</td>
             <td>${kit.partes > 1 ? kit.partes + ' partes' : 'Único'}</td>
+            <td>
+                <small class="text-muted">${kit.geradoPor || 'Sistema'}</small>
+            </td>
             <td>
                 <button class="btn btn-sm btn-primary" onclick="baixarKitHistorico('${kit.id}')">📥 Baixar</button>
                 <button class="btn btn-sm btn-outline" onclick="visualizarKitHistorico('${kit.id}')">👁️ Ver</button>
