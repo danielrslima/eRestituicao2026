@@ -1,6 +1,6 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 25/01/2026 - 10:25 (Horário de Brasília)
+## Última Atualização: 25/01/2026 - 11:55 (Horário de Brasília)
 
 ---
 
@@ -27,9 +27,22 @@
 
 ---
 
-## ✅ CORREÇÕES IMPLEMENTADAS HOJE (25/01/2026 - 10:25)
+## ✅ CORREÇÕES IMPLEMENTADAS HOJE (25/01/2026)
 
-### 1. Configurações - CORRIGIDO ✅
+### 1. Histórico Kit IR - CORRIGIDO ✅ (11:49)
+- [x] **Horário de geração** - Agora mostra data E hora (DD/MM/YYYY HH:MM)
+- [x] **Gerado Por** - Mostra nome do usuário logado + nível (Admin/Funcionário/Parceiro)
+- [x] **Chave correta** - Usa `dashboard_sessao` do localStorage (não mais `user`)
+- [x] **Formato**: "Administrador (Admin)", "João Silva (Funcionário)", "Maria Santos (Parceiro)", ou "Externo"
+
+### 2. Sino de Notificações - FUNCIONANDO ✅ (11:50)
+- [x] Dropdown abre ao clicar no sino
+- [x] Mostra notificações com ícones e tempo
+- [x] Botão "Limpar todas" funciona
+- [x] Link "Ver todas as notificações" funciona
+- [x] Badge com contador de não lidas
+
+### 3. Configurações - CORRIGIDO ✅
 - [x] Upload de logo funcionando (PNG, JPG, JPEG, SVG, GIF)
 - [x] Validação de formato de imagem
 - [x] Preview da imagem antes de salvar
@@ -37,12 +50,12 @@
 - [x] Exportar Clientes para CSV funcionando
 - [x] Exportar Financeiro para CSV funcionando
 
-### 2. Controle Financeiro - CORRIGIDO ✅
+### 4. Controle Financeiro - CORRIGIDO ✅
 - [x] Exportar PDF funcionando (jsPDF)
 - [x] Exportar Excel funcionando (SheetJS)
 - [x] Dados formatados corretamente
 
-### 3. Comissões - CORRIGIDO ✅
+### 5. Comissões - CORRIGIDO ✅
 - [x] Gerador de link de indicação funcionando
 - [x] Formato: https://erestituicao.com.br/?ref=CODIGO
 - [x] Botão copiar link
@@ -50,29 +63,35 @@
 - [x] Compartilhar via WhatsApp
 - [x] Compartilhar via E-mail
 
-### 4. Kit IR - CORRIGIDO ✅
+### 6. Kit IR - CORRIGIDO ✅
 - [x] URL da API de PDFs atualizada
 - [x] API de PDFs rodando na porta 5000
 - [x] Histórico persistido no localStorage
 - [x] Função "Ver" no histórico abre modal com detalhes
 - [x] Função "Baixar" no histórico funcionando
 
-### 5. CRM - CORRIGIDO ✅
+### 7. CRM - CORRIGIDO ✅
 - [x] Função "Salvar Dados" implementada
 - [x] Dados persistidos no localStorage
 - [x] Notificação de sucesso ao salvar
 
-### 6. Clientes - CORRIGIDO ✅
+### 8. Clientes - CORRIGIDO ✅
 - [x] Botão "Ver" (olho) abre modal com detalhes completos
 - [x] Botão "Editar" abre modal de edição
 - [x] Edição de nome, CPF, e-mail, telefone, data nascimento, tipo
 - [x] Dados salvos no localStorage
+- [x] **Busca startsWith** - Filtra apenas nomes que COMEÇAM com o texto digitado
+- [x] **Ordenação alfabética** - Resultados ordenados de A-Z
 
-### 7. Dashboard - CORRIGIDO ✅
+### 9. Dashboard - CORRIGIDO ✅
 - [x] Botão "Ver" abre modal com detalhes do cliente
 - [x] Botão "Editar" abre modal de edição rápida
 - [x] Edição de nome, e-mail, telefone, status
 - [x] Notificação de sucesso
+
+### 10. Relatórios - CORRIGIDO ✅
+- [x] **Gerado Por** - Usa chave correta `dashboard_sessao`
+- [x] **Nível do usuário** - Mostra (Admin/Funcionário/Parceiro) ou "Externo"
 
 ---
 
@@ -114,6 +133,30 @@
 
 ---
 
+## ⚠️ PENDÊNCIAS IDENTIFICADAS (25/01/2026 - 11:54)
+
+### 1. Kit IR - Download PDF NÃO GERA ⚠️
+- [ ] **PROBLEMA**: Download é iniciado mas PDF não é gerado/baixado
+- [ ] Mensagem "Download de DocumentosRRAAcaoTrabalhista.pdf iniciado!" aparece
+- [ ] Mas o arquivo PDF não é criado
+- [ ] **RESOLVER APÓS**: Validação dos cálculos (frontend + backend)
+
+### 2. Logo nos PDFs de Relatórios
+- [ ] PDFs de relatórios usam texto "e-Restituição" em vez de logo real
+- [ ] Implementar logo em base64 nos PDFs
+
+### 3. Pente Fino no Dashboard
+- [ ] Revisar todas as funcionalidades após cálculos validados
+- [ ] Verificar consistência de dados
+- [ ] Testar fluxo completo
+
+### 4. Sistema de Cálculos
+- [ ] Verificar se cálculos do frontend chegam ao dashboard
+- [ ] Implementar novo sistema de cálculo no backend
+- [ ] Integrar frontend ↔ backend ↔ dashboard
+
+---
+
 ## ✅ DASHBOARD - VALIDADO (25/01/2026)
 
 ### Login ✅
@@ -124,6 +167,7 @@
 - [x] Métricas e resumo
 - [x] Logo e-Restituição ajustado
 - [x] Ações Ver/Editar funcionando
+- [x] Sino de notificações funcionando
 
 ### Clientes ✅
 - [x] Cadastro com máscaras (telefone, CEP)
@@ -139,19 +183,20 @@
 - [x] **Ordenação alfabética** - Todas as listas de clientes ordenadas
 - [x] **Modal Ver Detalhes** - Abre modal com informações completas
 - [x] **Modal Editar** - Permite edição rápida do cliente
-- [x] **Busca com Autocomplete** - Lista alfabética ao digitar (NOVO)
-- [x] **Exibição dos 6 últimos** - Mostra apenas os 6 clientes mais recentes por padrão (NOVO)
-- [x] **Fixação de cliente** - Clique no nome para fixar cliente na visualização (NOVO)
-- [x] **Cabeçalhos destacados** - Ícones e texto em maiúsculas nos títulos das colunas (NOVO)
-- [x] **Nomes em destaque** - Nomes dos clientes em verde com hover (NOVO)
-- [x] **Validação de CPF** - Máscara automática e verificação de dígitos (NOVO)
-- [x] **Validação de CNPJ** - Máscara automática e verificação de dígitos (NOVO)
-- [x] **Busca de CEP** - Preenchimento automático de endereço via ViaCEP (NOVO)
-- [x] **Campos obrigatórios** - CEP, Número, Complemento, Bairro (NOVO)
-- [x] **Busca inline** - Barra de busca movida para baixo dos cabeçalhos (NOVO)
-- [x] **Alinhamento de campos** - Profissão e Indicado por alinhados (NOVO)
-- [x] **Busca com resultados em linha** - Ao digitar, mostra linha completa com ações (NOVO)
-- [x] **API data_nascimento** - Corrigido erro na geração de Planilha RT (NOVO)
+- [x] **Busca com Autocomplete** - Lista alfabética ao digitar
+- [x] **Exibição dos 6 últimos** - Mostra apenas os 6 clientes mais recentes por padrão
+- [x] **Fixação de cliente** - Clique no nome para fixar cliente na visualização
+- [x] **Cabeçalhos destacados** - Ícones e texto em maiúsculas nos títulos das colunas
+- [x] **Nomes em destaque** - Nomes dos clientes em verde com hover
+- [x] **Validação de CPF** - Máscara automática e verificação de dígitos
+- [x] **Validação de CNPJ** - Máscara automática e verificação de dígitos
+- [x] **Busca de CEP** - Preenchimento automático de endereço via ViaCEP
+- [x] **Campos obrigatórios** - CEP, Número, Complemento, Bairro
+- [x] **Busca inline** - Barra de busca movida para baixo dos cabeçalhos
+- [x] **Alinhamento de campos** - Profissão e Indicado por alinhados
+- [x] **Busca com resultados em linha** - Ao digitar, mostra linha completa com ações
+- [x] **API data_nascimento** - Corrigido erro na geração de Planilha RT
+- [x] **Busca startsWith** - Filtra nomes que COMEÇAM com texto digitado
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status
@@ -216,37 +261,38 @@
 - [x] **Preview do encarte** - Mostra encarte selecionado antes de confirmar
 - [x] **API de PDFs** - Rodando na porta 5000
 - [x] **Histórico** - Persistido no localStorage
-- [x] **Histórico com horário** - Data e hora de geração (NOVO 25/01/2026)
-- [x] **Histórico com usuário** - Quem gerou o kit (NOVO 25/01/2026)
-- [x] **Download de documentos** - Botão baixar funcional (NOVO 25/01/2026)
+- [x] **Histórico com horário** - Data e hora de geração
+- [x] **Histórico com usuário** - Quem gerou o kit (nome + nível)
+- [x] **Download de documentos** - Botão baixar funcional (⚠️ PDF não gera - pendente)
 
 ---
 
-## ⏳ PENDENTE / AJUSTES FUTUROS
+## ⏳ PRÓXIMOS PASSOS (Prioridade)
 
-### 1. Kit IR - Integração Backend
-- [ ] Testar geração automática de PDFs com API real
-- [ ] **Preview visual do Kit** - Melhorar modal de preview (registrado 25/01/2026)
+### 1. Validar Sistema de Cálculos
+- [ ] Verificar fluxo frontend → backend
+- [ ] Testar cálculos chegando ao dashboard
+- [ ] Implementar novo backend de cálculo
 
-### 2. Financeiro
-- [ ] Integrar dados reais (quando tiver banco de dados)
+### 2. Corrigir Kit IR PDF
+- [ ] Investigar por que PDF não é gerado após "Download iniciado"
+- [ ] Verificar API de PDFs
+- [ ] Testar geração completa
 
-### 3. Relatórios
-- [x] Tela de relatórios criada (25/01/2026)
+### 3. Pente Fino Dashboard
+- [ ] Revisar todas as páginas
+- [ ] Verificar consistência
+- [ ] Testar fluxos completos
 
-### 4. Usuários - ATUALIZADA (25/01/2026)
-- [x] Tela de gerenciamento de usuários criada
-- [x] **Campos de comissão individual** no cadastro de parceiro/operador
+### 4. Logo nos PDFs
+- [ ] Implementar logo em base64
+- [ ] Aplicar em todos os relatórios
 
 ### 5. Backup Automático Diário (FUTURO)
 - [ ] Implementar backup automático diário
 - [ ] Salvar em 2 ambientes diferentes:
   - GitHub (repositório)
   - Google Drive ou servidor externo
-
-### 6. Página de Contratos (FUTURO)
-- [ ] Subir modelos padrão de contrato
-- [ ] Preencher dados automaticamente do cliente
 
 ---
 
@@ -274,6 +320,17 @@
 | dashboard/financeiro.html | Controle financeiro | ✅ |
 | dashboard/configuracoes.html | Configurações | ✅ |
 | dashboard/usuarios.html | Gerenciamento usuários | ✅ |
+| dashboard/relatorios.html | Relatórios | ✅ |
+
+### JavaScript Dashboard
+| Arquivo | Descrição | Status |
+|---------|-----------|--------|
+| dashboard/js/auth.js | Autenticação | ✅ |
+| dashboard/js/utils.js | Utilitários (CPF, CNPJ, CEP) | ✅ |
+| dashboard/js/dashboard.js | Dashboard principal | ✅ |
+| dashboard/js/clientes.js | Gestão de clientes | ✅ |
+| dashboard/js/kit-ir.js | Kit IR / PDFs | ✅ |
+| dashboard/js/relatorios.js | Relatórios | ✅ |
 
 ### Backend (Python - PDFs)
 | Arquivo | Descrição | Status |
@@ -288,8 +345,9 @@
 ### Assets
 | Arquivo | Descrição | Status |
 |---------|-----------|--------|
-| assets/logo_e_restituicao.jpg | Logo e-Restituição | ✅ |
-| assets/logo_ir360.png | Logo IR360 | ✅ |
+| dashboard/assets/logo_e_restituicao.jpg | Logo e-Restituição | ✅ |
+| dashboard/assets/logo_ir360.jpg | Logo IR360 | ✅ |
+| dashboard/assets/logo_ir360_rodape.png | Logo IR360 rodapé | ✅ |
 
 ---
 
@@ -302,7 +360,7 @@ Analise minuciosamente tudo o que foi feito nas últimas 48 horas no projeto e-R
 
 ### Continuar implementação:
 ```
-Continue a implementação do projeto e-Restituição IA. O motor de cálculo, PDFs, encarte, Kit IR, Pagamentos, Comissões e Financeiro estão validados. Ajuste os itens pendentes.
+Continue a implementação do projeto e-Restituição IA. O motor de cálculo, PDFs, encarte, Kit IR, Pagamentos, Comissões e Financeiro estão validados. Foque nos itens pendentes: 1) Sistema de cálculos frontend→backend, 2) Corrigir Kit IR PDF, 3) Pente fino no dashboard.
 ```
 
 ---
@@ -331,4 +389,4 @@ Continue a implementação do projeto e-Restituição IA. O motor de cálculo, P
 
 - **URL**: https://github.com/danielrslima/eRestituicao2026
 - **Branch**: main
-- **Último commit**: 25/01/2026
+- **Último commit**: 25/01/2026 - 11:55

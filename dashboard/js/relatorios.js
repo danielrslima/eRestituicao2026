@@ -325,18 +325,56 @@ function gerarRelatorioPDF(periodo, tipo) {
     const corCinza = [100, 100, 100];
     let y = 20;
     
-    // Cabeçalho
+    // Identificar quem gerou (chave correta: dashboard_sessao)
+    const usuarioLogado = JSON.parse(localStorage.getItem('dashboard_sessao') || '{}');
+    let geradoPor = 'Externo';
+    if (usuarioLogado && usuarioLogado.nome) {
+        geradoPor = usuarioLogado.nome;
+        if (usuarioLogado.nivel === 'parceiro') {
+            geradoPor += ' (Parceiro)';
+        } else if (usuarioLogado.nivel === 'admin') {
+            geradoPor += ' (Admin)';
+        } else if (usuarioLogado.nivel === 'funcionario') {
+            geradoPor += ' (Funcionário)';
+        }
+    }
+    
+    // Cabeçalho com fundo verde
     doc.setFillColor(...corVerde);
-    doc.rect(0, 0, 210, 35, 'F');
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    // Adicionar logo (convertido para base64)
+    try {
+        const logoImg = new Image();
+        logoImg.src = 'img/logo_e_restituicao.jpg';
+        // Usar logo em base64 para garantir que funcione
+        const logoBase64 = localStorage.getItem('logoEmpresa') || null;
+        if (logoBase64) {
+            doc.addImage(logoBase64, 'JPEG', 75, 3, 60, 15);
+            y = 22;
+        } else {
+            // Fallback: texto do logo
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(22);
+            doc.setFont('helvetica', 'bold');
+            doc.text('e-Restituição', 105, 15, { align: 'center' });
+        }
+    } catch (e) {
+        // Fallback: texto do logo
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.setFont('helvetica', 'bold');
+        doc.text('e-Restituição', 105, 15, { align: 'center' });
+    }
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text('e-Restituição', 105, 15, { align: 'center' });
-    
     doc.setFontSize(14);
     doc.setFont('helvetica', 'normal');
-    doc.text('Relatório Gerencial', 105, 25, { align: 'center' });
+    doc.text('Relatório Gerencial', 105, 30, { align: 'center' });
+    
+    // Informação de quem gerou (canto superior direito)
+    doc.setFontSize(8);
+    doc.text(`Gerado por: ${geradoPor}`, 195, 38, { align: 'right' });
     
     y = 45;
     

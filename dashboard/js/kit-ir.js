@@ -717,16 +717,29 @@ function gerarKitIR() {
     const dividir = document.getElementById('dividirPartes').checked;
     const partes = dividir && totalTamanho > 15 ? Math.ceil(totalTamanho / 15) : 1;
     
-    // Obter usuário logado
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    // Obter usuário logado (chave correta: dashboard_sessao)
+    const user = JSON.parse(localStorage.getItem('dashboard_sessao') || '{}');
     const agora = new Date();
+    
+    // Determinar quem gerou
+    let geradoPor = 'Externo';
+    if (user && user.nome) {
+        geradoPor = user.nome;
+        if (user.nivel === 'parceiro') {
+            geradoPor += ' (Parceiro)';
+        } else if (user.nivel === 'admin') {
+            geradoPor += ' (Admin)';
+        } else if (user.nivel === 'funcionario') {
+            geradoPor += ' (Funcionário)';
+        }
+    }
     
     // Adicionar ao histórico
     const kit = {
         id: 'KIT-' + Date.now(),
         data: agora.toLocaleDateString('pt-BR'),
         horario: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        geradoPor: user.nome || 'Sistema',
+        geradoPor: geradoPor,
         cliente: clienteSelecionadoKit.nome,
         clienteId: clienteSelecionadoKit.id,
         arquivo: nomeValido + '.pdf',
