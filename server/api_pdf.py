@@ -157,7 +157,8 @@ def api_gerar_planilha_rt():
         dados = {
             'cliente': {
                 'nome': dados_req['nome'],
-                'cpf': dados_req['cpf']
+                'cpf': dados_req['cpf'],
+                'data_nascimento': dados_req.get('data_nascimento', '-')
             },
             'processo': {
                 'numero': dados_req.get('processo', '-'),

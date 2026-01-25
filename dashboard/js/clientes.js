@@ -1700,6 +1700,100 @@ function debounce(func, wait) {
     };
 }
 
+// Função de busca chamada diretamente pelo oninput/onkeyup
+function buscarClienteInput(valor) {
+    const termo = valor.toLowerCase().trim();
+    const buscaResultados = document.getElementById('buscaResultados');
+    const btnLimpar = document.getElementById('btnLimparBusca');
+    
+    // Mostrar/ocultar botão limpar
+    if (btnLimpar) {
+        btnLimpar.style.display = termo.length > 0 ? 'flex' : 'none';
+    }
+    
+    if (termo.length < 1) {
+        if (buscaResultados) buscaResultados.classList.remove('show');
+        return;
+    }
+    
+    // Filtrar clientes que correspondem ao termo
+    let clientesFiltrados = CLIENTES.filter(c => 
+        c.nome.toLowerCase().includes(termo) || 
+        c.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
+    );
+    
+    // Ordenar alfabeticamente
+    clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    
+    if (clientesFiltrados.length === 0) {
+        buscaResultados.innerHTML = '<div class="busca-sem-resultados">🔍 Nenhum cliente encontrado para "' + termo + '"</div>';
+        buscaResultados.classList.add('show');
+        return;
+    }
+    
+    // Gerar HTML com cabeçalho e linhas completas
+    let html = `
+        <div class="busca-resultado-header">
+            <span>👤 Nome</span>
+            <span>🆔 CPF</span>
+            <span>📧 E-mail</span>
+            <span>📞 Telefone</span>
+            <span>📊 Status</span>
+            <span>💰 Valor</span>
+            <span>📅 Cálculo</span>
+            <span>🗓️ Inclusão</span>
+            <span>⚙️ Ações</span>
+        </div>
+    `;
+    
+    clientesFiltrados.forEach(cliente => {
+        const ultimoCaso = cliente.casos && cliente.casos.length > 0 
+            ? cliente.casos[cliente.casos.length - 1] 
+            : null;
+        
+        const status = ultimoCaso 
+            ? STATUS_LABELS[ultimoCaso.status]?.texto || '🆕 Novo'
+            : '🆕 Novo';
+        
+        const statusClasse = ultimoCaso 
+            ? STATUS_LABELS[ultimoCaso.status]?.classe || 'novo'
+            : 'novo';
+        
+        const valorRestituicao = ultimoCaso && ultimoCaso.valorRestituicao 
+            ? formatarMoeda(ultimoCaso.valorRestituicao) 
+            : '-';
+        
+        const dataCalculo = ultimoCaso && ultimoCaso.dataCalculo 
+            ? new Date(ultimoCaso.dataCalculo).toLocaleDateString('pt-BR') 
+            : '-';
+        
+        const telefone = cliente.telefones && cliente.telefones.length > 0 
+            ? cliente.telefones[0].numero 
+            : '-';
+        
+        html += `
+            <div class="busca-resultado-linha" onclick="selecionarClienteBusca('${cliente.id}')">
+                <span class="cliente-nome-busca">${cliente.nome}</span>
+                <span>${cliente.cpf}</span>
+                <span>${cliente.email}</span>
+                <span>${telefone}</span>
+                <span class="status-badge ${statusClasse}">${status}</span>
+                <span class="valor-restituicao">${valorRestituicao}</span>
+                <span>${dataCalculo}</span>
+                <span>${cliente.dataInclusao || '-'}</span>
+                <span class="acoes-busca">
+                    <button class="btn-acao btn-ver" onclick="event.stopPropagation(); verCliente('${cliente.id}')" title="Ver detalhes">👁️</button>
+                    <button class="btn-acao btn-editar" onclick="event.stopPropagation(); editarCliente('${cliente.id}')" title="Editar">✏️</button>
+                    <button class="btn-acao btn-kit" onclick="event.stopPropagation(); abrirKitIR('${cliente.id}')" title="Kit IR">📦</button>
+                </span>
+            </div>
+        `;
+    });
+    
+    buscaResultados.innerHTML = html;
+    buscaResultados.classList.add('show');
+}
+
 // Exportar funções globais
 window.abrirModalNovoCliente = abrirModalNovoCliente;
 window.fecharModal = fecharModal;
@@ -1720,6 +1814,7 @@ window.removerTelefone = removerTelefone;
 window.toggleNomeResponsavel = toggleNomeResponsavel;
 window.selecionarClienteBusca = selecionarClienteBusca;
 window.limparBusca = limparBusca;
+window.buscarClienteInput = buscarClienteInput;
 window.abrirKitIR = abrirKitIR;
 window.fixarCliente = fixarCliente;
 window.mostrarTodosClientes = mostrarTodosClientes;

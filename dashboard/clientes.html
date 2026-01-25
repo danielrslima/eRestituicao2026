@@ -126,7 +126,9 @@
                            placeholder="Digite o nome ou CPF do cliente para buscar..." 
                            class="busca-clientes-input" 
                            id="buscaCliente" 
-                           autocomplete="off">
+                           autocomplete="off"
+                           oninput="buscarClienteInput(this.value)"
+                           onkeyup="buscarClienteInput(this.value)">
                     <button class="btn-limpar-busca" id="btnLimparBusca" onclick="limparBusca()" style="display: none;">✕</button>
                 </div>
                 <div class="busca-resultados" id="buscaResultados"></div>

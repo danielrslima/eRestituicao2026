@@ -373,6 +373,7 @@ async function usarDocumentoGerado() {
             dadosRequisicao = {
                 nome: clienteSelecionadoKit.nome,
                 cpf: clienteSelecionadoKit.cpf,
+                data_nascimento: clienteSelecionadoKit.dataNascimento || '-',
                 processo: clienteSelecionadoKit.processo,
                 exercicio: clienteSelecionadoKit.exercicios[0] || 2024,
                 valor_bruto: clienteSelecionadoKit.valor || 0,

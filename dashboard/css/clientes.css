@@ -1215,3 +1215,108 @@ tr.highlight-new {
     margin-top: 4px;
     display: block;
 }
+
+/* ========================================
+   BUSCA - CABEÇALHO E LINHAS
+   ======================================== */
+
+.busca-resultado-header {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 2fr 1.2fr 1fr 1.2fr 1fr 1.2fr auto;
+    gap: 10px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #1a7f37 0%, #15692d 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 8px 8px 0 0;
+}
+
+.busca-resultado-header span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.busca-resultado-linha {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 2fr 1.2fr 1fr 1.2fr 1fr 1.2fr auto;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: center;
+    background: white;
+}
+
+.busca-resultado-linha:hover {
+    background: #e8f5e9;
+    transform: translateX(5px);
+}
+
+.busca-resultado-linha:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.cliente-nome-busca {
+    font-weight: 700;
+    color: #1a7f37;
+    font-size: 15px;
+}
+
+.valor-restituicao {
+    font-weight: 600;
+    color: #1a7f37;
+}
+
+.acoes-busca {
+    display: flex;
+    gap: 5px;
+}
+
+.acoes-busca .btn-acao {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.acoes-busca .btn-ver {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.acoes-busca .btn-ver:hover {
+    background: #1976d2;
+    color: white;
+}
+
+.acoes-busca .btn-editar {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.acoes-busca .btn-editar:hover {
+    background: #f57c00;
+    color: white;
+}
+
+.acoes-busca .btn-kit {
+    background: #e8f5e9;
+    color: #1a7f37;
+}
+
+.acoes-busca .btn-kit:hover {
+    background: #1a7f37;
+    color: white;
+}
