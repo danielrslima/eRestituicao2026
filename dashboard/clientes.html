@@ -118,6 +118,21 @@
             </div>
             
             <!-- Info de visualização -->
+            <!-- Barra de Busca Grande -->
+            <div class="busca-clientes-container">
+                <div class="busca-clientes-wrapper">
+                    <span class="busca-icon">🔍</span>
+                    <input type="text" 
+                           placeholder="Digite o nome ou CPF do cliente para buscar..." 
+                           class="busca-clientes-input" 
+                           id="buscaCliente" 
+                           autocomplete="off">
+                    <button class="btn-limpar-busca" id="btnLimparBusca" onclick="limparBusca()" style="display: none;">✕</button>
+                </div>
+                <div class="busca-resultados" id="buscaResultados"></div>
+            </div>
+            
+            <!-- Info de visualização -->
             <div class="info-visualizacao" id="infoVisualizacao">
                 <span class="badge-info">📊 Mostrando os <strong>6 últimos clientes</strong> cadastrados</span>
             </div>
@@ -135,15 +150,6 @@
                             <th class="th-destaque"><span class="th-icon">📅</span> DATA CÁLCULO</th>
                             <th class="th-destaque"><span class="th-icon">🗓️</span> DATA INCLUSÃO</th>
                             <th class="th-destaque"><span class="th-icon">⚙️</span> AÇÕES</th>
-                        </tr>
-                        <!-- Barra de busca abaixo dos cabeçalhos -->
-                        <tr class="tr-busca">
-                            <th colspan="9" style="padding: 0; background: #f8f9fa;">
-                                <div class="busca-container-inline">
-                                    <input type="text" placeholder="🔍 Digite o nome ou CPF do cliente para buscar..." class="input-busca-inline" id="buscaCliente" autocomplete="off">
-                                    <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
-                                </div>
-                            </th>
                         </tr>
                     </thead>
                     <tbody id="tabelaClientes">

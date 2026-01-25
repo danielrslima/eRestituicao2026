@@ -583,81 +583,135 @@ function configurarMascaras() {
 function configurarFiltros() {
     const buscaInput = document.getElementById('buscaCliente');
     const filtroSelect = document.getElementById('filtroStatus');
-    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const buscaResultados = document.getElementById('buscaResultados');
+    const btnLimpar = document.getElementById('btnLimparBusca');
     
-    if (buscaInput && autocompleteDropdown) {
-        // Autocomplete ao digitar
+    if (buscaInput && buscaResultados) {
+        // Busca ao digitar - mostra linha completa
         buscaInput.addEventListener('input', function() {
             const termo = this.value.toLowerCase().trim();
             
-            if (termo.length < 2) {
-                autocompleteDropdown.classList.remove('show');
+            // Mostrar/ocultar botão limpar
+            if (btnLimpar) {
+                btnLimpar.style.display = termo.length > 0 ? 'flex' : 'none';
+            }
+            
+            if (termo.length < 1) {
+                buscaResultados.classList.remove('show');
                 return;
             }
             
             // Filtrar clientes que correspondem ao termo
             let clientesFiltrados = CLIENTES.filter(c => 
                 c.nome.toLowerCase().includes(termo) || 
-                c.cpf.includes(termo)
+                c.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
             );
             
             // Ordenar alfabeticamente
             clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
             
-            // Limitar a 10 resultados
-            clientesFiltrados = clientesFiltrados.slice(0, 10);
-            
             if (clientesFiltrados.length === 0) {
-                autocompleteDropdown.innerHTML = '<div class="autocomplete-item" style="color: #999;">Nenhum cliente encontrado</div>';
-                autocompleteDropdown.classList.add('show');
+                buscaResultados.innerHTML = '<div class="busca-sem-resultados">🔍 Nenhum cliente encontrado para "' + termo + '"</div>';
+                buscaResultados.classList.add('show');
                 return;
             }
             
-            // Gerar HTML do dropdown
-            autocompleteDropdown.innerHTML = clientesFiltrados.map(cliente => {
-                const status = cliente.casos.length > 0 
-                    ? STATUS_LABELS[cliente.casos[cliente.casos.length - 1].status]?.texto || '🆕 Novo'
+            // Gerar HTML com cabeçalho e linhas completas
+            let html = `
+                <div class="busca-resultado-header">
+                    <span>👤 Nome</span>
+                    <span>🆔 CPF</span>
+                    <span>📧 E-mail</span>
+                    <span>📞 Telefone</span>
+                    <span>📊 Status</span>
+                    <span>💰 Valor</span>
+                    <span>📅 Cálculo</span>
+                    <span>🗓️ Inclusão</span>
+                    <span>⚙️ Ações</span>
+                </div>
+            `;
+            
+            clientesFiltrados.forEach(cliente => {
+                const ultimoCaso = cliente.casos && cliente.casos.length > 0 
+                    ? cliente.casos[cliente.casos.length - 1] 
+                    : null;
+                
+                const status = ultimoCaso 
+                    ? STATUS_LABELS[ultimoCaso.status]?.texto || '🆕 Novo'
                     : '🆕 Novo';
                 
-                return `
-                    <div class="autocomplete-item" onclick="selecionarClienteAutocomplete('${cliente.id}')">
-                        <div>
-                            <div class="autocomplete-nome">${cliente.nome}</div>
-                            <div class="autocomplete-cpf">${cliente.cpf}</div>
-                        </div>
-                        <span class="autocomplete-status">${status}</span>
+                const statusClasse = ultimoCaso 
+                    ? STATUS_LABELS[ultimoCaso.status]?.classe || 'novo'
+                    : 'novo';
+                
+                const valorRestituicao = ultimoCaso && ultimoCaso.valorRestituicao 
+                    ? formatarMoeda(ultimoCaso.valorRestituicao) 
+                    : '-';
+                
+                const dataCalculo = ultimoCaso && ultimoCaso.dataCalculo 
+                    ? formatarData(ultimoCaso.dataCalculo) 
+                    : '-';
+                
+                const telefone = cliente.telefones && cliente.telefones.length > 0 
+                    ? cliente.telefones[0].numero 
+                    : '-';
+                
+                const dataInclusao = cliente.dataInclusao 
+                    ? cliente.dataInclusao.split(' ')[0].split('-').reverse().join('/') 
+                    : '-';
+                
+                html += `
+                    <div class="busca-resultado-item" onclick="selecionarClienteBusca('${cliente.id}')">
+                        <span class="busca-resultado-nome">${cliente.nome}</span>
+                        <span class="busca-resultado-cpf">${cliente.cpf}</span>
+                        <span class="busca-resultado-email">${cliente.email || '-'}</span>
+                        <span class="busca-resultado-telefone">${telefone}</span>
+                        <span class="busca-resultado-status"><span class="status-badge status-${statusClasse}">${status}</span></span>
+                        <span class="busca-resultado-valor">${valorRestituicao}</span>
+                        <span class="busca-resultado-data">${dataCalculo}</span>
+                        <span class="busca-resultado-data">${dataInclusao}</span>
+                        <span class="busca-resultado-acoes">
+                            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); verCliente('${cliente.id}')" title="Ver detalhes">👁️</button>
+                            <button class="btn btn-sm btn-warning" onclick="event.stopPropagation(); editarCliente('${cliente.id}')" title="Editar">✏️</button>
+                            <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); abrirKitIR('${cliente.id}')" title="Kit IR">📦</button>
+                        </span>
                     </div>
                 `;
-            }).join('');
+            });
             
-            autocompleteDropdown.classList.add('show');
+            buscaResultados.innerHTML = html;
+            buscaResultados.classList.add('show');
         });
         
         // Fechar dropdown ao clicar fora
         document.addEventListener('click', function(e) {
-            if (!buscaInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
-                autocompleteDropdown.classList.remove('show');
+            const container = document.querySelector('.busca-clientes-container');
+            if (container && !container.contains(e.target)) {
+                buscaResultados.classList.remove('show');
             }
         });
         
         // Navegação por teclado
         buscaInput.addEventListener('keydown', function(e) {
-            const items = autocompleteDropdown.querySelectorAll('.autocomplete-item');
-            const selected = autocompleteDropdown.querySelector('.autocomplete-item.selected');
+            const items = buscaResultados.querySelectorAll('.busca-resultado-item');
+            const selected = buscaResultados.querySelector('.busca-resultado-item.selected');
             
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (!selected && items.length > 0) {
                     items[0].classList.add('selected');
-                } else if (selected && selected.nextElementSibling) {
+                    items[0].scrollIntoView({ block: 'nearest' });
+                } else if (selected && selected.nextElementSibling && selected.nextElementSibling.classList.contains('busca-resultado-item')) {
                     selected.classList.remove('selected');
                     selected.nextElementSibling.classList.add('selected');
+                    selected.nextElementSibling.scrollIntoView({ block: 'nearest' });
                 }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                if (selected && selected.previousElementSibling) {
+                if (selected && selected.previousElementSibling && selected.previousElementSibling.classList.contains('busca-resultado-item')) {
                     selected.classList.remove('selected');
                     selected.previousElementSibling.classList.add('selected');
+                    selected.previousElementSibling.scrollIntoView({ block: 'nearest' });
                 }
             } else if (e.key === 'Enter') {
                 e.preventDefault();
@@ -665,7 +719,7 @@ function configurarFiltros() {
                     selected.click();
                 }
             } else if (e.key === 'Escape') {
-                autocompleteDropdown.classList.remove('show');
+                buscaResultados.classList.remove('show');
                 buscaInput.blur();
             }
         });
@@ -681,20 +735,45 @@ function configurarFiltros() {
     }
 }
 
-// Selecionar cliente do autocomplete
-function selecionarClienteAutocomplete(clienteId) {
+// Selecionar cliente da busca
+function selecionarClienteBusca(clienteId) {
     const buscaInput = document.getElementById('buscaCliente');
-    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const buscaResultados = document.getElementById('buscaResultados');
+    const btnLimpar = document.getElementById('btnLimparBusca');
     const cliente = CLIENTES.find(c => c.id === clienteId);
     
     if (cliente) {
         buscaInput.value = cliente.nome;
-        autocompleteDropdown.classList.remove('show');
+        buscaResultados.classList.remove('show');
         
         // Fixar o cliente selecionado
         fixarCliente(clienteId);
     }
 }
+
+// Limpar busca
+function limparBusca() {
+    const buscaInput = document.getElementById('buscaCliente');
+    const buscaResultados = document.getElementById('buscaResultados');
+    const btnLimpar = document.getElementById('btnLimparBusca');
+    
+    if (buscaInput) buscaInput.value = '';
+    if (buscaResultados) buscaResultados.classList.remove('show');
+    if (btnLimpar) btnLimpar.style.display = 'none';
+    
+    // Voltar para os últimos 6
+    clienteFixado = null;
+    mostrandoTodos = false;
+    carregarClientes();
+}
+
+// Abrir Kit IR para o cliente
+function abrirKitIR(clienteId) {
+    // Redirecionar para a página do Kit IR com o cliente selecionado
+    window.location.href = `kit-ir.html?cliente=${clienteId}`;
+}
+
+
 
 // Fixar cliente na visualização
 function fixarCliente(clienteId) {
@@ -1639,7 +1718,9 @@ window.toggleSenha = toggleSenha;
 window.adicionarTelefone = adicionarTelefone;
 window.removerTelefone = removerTelefone;
 window.toggleNomeResponsavel = toggleNomeResponsavel;
-window.selecionarClienteAutocomplete = selecionarClienteAutocomplete;
+window.selecionarClienteBusca = selecionarClienteBusca;
+window.limparBusca = limparBusca;
+window.abrirKitIR = abrirKitIR;
 window.fixarCliente = fixarCliente;
 window.mostrarTodosClientes = mostrarTodosClientes;
 

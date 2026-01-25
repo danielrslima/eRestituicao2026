@@ -148,6 +148,8 @@
 - [x] **Validação de CNPJ** - Máscara automática e verificação de dígitos (NOVO)
 - [x] **Busca de CEP** - Preenchimento automático de endereço via ViaCEP (NOVO)
 - [x] **Campos obrigatórios** - CEP, Número, Complemento, Bairro (NOVO)
+- [x] **Busca inline** - Barra de busca movida para baixo dos cabeçalhos (NOVO)
+- [x] **Alinhamento de campos** - Profissão e Indicado por alinhados (NOVO)
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status

@@ -2,6 +2,168 @@
    CLIENTES - CSS
    ======================================== */
 
+/* ========================================
+   BARRA DE BUSCA GRANDE
+   ======================================== */
+
+.busca-clientes-container {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.busca-clientes-wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 3px solid #1a7f37;
+    border-radius: 12px;
+    padding: 0 20px;
+    box-shadow: 0 4px 15px rgba(26, 127, 55, 0.15);
+    transition: all 0.3s ease;
+}
+
+.busca-clientes-wrapper:focus-within {
+    border-color: #15692d;
+    box-shadow: 0 6px 20px rgba(26, 127, 55, 0.25);
+}
+
+.busca-icon {
+    font-size: 24px;
+    margin-right: 15px;
+    color: #1a7f37;
+}
+
+.busca-clientes-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    padding: 18px 0;
+    background: transparent;
+    color: #333;
+}
+
+.busca-clientes-input::placeholder {
+    color: #999;
+}
+
+.btn-limpar-busca {
+    background: #e0e0e0;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-limpar-busca:hover {
+    background: #ff5252;
+    color: white;
+}
+
+/* Resultados da busca - Tabela completa */
+.busca-resultados {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #1a7f37;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.busca-resultados.show {
+    display: block;
+}
+
+.busca-resultado-item {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 2fr 1.2fr 1fr 1.2fr 1fr 1fr auto;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    align-items: center;
+}
+
+.busca-resultado-item:hover {
+    background: #e8f5e9;
+}
+
+.busca-resultado-item:last-child {
+    border-bottom: none;
+}
+
+.busca-resultado-nome {
+    font-weight: 700;
+    color: #1a7f37;
+    font-size: 15px;
+}
+
+.busca-resultado-cpf,
+.busca-resultado-email,
+.busca-resultado-telefone,
+.busca-resultado-data {
+    font-size: 13px;
+    color: #555;
+}
+
+.busca-resultado-valor {
+    font-weight: 600;
+    color: #1a7f37;
+    font-size: 14px;
+}
+
+.busca-resultado-status {
+    font-size: 12px;
+}
+
+.busca-resultado-acoes {
+    display: flex;
+    gap: 5px;
+}
+
+.busca-resultado-acoes .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+/* Mensagem sem resultados */
+.busca-sem-resultados {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Cabeçalho dos resultados */
+.busca-resultado-header {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 2fr 1.2fr 1fr 1.2fr 1fr 1fr auto;
+    gap: 10px;
+    padding: 12px 20px;
+    background: #1a7f37;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+}
+
 /* Filtros */
 .filtros {
     display: flex;
