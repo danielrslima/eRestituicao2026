@@ -204,9 +204,15 @@ function configurarInterface() {
     }
 }
 
+// Variáveis de controle de visualização
+let clienteFixado = null;
+let mostrandoTodos = false;
+
 // Carregar clientes na tabela
 function carregarClientes() {
     const tbody = document.getElementById('tabelaClientes');
+    const infoVisualizacao = document.getElementById('infoVisualizacao');
+    const btnVerTodos = document.getElementById('btnVerTodos');
     
     // Filtrar clientes baseado no nível de acesso
     let clientes = CLIENTES;
@@ -216,17 +222,8 @@ function carregarClientes() {
         clientes = clientes.filter(c => c.parceiroId === usuario.id);
     }
     
-    // Aplicar filtros de busca
-    const busca = document.getElementById('buscaCliente')?.value.toLowerCase() || '';
+    // Aplicar filtro de status
     const filtroStatus = document.getElementById('filtroStatus')?.value || '';
-    
-    if (busca) {
-        clientes = clientes.filter(c => 
-            c.nome.toLowerCase().includes(busca) || 
-            c.cpf.includes(busca) ||
-            c.id.toLowerCase().includes(busca)
-        );
-    }
     
     if (filtroStatus) {
         clientes = clientes.filter(c => {
@@ -235,8 +232,35 @@ function carregarClientes() {
         });
     }
     
-    // Ordenar alfabeticamente por nome
-    clientes.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    // Se tem cliente fixado, mostrar apenas ele
+    if (clienteFixado) {
+        clientes = clientes.filter(c => c.id === clienteFixado);
+        if (infoVisualizacao) {
+            infoVisualizacao.innerHTML = `<span class="badge-info">📌 Cliente <strong>fixado</strong> - Clique em "Ver Todos" para voltar</span>`;
+        }
+        if (btnVerTodos) btnVerTodos.style.display = 'inline-flex';
+    } else if (!mostrandoTodos) {
+        // Ordenar por data de inclusão (mais recentes primeiro) e pegar os 6 últimos
+        clientes.sort((a, b) => {
+            const dataA = new Date(a.dataInclusao || '2000-01-01');
+            const dataB = new Date(b.dataInclusao || '2000-01-01');
+            return dataB - dataA;
+        });
+        clientes = clientes.slice(0, 6);
+        
+        if (infoVisualizacao) {
+            infoVisualizacao.innerHTML = `<span class="badge-info">📊 Mostrando os <strong>6 últimos clientes</strong> cadastrados</span>`;
+        }
+        if (btnVerTodos) btnVerTodos.style.display = 'none';
+    } else {
+        // Ordenar alfabeticamente por nome quando mostrar todos
+        clientes.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+        
+        if (infoVisualizacao) {
+            infoVisualizacao.innerHTML = `<span class="badge-info">📊 Mostrando <strong>todos os ${clientes.length} clientes</strong> em ordem alfabética</span>`;
+        }
+        if (btnVerTodos) btnVerTodos.style.display = 'inline-flex';
+    }
     
     if (clientes.length === 0) {
         tbody.innerHTML = `
@@ -271,11 +295,14 @@ function carregarClientes() {
             ? cliente.telefones[0].numero 
             : (cliente.telefone || '-');
         
+        // Verificar se é o cliente fixado
+        const isFixado = clienteFixado === cliente.id;
+        
         return `
-            <tr>
+            <tr class="${isFixado ? 'cliente-fixado' : ''}">
                 <td>
                     <div>
-                        <strong>${cliente.nome}</strong>
+                        <span class="cliente-nome-destaque" onclick="fixarCliente('${cliente.id}')" title="Clique para fixar este cliente">${cliente.nome}</span>
                         <div><span class="cliente-id">${cliente.id}</span></div>
                         ${casoId !== '-' ? `<div><span class="caso-id">${casoId}</span></div>` : ''}
                     </div>
@@ -556,14 +583,140 @@ function configurarMascaras() {
 function configurarFiltros() {
     const buscaInput = document.getElementById('buscaCliente');
     const filtroSelect = document.getElementById('filtroStatus');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
     
-    if (buscaInput) {
-        buscaInput.addEventListener('input', debounce(carregarClientes, 300));
+    if (buscaInput && autocompleteDropdown) {
+        // Autocomplete ao digitar
+        buscaInput.addEventListener('input', function() {
+            const termo = this.value.toLowerCase().trim();
+            
+            if (termo.length < 2) {
+                autocompleteDropdown.classList.remove('show');
+                return;
+            }
+            
+            // Filtrar clientes que correspondem ao termo
+            let clientesFiltrados = CLIENTES.filter(c => 
+                c.nome.toLowerCase().includes(termo) || 
+                c.cpf.includes(termo)
+            );
+            
+            // Ordenar alfabeticamente
+            clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+            
+            // Limitar a 10 resultados
+            clientesFiltrados = clientesFiltrados.slice(0, 10);
+            
+            if (clientesFiltrados.length === 0) {
+                autocompleteDropdown.innerHTML = '<div class="autocomplete-item" style="color: #999;">Nenhum cliente encontrado</div>';
+                autocompleteDropdown.classList.add('show');
+                return;
+            }
+            
+            // Gerar HTML do dropdown
+            autocompleteDropdown.innerHTML = clientesFiltrados.map(cliente => {
+                const status = cliente.casos.length > 0 
+                    ? STATUS_LABELS[cliente.casos[cliente.casos.length - 1].status]?.texto || '🆕 Novo'
+                    : '🆕 Novo';
+                
+                return `
+                    <div class="autocomplete-item" onclick="selecionarClienteAutocomplete('${cliente.id}')">
+                        <div>
+                            <div class="autocomplete-nome">${cliente.nome}</div>
+                            <div class="autocomplete-cpf">${cliente.cpf}</div>
+                        </div>
+                        <span class="autocomplete-status">${status}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            autocompleteDropdown.classList.add('show');
+        });
+        
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!buscaInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+                autocompleteDropdown.classList.remove('show');
+            }
+        });
+        
+        // Navegação por teclado
+        buscaInput.addEventListener('keydown', function(e) {
+            const items = autocompleteDropdown.querySelectorAll('.autocomplete-item');
+            const selected = autocompleteDropdown.querySelector('.autocomplete-item.selected');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!selected && items.length > 0) {
+                    items[0].classList.add('selected');
+                } else if (selected && selected.nextElementSibling) {
+                    selected.classList.remove('selected');
+                    selected.nextElementSibling.classList.add('selected');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (selected && selected.previousElementSibling) {
+                    selected.classList.remove('selected');
+                    selected.previousElementSibling.classList.add('selected');
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selected) {
+                    selected.click();
+                }
+            } else if (e.key === 'Escape') {
+                autocompleteDropdown.classList.remove('show');
+                buscaInput.blur();
+            }
+        });
     }
     
     if (filtroSelect) {
-        filtroSelect.addEventListener('change', carregarClientes);
+        filtroSelect.addEventListener('change', function() {
+            // Ao mudar filtro de status, limpar fixação
+            clienteFixado = null;
+            mostrandoTodos = true;
+            carregarClientes();
+        });
     }
+}
+
+// Selecionar cliente do autocomplete
+function selecionarClienteAutocomplete(clienteId) {
+    const buscaInput = document.getElementById('buscaCliente');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const cliente = CLIENTES.find(c => c.id === clienteId);
+    
+    if (cliente) {
+        buscaInput.value = cliente.nome;
+        autocompleteDropdown.classList.remove('show');
+        
+        // Fixar o cliente selecionado
+        fixarCliente(clienteId);
+    }
+}
+
+// Fixar cliente na visualização
+function fixarCliente(clienteId) {
+    clienteFixado = clienteId;
+    mostrandoTodos = false;
+    carregarClientes();
+    
+    // Scroll para a tabela
+    const tabela = document.querySelector('.table-container');
+    if (tabela) {
+        tabela.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Mostrar todos os clientes
+function mostrarTodosClientes() {
+    const buscaInput = document.getElementById('buscaCliente');
+    if (buscaInput) buscaInput.value = '';
+    
+    clienteFixado = null;
+    mostrandoTodos = !mostrandoTodos; // Toggle entre todos e últimos 6
+    carregarClientes();
 }
 
 // ========================================
@@ -1486,6 +1639,9 @@ window.toggleSenha = toggleSenha;
 window.adicionarTelefone = adicionarTelefone;
 window.removerTelefone = removerTelefone;
 window.toggleNomeResponsavel = toggleNomeResponsavel;
+window.selecionarClienteAutocomplete = selecionarClienteAutocomplete;
+window.fixarCliente = fixarCliente;
+window.mostrarTodosClientes = mostrarTodosClientes;
 
 
 // ========================================

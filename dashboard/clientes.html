@@ -103,7 +103,10 @@
             <div class="section-header">
                 <h2>Lista de Clientes</h2>
                 <div class="filtros">
-                    <input type="text" placeholder="🔍 Buscar por nome ou CPF..." class="input-busca" id="buscaCliente">
+                    <div class="busca-container" style="position: relative;">
+                        <input type="text" placeholder="🔍 Buscar cliente por nome..." class="input-busca" id="buscaCliente" autocomplete="off">
+                        <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+                    </div>
                     <select class="select-filtro" id="filtroStatus">
                         <option value="">Todos os status</option>
                         <option value="novo">🆕 Novo</option>
@@ -112,22 +115,30 @@
                         <option value="analise">⏳ Em Análise</option>
                         <option value="concluido">✅ Concluído</option>
                     </select>
+                    <button class="btn btn-outline btn-sm" id="btnVerTodos" onclick="mostrarTodosClientes()" style="display: none;">
+                        🔄 Ver Todos
+                    </button>
                 </div>
+            </div>
+            
+            <!-- Info de visualização -->
+            <div class="info-visualizacao" id="infoVisualizacao">
+                <span class="badge-info">📊 Mostrando os <strong>6 últimos clientes</strong> cadastrados</span>
             </div>
             
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>E-mail</th>
-                            <th>Telefone</th>
-                            <th>Status</th>
-                            <th>Valor Restituição</th>
-                            <th>Data Cálculo</th>
-                            <th>Data Inclusão</th>
-                            <th>Ações</th>
+                            <th class="th-destaque"><span class="th-icon">👤</span> NOME</th>
+                            <th class="th-destaque"><span class="th-icon">🆔</span> CPF</th>
+                            <th class="th-destaque"><span class="th-icon">📧</span> E-MAIL</th>
+                            <th class="th-destaque"><span class="th-icon">📞</span> TELEFONE</th>
+                            <th class="th-destaque"><span class="th-icon">📊</span> STATUS</th>
+                            <th class="th-destaque"><span class="th-icon">💰</span> VALOR RESTITUIÇÃO</th>
+                            <th class="th-destaque"><span class="th-icon">📅</span> DATA CÁLCULO</th>
+                            <th class="th-destaque"><span class="th-icon">🗓️</span> DATA INCLUSÃO</th>
+                            <th class="th-destaque"><span class="th-icon">⚙️</span> AÇÕES</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaClientes">

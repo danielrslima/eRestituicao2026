@@ -733,3 +733,222 @@ h4 {
     border-color: #1a7f37;
     box-shadow: 0 0 0 3px rgba(26, 127, 55, 0.1);
 }
+
+
+/* ========================================
+   BUSCA COM AUTOCOMPLETE
+   ======================================== */
+
+.busca-container {
+    position: relative;
+    width: 350px;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background: #e8f5e9;
+}
+
+.autocomplete-item.selected {
+    background: var(--primary);
+    color: white;
+}
+
+.autocomplete-nome {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.autocomplete-item:hover .autocomplete-nome,
+.autocomplete-item.selected .autocomplete-nome {
+    color: inherit;
+}
+
+.autocomplete-cpf {
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+.autocomplete-item:hover .autocomplete-cpf,
+.autocomplete-item.selected .autocomplete-cpf {
+    color: inherit;
+    opacity: 0.8;
+}
+
+.autocomplete-status {
+    margin-left: auto;
+    font-size: 11px;
+}
+
+/* ========================================
+   INFO DE VISUALIZAÇÃO
+   ======================================== */
+
+.info-visualizacao {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+.badge-info {
+    font-size: 14px;
+    color: var(--primary-dark);
+}
+
+.badge-info strong {
+    color: var(--primary);
+}
+
+/* ========================================
+   CABEÇALHOS DA TABELA COM DESTAQUE
+   ======================================== */
+
+.th-destaque {
+    background: linear-gradient(135deg, #1a7f37 0%, #2e8b57 100%) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 14px 12px !important;
+    white-space: nowrap;
+}
+
+.th-icon {
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* ========================================
+   NOMES DOS CLIENTES DESTACADOS
+   ======================================== */
+
+.cliente-nome-destaque {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a5d2a;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.cliente-nome-destaque:hover {
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ========================================
+   LINHA FIXADA (CLIENTE SELECIONADO)
+   ======================================== */
+
+tr.cliente-fixado {
+    background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%) !important;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+    position: relative;
+}
+
+tr.cliente-fixado td {
+    border-top: 2px solid #ffc107 !important;
+    border-bottom: 2px solid #ffc107 !important;
+}
+
+tr.cliente-fixado td:first-child {
+    border-left: 3px solid #ffc107 !important;
+}
+
+tr.cliente-fixado::before {
+    content: '📌';
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+}
+
+/* ========================================
+   BOTÃO VER TODOS
+   ======================================== */
+
+#btnVerTodos {
+    background: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+    font-weight: 600;
+}
+
+#btnVerTodos:hover {
+    background: #ffc107;
+    color: #212529;
+}
+
+/* ========================================
+   ANIMAÇÕES
+   ======================================== */
+
+@keyframes highlightRow {
+    0% { background: #fff9c4; }
+    50% { background: #ffeb3b; }
+    100% { background: #fff9c4; }
+}
+
+tr.highlight-new {
+    animation: highlightRow 1s ease;
+}
+
+/* ========================================
+   RESPONSIVO
+   ======================================== */
+
+@media (max-width: 768px) {
+    .busca-container {
+        width: 100%;
+    }
+    
+    .filtros {
+        flex-wrap: wrap;
+    }
+    
+    .th-destaque {
+        font-size: 10px !important;
+        padding: 10px 8px !important;
+    }
+    
+    .th-icon {
+        display: none;
+    }
+}
