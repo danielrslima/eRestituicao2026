@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculos - e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/calculos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item" data-permissao="visualizarTodosClientes,visualizarSeusClientes">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item" data-permissao="crmVerTodos">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navOperacoes">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="calculos.html" class="nav-item active" data-permissao="realizarCalculos">
+                        <span class="nav-item-icon">🧮</span>
+                        Cálculos
+                    </a>
+                    <a href="kit-ir.html" class="nav-item" data-permissao="gerarKitIR">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item" data-permissao="verPagamentos">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navParceiro">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item" data-permissao="verComissoes">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navFinanceiro">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item" data-permissao="controleFinanceiro">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item" data-permissao="verRelatorios">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navAdmin">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item" data-permissao="gerenciarUsuarios">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item" data-permissao="alterarConfiguracoes">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">🧮 Cálculos de Restituição</h1>
+                
+                <div class="header-actions">
+                    <div class="user-menu" id="userMenu">
+                        <div class="user-avatar" id="userAvatar">AD</div>
+                        <div class="user-info">
+                            <div class="user-name" id="userName">Carregando...</div>
+                            <div class="user-role" id="userRole">-</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <!-- Seleção de Cliente -->
+                <div class="card card-selecao">
+                    <div class="card-header">
+                        <h2>1️⃣ Selecionar Cliente</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="busca-cliente">
+                            <input type="text" id="buscaCliente" placeholder="🔍 Buscar por nome ou CPF..." class="input-busca">
+                            <div id="resultadosBusca" class="resultados-busca"></div>
+                        </div>
+                        
+                        <div id="clienteSelecionado" class="cliente-selecionado" style="display: none;">
+                            <div class="cliente-info">
+                                <div class="cliente-avatar" id="clienteAvatar">JR</div>
+                                <div class="cliente-dados">
+                                    <h3 id="clienteNome">-</h3>
+                                    <p><strong>CPF:</strong> <span id="clienteCPF">-</span></p>
+                                    <p><strong>Data Nasc.:</strong> <span id="clienteNascimento">-</span></p>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="limparCliente()">✕ Trocar Cliente</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dados do Processo -->
+                <div class="card card-processo" id="cardProcesso" style="display: none;">
+                    <div class="card-header">
+                        <h2>2️⃣ Dados do Processo</h2>
+                        <span class="badge badge-info" id="statusDados">Carregado do cadastro</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Dados do Processo -->
+                        <div class="secao">
+                            <h4>📋 Informações do Processo</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Número do Processo</label>
+                                    <input type="text" id="numeroProcesso" placeholder="0000000-00.0000.0.00.0000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Vara</label>
+                                    <input type="text" id="vara" placeholder="Ex: 1ª Vara do Trabalho">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Comarca</label>
+                                    <input type="text" id="comarca" placeholder="Ex: São Paulo/SP">
+                                </div>
+                                <div class="form-group">
+                                    <label>CNPJ da Reclamada</label>
+                                    <input type="text" id="cnpjReclamada" placeholder="00.000.000/0000-00" maxlength="18">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Nome da Reclamada (Fonte Pagadora)</label>
+                                    <input type="text" id="nomeReclamada" placeholder="Nome da empresa reclamada">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Valores Homologados -->
+                        <div class="secao">
+                            <h4>💰 Valores Homologados</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Valor Bruto Homologado *</label>
+                                    <input type="text" id="valorBruto" placeholder="R$ 0,00" class="input-moeda">
+                                </div>
+                                <div class="form-group">
+                                    <label>Valor Tributável *</label>
+                                    <input type="text" id="valorTributavel" placeholder="R$ 0,00" class="input-moeda">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Número de Meses *</label>
+                                    <input type="number" id="numeroMeses" placeholder="Ex: 24" min="1" max="480">
+                                    <small>Quantidade de meses de acumulação dos rendimentos</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Valor de INSS Reclamante</label>
+                                    <input type="text" id="valorINSS" placeholder="R$ 0,00" class="input-moeda">
+                                    <small>Opcional - se houver</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alvarás -->
+                        <div class="secao">
+                            <h4>📄 Alvarás</h4>
+                            <p class="info-text">Informe os alvarás de levantamento (valor e data de cada um)</p>
+                            <div id="containerAlvaras">
+                                <!-- Alvarás dinâmicos -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarAlvara()">
+                                ➕ Adicionar Alvará
+                            </button>
+                        </div>
+
+                        <!-- DARFs -->
+                        <div class="secao">
+                            <h4>📋 DARFs (Imposto Retido)</h4>
+                            <p class="info-text">Informe os DARFs pagos (valor e data de cada um)</p>
+                            <div id="containerDarfs">
+                                <!-- DARFs dinâmicos -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarDarf()">
+                                ➕ Adicionar DARF
+                            </button>
+                        </div>
+
+                        <!-- Honorários -->
+                        <div class="secao">
+                            <h4>⚖️ Honorários Advocatícios</h4>
+                            <p class="info-text">Informe os honorários pagos (valor e ano de pagamento)</p>
+                            <div id="containerHonorarios">
+                                <!-- Honorários dinâmicos -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarHonorario()">
+                                ➕ Adicionar Honorário
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botão Calcular -->
+                <div class="card card-acoes" id="cardAcoes" style="display: none;">
+                    <div class="card-body acoes-container">
+                        <button class="btn btn-primary btn-lg" id="btnCalcular" onclick="executarCalculo()">
+                            🧮 Executar Cálculo
+                        </button>
+                        <button class="btn btn-outline" onclick="limparFormulario()">
+                            🗑️ Limpar Dados
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Resultado do Cálculo -->
+                <div class="card card-resultado" id="cardResultado" style="display: none;">
+                    <div class="card-header">
+                        <h2>3️⃣ Resultado do Cálculo</h2>
+                        <span class="badge badge-success">✅ Calculado</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Valor Principal -->
+                        <div class="resultado-principal">
+                            <div class="resultado-label">Valor a Restituir</div>
+                            <div class="resultado-valor" id="valorRestituir">R$ 0,00</div>
+                            <div class="resultado-info" id="infoRestituicao">-</div>
+                        </div>
+
+                        <!-- Detalhamento -->
+                        <div class="resultado-detalhes">
+                            <h4>📊 Detalhamento do Cálculo</h4>
+                            <table class="tabela-resultado">
+                                <tbody>
+                                    <tr>
+                                        <td>Total de Rendimentos do Autor</td>
+                                        <td class="valor" id="resItem1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total de DARF Paga</td>
+                                        <td class="valor" id="resItem2">-</td>
+                                    </tr>
+                                    <tr class="destaque">
+                                        <td>Total da Causa</td>
+                                        <td class="valor" id="resItem3">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rendimentos Bruto (deflacionado)</td>
+                                        <td class="valor" id="resItem4">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>RT Calculados</td>
+                                        <td class="valor" id="resItem5">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Proporção RT</td>
+                                        <td class="valor" id="resItem6">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rendimentos Isentos</td>
+                                        <td class="valor" id="resItem7">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>RT Normal</td>
+                                        <td class="valor" id="resItem8">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Despesas Totais</td>
+                                        <td class="valor" id="resItem9">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Proporção Despesas</td>
+                                        <td class="valor" id="resItem10">-</td>
+                                    </tr>
+                                    <tr class="destaque">
+                                        <td>Rendimentos Tributáveis (Final)</td>
+                                        <td class="valor" id="resItem13">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>INSS Reclamante</td>
+                                        <td class="valor" id="resItem14">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IRRF Retido</td>
+                                        <td class="valor" id="resItem15">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Ações do Resultado -->
+                        <div class="resultado-acoes">
+                            <button class="btn btn-success" onclick="salvarCalculo()">
+                                💾 Salvar no Cadastro
+                            </button>
+                            <button class="btn btn-primary" onclick="gerarPDFs()">
+                                📄 Gerar PDFs (Esclarecimentos + Planilha RT)
+                            </button>
+                            <button class="btn btn-outline" onclick="novoCalculo()">
+                                🔄 Novo Cálculo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Cálculos -->
+                <div class="card card-historico">
+                    <div class="card-header">
+                        <h2>📜 Histórico de Cálculos Recentes</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="tabela-historico">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Processo</th>
+                                    <th>Valor Restituição</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaHistorico">
+                                <!-- Histórico dinâmico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/calculos.js"></script>
+</body>
+</html>

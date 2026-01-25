@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/financeiro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="kit-ir.html" class="nav-item">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item active">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Controle Financeiro</h1>
+                <div class="header-actions">
+                    <span class="badge admin-badge">ADMIN</span>
+                </div>
+            </header>
+
+            <!-- Período Seletor -->
+            <div class="periodo-selector">
+                <label>Período:</label>
+                <select id="periodoMes">
+                    <option value="01">Janeiro</option>
+                    <option value="02">Fevereiro</option>
+                    <option value="03">Março</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Maio</option>
+                    <option value="06">Junho</option>
+                    <option value="07">Julho</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+                <select id="periodoAno">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                </select>
+                <button class="btn btn-primary" onclick="filtrarPeriodo()">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+            </div>
+
+            <!-- Cards Resumo -->
+            <div class="cards-financeiro">
+                <div class="card-fin receitas">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Receitas</h3>
+                        <p class="valor" id="totalReceitas">R$ 0,00</p>
+                        <span class="variacao positiva">+12% vs mês anterior</span>
+                    </div>
+                </div>
+                
+                <div class="card-fin despesas">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Despesas</h3>
+                        <p class="valor" id="totalDespesas">R$ 0,00</p>
+                        <span class="variacao negativa">+5% vs mês anterior</span>
+                    </div>
+                </div>
+                
+                <div class="card-fin saldo">
+                    <div class="card-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Saldo</h3>
+                        <p class="valor" id="saldoMes">R$ 0,00</p>
+                        <span class="variacao positiva">Lucro do mês</span>
+                    </div>
+                </div>
+                
+                <div class="card-fin comissoes">
+                    <div class="card-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Comissões a Pagar</h3>
+                        <p class="valor" id="totalComissoes">R$ 0,00</p>
+                        <span class="variacao">Parceiros ativos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abas -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="receitas">
+                        <i class="fas fa-arrow-up"></i> Receitas
+                    </button>
+                    <button class="tab" data-tab="despesas">
+                        <i class="fas fa-arrow-down"></i> Despesas
+                    </button>
+                    <button class="tab" data-tab="relatorios">
+                        <i class="fas fa-chart-bar"></i> Relatórios
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Receitas -->
+            <div class="tab-content active" id="tab-receitas">
+                <div class="section-header">
+                    <h2>Receitas do Período</h2>
+                    <button class="btn btn-success" onclick="abrirModalReceita()">
+                        <i class="fas fa-plus"></i> Nova Receita
+                    </button>
+                </div>
+                
+                <div class="filtros-receitas">
+                    <select id="filtroTipoReceita">
+                        <option value="">Todos os tipos</option>
+                        <option value="kit_ir">Kit IR (R$ 10,00)</option>
+                        <option value="ver_valor">Ver Valor (R$ 5,99)</option>
+                        <option value="contrato">Contrato (% restituição)</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <input type="text" id="buscaReceita" placeholder="Buscar por cliente...">
+                </div>
+                
+                <table class="tabela-financeiro">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaReceitas">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+                
+                <div class="totalizador">
+                    <span>Total de Receitas:</span>
+                    <strong id="totalReceitasTabela">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <!-- Tab Despesas -->
+            <div class="tab-content" id="tab-despesas">
+                <div class="section-header">
+                    <h2>Despesas do Período</h2>
+                    <button class="btn btn-danger" onclick="abrirModalDespesa()">
+                        <i class="fas fa-plus"></i> Nova Despesa
+                    </button>
+                </div>
+                
+                <div class="filtros-despesas">
+                    <select id="filtroCategoriaDespesa">
+                        <option value="">Todas as categorias</option>
+                        <option value="comissao">Comissão Parceiro</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="operacional">Operacional</option>
+                        <option value="pessoal">Pessoal</option>
+                        <option value="impostos">Impostos</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <input type="text" id="buscaDespesa" placeholder="Buscar despesa...">
+                </div>
+                
+                <table class="tabela-financeiro">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Categoria</th>
+                            <th>Descrição</th>
+                            <th>Fornecedor/Parceiro</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaDespesas">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+                
+                <div class="totalizador despesa">
+                    <span>Total de Despesas:</span>
+                    <strong id="totalDespesasTabela">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <!-- Tab Relatórios -->
+            <div class="tab-content" id="tab-relatorios">
+                <div class="section-header">
+                    <h2>Relatórios Financeiros</h2>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="exportarRelatorio('pdf')">
+                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportarRelatorio('excel')">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relatorios-grid">
+                    <!-- Gráfico de Receitas x Despesas -->
+                    <div class="grafico-container">
+                        <h3>Receitas x Despesas (Últimos 6 meses)</h3>
+                        <canvas id="graficoReceitasDespesas"></canvas>
+                    </div>
+                    
+                    <!-- Gráfico de Receitas por Tipo -->
+                    <div class="grafico-container">
+                        <h3>Receitas por Tipo</h3>
+                        <canvas id="graficoReceitasTipo"></canvas>
+                    </div>
+                    
+                    <!-- Gráfico de Despesas por Categoria -->
+                    <div class="grafico-container">
+                        <h3>Despesas por Categoria</h3>
+                        <canvas id="graficoDespesasCategoria"></canvas>
+                    </div>
+                    
+                    <!-- Resumo Anual -->
+                    <div class="resumo-anual">
+                        <h3>Resumo Anual 2026</h3>
+                        <table class="tabela-resumo">
+                            <thead>
+                                <tr>
+                                    <th>Mês</th>
+                                    <th>Receitas</th>
+                                    <th>Despesas</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaResumoAnual">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><strong>TOTAL</strong></td>
+                                    <td id="totalAnualReceitas"><strong>R$ 0,00</strong></td>
+                                    <td id="totalAnualDespesas"><strong>R$ 0,00</strong></td>
+                                    <td id="totalAnualSaldo"><strong>R$ 0,00</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Único para Receita/Despesa (UX Melhorada) -->
+    <div class="modal-overlay" id="modalFinanceiro" style="display: none;">
+        <div class="modal-financeiro">
+            <div class="modal-header-fin">
+                <div class="modal-tabs">
+                    <button type="button" class="modal-tab active" data-tipo="receita" onclick="trocarTipoModal('receita')">
+                        <i class="fas fa-arrow-up"></i> Receita
+                    </button>
+                    <button type="button" class="modal-tab" data-tipo="despesa" onclick="trocarTipoModal('despesa')">
+                        <i class="fas fa-arrow-down"></i> Despesa
+                    </button>
+                </div>
+                <button class="btn-fechar-modal" onclick="fecharModalFinanceiro()">&times;</button>
+            </div>
+            
+            <div class="modal-body-fin">
+                <!-- Formulário Receita -->
+                <form id="formReceita" class="form-financeiro active" onsubmit="salvarReceita(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data *</label>
+                            <input type="date" id="receitaData" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Tipo *</label>
+                            <select id="receitaTipo" required onchange="atualizarValorReceita()">
+                                <option value="">Selecione o tipo...</option>
+                                <option value="kit_ir" data-valor="10.00">Kit IR (R$ 10,00)</option>
+                                <option value="ver_valor" data-valor="5.99">Ver Valor (R$ 5,99)</option>
+                                <option value="contrato" data-valor="0">Contrato (% restituição)</option>
+                                <option value="outros" data-valor="0">Outros</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Cliente</label>
+                            <select id="receitaCliente">
+                                <option value="">Selecione o cliente...</option>
+                                <!-- Preenchido via JS -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-dollar-sign"></i> Valor *</label>
+                            <input type="text" id="receitaValor" required placeholder="R$ 0,00" class="input-valor">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-check-circle"></i> Status</label>
+                            <select id="receitaStatus">
+                                <option value="confirmado">✅ Confirmado</option>
+                                <option value="pendente">⏳ Pendente</option>
+                                <option value="cancelado">❌ Cancelado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-comment"></i> Descrição</label>
+                            <textarea id="receitaDescricao" rows="3" placeholder="Observações sobre a receita..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions-fin">
+                        <button type="button" class="btn btn-cancel" onclick="fecharModalFinanceiro()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-save-receita">
+                            <i class="fas fa-check"></i> Salvar Receita
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Formulário Despesa -->
+                <form id="formDespesa" class="form-financeiro" onsubmit="salvarDespesa(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data *</label>
+                            <input type="date" id="despesaData" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-folder"></i> Categoria *</label>
+                            <select id="despesaCategoria" required>
+                                <option value="">Selecione a categoria...</option>
+                                <option value="comissao">💰 Comissão Parceiro</option>
+                                <option value="marketing">📢 Marketing</option>
+                                <option value="operacional">🔧 Operacional</option>
+                                <option value="pessoal">👥 Pessoal</option>
+                                <option value="impostos">📋 Impostos</option>
+                                <option value="outros">📦 Outros</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Fornecedor/Parceiro</label>
+                            <input type="text" id="despesaFornecedor" placeholder="Nome do fornecedor ou parceiro">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-dollar-sign"></i> Valor *</label>
+                            <input type="text" id="despesaValor" required placeholder="R$ 0,00" class="input-valor">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-check-circle"></i> Status</label>
+                            <select id="despesaStatus">
+                                <option value="pago">✅ Pago</option>
+                                <option value="pendente">⏳ Pendente</option>
+                                <option value="cancelado">❌ Cancelado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-comment"></i> Descrição *</label>
+                            <textarea id="despesaDescricao" rows="3" required placeholder="Descreva a despesa..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions-fin">
+                        <button type="button" class="btn btn-cancel" onclick="fecharModalFinanceiro()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-save-despesa">
+                            <i class="fas fa-check"></i> Salvar Despesa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/financeiro.js"></script>
+</body>
+</html>

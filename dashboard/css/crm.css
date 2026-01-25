@@ -1,0 +1,451 @@
+/* ========================================
+   CRM - ESTILOS DO KANBAN E GESTÃO
+   ======================================== */
+
+/* Métricas do CRM */
+.crm-metricas {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.metrica-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metrica-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.metrica-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.metrica-icon.novo { background: #e3f2fd; }
+.metrica-icon.calculado { background: #fff3e0; }
+.metrica-icon.pago { background: #e8f5e9; }
+.metrica-icon.contrato { background: #f3e5f5; }
+.metrica-icon.analise { background: #fff8e1; }
+.metrica-icon.concluido { background: #e0f2f1; }
+
+.metrica-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.metrica-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.metrica-label {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+/* Filtros */
+.filtros {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-busca {
+    padding: 8px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    width: 200px;
+}
+
+.select-filtro {
+    padding: 8px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+}
+
+/* Kanban Container */
+.kanban-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    min-height: 500px;
+}
+
+.kanban-coluna {
+    min-width: 280px;
+    max-width: 280px;
+    background: var(--gray-100);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.kanban-header {
+    padding: 12px 15px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: white;
+}
+
+.kanban-header.novo { background: #2196f3; }
+.kanban-header.calculado { background: #ff9800; }
+.kanban-header.pago { background: #4caf50; }
+.kanban-header.contrato { background: #9c27b0; }
+.kanban-header.enviado { background: #00bcd4; }
+.kanban-header.analise { background: #ffc107; color: #333; }
+.kanban-header.concluido { background: #1a7f37; }
+
+.status-icon {
+    font-size: 1.1rem;
+}
+
+.status-nome {
+    flex: 1;
+}
+
+.status-count {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.kanban-cards {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 450px;
+}
+
+/* Cards do Kanban */
+.kanban-card {
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.kanban-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.kanban-card.externo { border-left-color: #2196f3; }
+.kanban-card.interno { border-left-color: #9c27b0; }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.card-nome {
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: 0.95rem;
+}
+
+.card-tipo {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--gray-200);
+    color: var(--gray-600);
+}
+
+.card-tipo.externo { background: #e3f2fd; color: #1976d2; }
+.card-tipo.interno { background: #f3e5f5; color: #7b1fa2; }
+
+.card-cpf {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+}
+
+.card-valor {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-200);
+}
+
+.card-data {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.card-acoes {
+    display: flex;
+    gap: 5px;
+}
+
+.card-acoes button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.btn-ver {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.btn-ver:hover {
+    background: #bbdefb;
+}
+
+.btn-status {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.btn-status:hover {
+    background: #ffe0b2;
+}
+
+.btn-excluir {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.btn-excluir:hover {
+    background: #ffcdd2;
+}
+
+/* Modal Estilos */
+.modal-grande {
+    max-width: 700px;
+}
+
+.cliente-info-modal {
+    background: var(--gray-100);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.cliente-info-modal h3 {
+    margin: 0 0 5px 0;
+    color: var(--gray-900);
+}
+
+.cliente-info-modal p {
+    margin: 0;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+}
+
+.status-atual {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.status-atual label {
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.select-status {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+}
+
+/* Detalhes Grid */
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.detalhes-coluna h4 {
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary);
+    color: var(--gray-900);
+}
+
+.detalhe-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.detalhe-item label {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+}
+
+.detalhe-item span {
+    color: var(--gray-900);
+    font-weight: 500;
+}
+
+.valor-destaque {
+    color: var(--primary) !important;
+    font-size: 1.1rem !important;
+}
+
+/* Timeline Histórico */
+.historico-section {
+    background: var(--gray-50);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.historico-section h4 {
+    margin: 0 0 15px 0;
+    color: var(--gray-900);
+}
+
+.timeline {
+    position: relative;
+    padding-left: 25px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-300);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+.timeline-status {
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 3px;
+}
+
+.timeline-data {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.timeline-obs {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Lista View */
+.lista-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Responsivo */
+@media (max-width: 1200px) {
+    .crm-metricas {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .crm-metricas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filtros {
+        flex-wrap: wrap;
+    }
+    
+    .input-busca {
+        width: 100%;
+    }
+    
+    .kanban-container {
+        flex-direction: column;
+    }
+    
+    .kanban-coluna {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+}

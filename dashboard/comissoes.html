@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comissões - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/comissoes.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item" data-permissao="visualizarTodosClientes,visualizarSeusClientes">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item" data-permissao="crmVerTodos">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                    <a href="calculos.html" class="nav-item" data-permissao="realizarCalculos">
+                        <span class="nav-item-icon">🧮</span>
+                        Cálculos
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navOperacoes">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="kit-ir.html" class="nav-item" data-permissao="gerarKitIR">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item" data-permissao="verPagamentos">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                    <a href="contratos.html" class="nav-item" data-permissao="criarContratos">
+                        <span class="nav-item-icon">📝</span>
+                        Contratos
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navParceiro">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item active" data-permissao="verComissoes">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navFinanceiro">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item" data-permissao="controleFinanceiro">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item" data-permissao="verRelatorios">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navAdmin">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item" data-permissao="gerenciarUsuarios">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item" data-permissao="alterarConfiguracoes">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">💰 Comissões</h1>
+                <p class="header-date" id="dataAtual"></p>
+                
+                <div class="header-actions">
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">P</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Parceiro</span>
+                            <span class="user-role" id="userRole">Parceiro</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <!-- Cards de Resumo -->
+                <div class="stats-grid">
+                    <div class="stat-card stat-card-primary">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalComissoes">R$ 0,00</span>
+                            <span class="stat-label">Total de Comissões</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card-success">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="comissoesPagas">R$ 0,00</span>
+                            <span class="stat-label">Comissões Pagas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card-warning">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="comissoesPendentes">R$ 0,00</span>
+                            <span class="stat-label">Comissões Pendentes</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card-info">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalIndicados">0</span>
+                            <span class="stat-label">Clientes Indicados</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informações do Parceiro -->
+                <div class="card info-parceiro">
+                    <div class="card-header">
+                        <h2>📋 Informações do Parceiro</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Nome</span>
+                                <span class="info-value" id="parceiroNome">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Código do Parceiro</span>
+                                <span class="info-value" id="parceiroCodigo">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Taxa de Comissão</span>
+                                <span class="info-value" id="parceiroTaxa">10%</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Link de Indicação</span>
+                                <div class="link-copy">
+                                    <input type="text" id="linkIndicacao" readonly value="https://erestituicao.com.br/?ref=PARCEIRO123">
+                                    <button class="btn btn-secondary btn-sm" onclick="copiarLink()">📋 Copiar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtros -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>🔍 Filtros</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="filtros-grid">
+                            <div class="filtro-group">
+                                <label>Período</label>
+                                <select id="filtroPeriodo">
+                                    <option value="mes">Este Mês</option>
+                                    <option value="trimestre">Este Trimestre</option>
+                                    <option value="ano" selected>Este Ano</option>
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group">
+                                <label>Status</label>
+                                <select id="filtroStatus">
+                                    <option value="">Todos</option>
+                                    <option value="pago">✅ Pago</option>
+                                    <option value="pendente">⏳ Pendente</option>
+                                    <option value="processando">🔄 Processando</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group">
+                                <label>Buscar Cliente</label>
+                                <input type="text" id="buscaCliente" placeholder="Nome do cliente...">
+                            </div>
+                            <div class="filtro-group filtro-actions">
+                                <button class="btn btn-primary" onclick="aplicarFiltros()">🔍 Filtrar</button>
+                                <button class="btn btn-secondary" onclick="limparFiltros()">🗑️ Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lista de Clientes Indicados -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>👥 Clientes Indicados</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" onclick="exportarComissoes()">📥 Exportar</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="tabelaComissoes">
+                                <thead>
+                                    <tr>
+                                        <th>Data Indicação</th>
+                                        <th>Cliente</th>
+                                        <th>Produto/Serviço</th>
+                                        <th>Valor Pago</th>
+                                        <th>Comissão (10%)</th>
+                                        <th>Status</th>
+                                        <th>Data Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaComissoes">
+                                    <!-- Dados serão carregados via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="total-comissoes">
+                            <span>Total de Comissões do Período:</span>
+                            <span class="total-valor" id="totalPeriodo">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Histórico de Pagamentos -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>💳 Histórico de Pagamentos</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="tabelaPagamentos">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Período Referência</th>
+                                        <th>Valor</th>
+                                        <th>Forma de Pagamento</th>
+                                        <th>Comprovante</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaPagamentos">
+                                    <!-- Dados serão carregados via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/comissoes.js"></script>
+</body>
+</html>

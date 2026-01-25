@@ -1,0 +1,806 @@
+/* ============================================
+   e-Restituição - Estilos da Tela de Resultado
+   Design mais vívido e chamativo
+   ============================================ */
+
+/* Variáveis adicionais */
+:root {
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.3);
+  --shadow-gold-glow: 0 0 30px rgba(245, 158, 11, 0.3);
+}
+
+/* ============================================
+   RESULTADO CARD - BASE
+   ============================================ */
+
+.resultado-card {
+  text-align: center;
+  padding: 40px 30px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   ÍCONE DE CELEBRAÇÃO
+   ============================================ */
+
+.resultado-icon-grande {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease infinite;
+}
+
+.resultado-icon-grande.confetes {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.resultado-icon-grande.confetes span {
+  animation: bounce 1s ease infinite;
+}
+
+.resultado-icon-grande.confetes span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.resultado-icon-grande.confetes span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.resultado-icon-grande.atencao-icon {
+  font-size: 80px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.resultado-icon-grande.atencao-icon span {
+  animation: pulse 1.5s ease infinite;
+}
+
+.resultado-icon-grande.atencao-icon span:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ============================================
+   MENSAGEM PRINCIPAL
+   ============================================ */
+
+.resultado-mensagem-principal {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  line-height: 1.3;
+}
+
+.resultado-mensagem-principal.sucesso {
+  color: #1a7f37;
+}
+
+.resultado-mensagem-principal.atencao {
+  color: #b45309;
+}
+
+/* Mensagem secundária destacada (para resultado negativo) */
+.mensagem-secundaria-destaque {
+  font-size: 24px;
+  font-weight: 600;
+  color: #dc2626;
+  margin-top: -15px;
+  margin-bottom: 30px;
+  animation: pulse 2s ease infinite;
+}
+
+.resultado-mensagem-principal.atencao {
+  color: #b45309;
+}
+
+/* ============================================
+   CARD DESTAQUE (DESCUBRA SEU VALOR / KIT IR / ESPECIALISTA)
+   ============================================ */
+
+.plano-destaque-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+  border: 3px solid #10b981;
+  border-radius: 20px;
+  padding: 35px 30px;
+  margin: 30px auto;
+  max-width: 450px;
+  box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.plano-destaque-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradient-success);
+}
+
+.plano-destaque-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow);
+}
+
+.plano-destaque-card.kit-ir {
+  background: linear-gradient(145deg, #ffffff 0%, #fef3c7 100%);
+  border-color: #f59e0b;
+}
+
+.plano-destaque-card.kit-ir::before {
+  background: var(--gradient-gold);
+}
+
+.plano-destaque-card.kit-ir:hover {
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.plano-destaque-card.especialista {
+  background: linear-gradient(145deg, #ffffff 0%, #dbeafe 100%);
+  border-color: #3b82f6;
+}
+
+.plano-destaque-card.especialista::before {
+  background: var(--gradient-blue);
+}
+
+.plano-destaque-icone {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+.plano-destaque-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a7f37;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.plano-destaque-card.kit-ir .plano-destaque-titulo {
+  color: #b45309;
+}
+
+.plano-destaque-card.especialista .plano-destaque-titulo {
+  color: #1d4ed8;
+  text-transform: none;
+  font-size: 22px;
+}
+
+.plano-destaque-descricao {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.plano-destaque-preco {
+  font-size: 42px;
+  font-weight: 800;
+  color: #1a7f37;
+  margin: 20px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.plano-destaque-card.kit-ir .plano-destaque-preco {
+  color: #b45309;
+}
+
+.badge-teste {
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+/* ============================================
+   BOTÃO DESCOBRIR / AÇÃO PRINCIPAL
+   ============================================ */
+
+.btn-descobrir {
+  display: inline-block;
+  background: var(--gradient-success);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 18px 40px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-descobrir:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+}
+
+.btn-descobrir.btn-kit {
+  background: var(--gradient-gold);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.btn-descobrir.btn-kit:hover {
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+}
+
+.btn-descobrir.btn-especialista {
+  background: var(--gradient-blue);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-descobrir.btn-especialista:hover {
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+}
+
+/* ============================================
+   CARD DO VALOR TOTAL
+   ============================================ */
+
+.valor-total-card {
+  background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #10b981;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 500px;
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
+}
+
+.valor-total-label {
+  display: block;
+  font-size: 18px;
+  color: #4b5563;
+  margin-bottom: 10px;
+}
+
+.valor-total-numero {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.valor-total-numero.positivo {
+  color: #1a7f37;
+}
+
+.valor-total-numero.negativo {
+  color: #dc2626;
+}
+
+/* ============================================
+   DETALHAMENTO POR EXERCÍCIO
+   ============================================ */
+
+.detalhamento-section {
+  margin: 30px 0;
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.detalhamento-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.exercicios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exercicio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+}
+
+.exercicio-ano {
+  font-weight: 500;
+  color: #374151;
+}
+
+.valor-positivo {
+  color: #1a7f37;
+  font-weight: 700;
+}
+
+.valor-negativo {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* ============================================
+   CAIXA DE OBSERVAÇÃO
+   ============================================ */
+
+.observacao-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #6b7280;
+  border-radius: 8px;
+  padding: 25px;
+  margin: 30px auto;
+  max-width: 650px;
+  text-align: left;
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.8;
+}
+
+.observacao-box strong {
+  color: #374151;
+}
+
+.observacao-box.especialista-obs {
+  border-left-color: #3b82f6;
+}
+
+/* ============================================
+   MODAL DE PAGAMENTO
+   ============================================ */
+
+.modal-pagamento {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-pagamento-content {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 450px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-pagamento-content h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+.plano-selecionado {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 5px;
+}
+
+.checkout-valor {
+  font-size: 18px;
+  color: #1a7f37;
+  margin-bottom: 25px;
+}
+
+.checkout-valor strong {
+  font-size: 22px;
+}
+
+/* Métodos de Pagamento */
+.metodos-pagamento {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.btn-metodo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.btn-metodo:hover {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.btn-metodo.ativo {
+  border-color: #10b981;
+  background: #f0fdf4;
+  color: #1a7f37;
+}
+
+.metodo-icone {
+  font-size: 24px;
+}
+
+/* Botão Pagar */
+.btn-pagar {
+  width: 100%;
+  padding: 18px;
+  background: var(--gradient-gold);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.btn-pagar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+}
+
+.btn-pagar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   SEÇÃO CONFIRMAR PAGAMENTO
+   ============================================ */
+
+.confirmar-pagamento-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fef3c7;
+  border-radius: 12px;
+  border: 2px dashed #f59e0b;
+}
+
+.confirmar-pagamento-section p {
+  margin-bottom: 15px;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.btn-confirmar-pagamento {
+  padding: 15px 30px;
+  background: #10b981;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-confirmar-pagamento:hover {
+  background: #059669;
+}
+
+/* ============================================
+   RESPONSIVO
+   ============================================ */
+
+@media (max-width: 768px) {
+  .resultado-card {
+    padding: 30px 20px;
+  }
+  
+  .resultado-icon-grande {
+    font-size: 60px;
+  }
+  
+  .resultado-mensagem-principal {
+    font-size: 22px;
+  }
+  
+  .plano-destaque-card {
+    padding: 25px 20px;
+    margin: 20px 10px;
+  }
+  
+  .plano-destaque-titulo {
+    font-size: 20px;
+  }
+  
+  .plano-destaque-preco {
+    font-size: 32px;
+  }
+  
+  .btn-descobrir {
+    font-size: 16px;
+    padding: 15px 30px;
+  }
+  
+  .valor-total-numero {
+    font-size: 36px;
+  }
+  
+  .modal-pagamento-content {
+    padding: 30px 20px;
+  }
+  
+  .metodos-pagamento {
+    flex-direction: column;
+  }
+}
+
+
+/* ============================================
+   SEÇÃO DE CONFIRMAÇÃO DE PAGAMENTO
+   ============================================ */
+
+.confirmacao-pagamento-section {
+  margin-top: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.confirmacao-card {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+  border: 2px solid #ffc107;
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.confirmacao-icone {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.confirmacao-card h3 {
+  color: #856404;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.confirmacao-card p {
+  color: #856404;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.confirmacao-instrucao {
+  font-weight: 600;
+  margin-top: 20px !important;
+}
+
+.btn-verificar-pagamento {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-verificar-pagamento:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+}
+
+.btn-verificar-pagamento:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.confirmacao-obs {
+  margin-top: 15px;
+  color: #6c757d;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   MENSAGEM KIT IR ENVIADO
+   ============================================ */
+
+.mensagem-kit-enviado {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border: 2px solid #28a745;
+  border-radius: 16px;
+  padding: 25px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.mensagem-kit-enviado .icone-email {
+  font-size: 50px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.mensagem-kit-enviado p {
+  color: #155724;
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.mensagem-kit-enviado .sub-mensagem {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #1e7e34;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== PREÇO COM ABATIMENTO ===== */
+.preco-com-abatimento {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.preco-original-riscado {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.preco-original-riscado .de {
+  font-size: 14px;
+  color: #888;
+}
+
+.preco-original-riscado .valor-riscado {
+  font-size: 18px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.preco-abatimento-info {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: 5px 15px;
+  border-radius: 20px;
+  margin: 5px 0;
+}
+
+.abatimento-texto {
+  font-size: 13px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.preco-final {
+  animation: pulse-preco 1.5s ease-in-out infinite;
+}
+
+.preco-final .por {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+@keyframes pulse-preco {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Aviso de SPAM */
+.aviso-spam {
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  color: #856404;
+  font-size: 14px;
+  text-align: center;
+}
+
+.aviso-spam strong {
+  color: #664d03;
+}

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kit IR - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/kit-ir.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="img/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="kit-ir.html" class="nav-item active">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="btn-menu" onclick="toggleSidebar()">☰</button>
+                    <h1>📦 Kit IR / PDFs</h1>
+                </div>
+                <div class="header-right">
+                    <span class="date" id="currentDate"></span>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- Etapa 1: Selecionar Cliente -->
+                <div class="card" id="etapa1">
+                    <div class="card-header">
+                        <h2>1️⃣ Selecionar Cliente</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="search-box">
+                            <input type="text" id="buscaCliente" class="input-busca-grande" 
+                                   placeholder="🔍 Digite o nome ou CPF do cliente..." 
+                                   oninput="buscarCliente(this.value)">
+                            <div class="search-results" id="searchResults" style="display: none;"></div>
+                        </div>
+                        
+                        <!-- Cliente Selecionado -->
+                        <div id="clienteSelecionado" style="display: none; margin-top: 20px;">
+                            <div class="cliente-card-grande">
+                                <div class="cliente-avatar" id="clienteAvatar">JR</div>
+                                <div class="cliente-info-grande">
+                                    <h3 id="clienteNome">José Ramos da Silva</h3>
+                                    <p id="clienteCpf">CPF: 070.817.318-72</p>
+                                    <p id="clienteProcesso">Processo: 0001234-56.2020.5.02.0001</p>
+                                </div>
+                                <div class="cliente-valor">
+                                    <span class="label">Valor Restituição</span>
+                                    <span class="valor" id="clienteValor">R$ 74.028,67</span>
+                                </div>
+                                <div class="cliente-status">
+                                    <span class="badge badge-success" id="clienteStatus">Concluído</span>
+                                </div>
+                                <button class="btn btn-outline" onclick="limparCliente()">✕ Trocar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 2: Montar Kit IR -->
+                <div class="card" id="etapa2" style="display: none;">
+                    <div class="card-header">
+                        <h2>2️⃣ Montar Kit IR</h2>
+                        <div class="header-actions">
+                            <span class="info-text">Adicione encarte e faça upload dos documentos na ordem desejada</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="kit-ir-container">
+                            <!-- Lista de Seções do Kit -->
+                            <div class="kit-secoes" id="kitSecoes">
+                                <!-- Seções serão adicionadas dinamicamente -->
+                            </div>
+                            
+                            <!-- Botão Adicionar Seção -->
+                            <button class="btn btn-adicionar-secao" onclick="abrirModalEncarte()">
+                                ➕ Adicionar Encarte + Documento
+                            </button>
+                        </div>
+                        
+                        <!-- Resumo do Kit -->
+                        <div class="kit-resumo" id="kitResumo" style="display: none;">
+                            <h3>📊 Resumo do Kit IR</h3>
+                            <div class="resumo-grid">
+                                <div class="resumo-item">
+                                    <span class="label">Seções</span>
+                                    <span id="totalSecoes">0</span>
+                                </div>
+                                <div class="resumo-item">
+                                    <span class="label">Páginas</span>
+                                    <span id="totalPaginas">0</span>
+                                </div>
+                                <div class="resumo-item">
+                                    <span class="label">Tamanho</span>
+                                    <span id="totalTamanho">0 MB</span>
+                                </div>
+                                <div class="resumo-item status">
+                                    <span class="label">Status</span>
+                                    <span id="statusTamanho" class="status-ok">✅ OK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 3: Gerar Kit IR -->
+                <div class="card acoes-finais" id="etapa3" style="display: none;">
+                    <div class="card-header">
+                        <h2>3️⃣ Gerar Kit IR Final</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="opcoes-geracao">
+                            <div class="form-group">
+                                <label>Nome do Arquivo</label>
+                                <input type="text" id="nomeArquivo" class="form-control" 
+                                       value="DocumentosRRAAcaoTrabalhista" 
+                                       placeholder="Nome sem acentos ou caracteres especiais">
+                                <small class="form-text">Sem acentos ou caracteres especiais</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Qualidade</label>
+                                <select id="qualidadePdf" class="form-control">
+                                    <option value="150" selected>150 PPI (Recomendado)</option>
+                                    <option value="100">100 PPI (Menor tamanho)</option>
+                                    <option value="200">200 PPI (Maior qualidade)</option>
+                                </select>
+                            </div>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="dividirPartes" checked>
+                                    Dividir automaticamente em partes de 15MB (se necessário)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="botoes-acao">
+                            <button class="btn btn-outline" onclick="previewKit()">
+                                👁️ Pré-visualizar
+                            </button>
+                            <button class="btn btn-primary btn-lg" onclick="gerarKitIR()">
+                                📦 Gerar Kit IR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Kits Gerados -->
+                <div class="card" id="historicoCard">
+                    <div class="card-header">
+                        <h2>📜 Histórico de Kits Gerados</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="historico-docs">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Cliente</th>
+                                        <th>Arquivo</th>
+                                        <th>Tamanho</th>
+                                        <th>Partes</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historicoBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            Nenhum Kit IR gerado ainda
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Selecionar Encarte -->
+    <div class="modal-overlay" id="modalEncarte">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📑 Selecionar Encarte</h3>
+                <button class="btn-close" onclick="fecharModal('modalEncarte')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Selecionar da Biblioteca -->
+                <div class="form-group">
+                    <label><strong>📚 Selecionar da Biblioteca</strong></label>
+                    <select id="selectEncarte" class="form-control" onchange="selecionarEncarteSelect()">
+                        <option value="">-- Selecione um encarte (ordem alfabética) --</option>
+                    </select>
+                    <small class="text-muted">Busque digitando ou role a lista</small>
+                </div>
+                
+                <div class="ou-divisor">
+                    <span>ou crie um novo</span>
+                </div>
+                
+                <!-- Criar Encarte Personalizado -->
+                <div class="form-group">
+                    <label><strong>✨ Criar Novo Encarte</strong></label>
+                    <input type="text" id="encartePersonalizado" class="form-control" 
+                           placeholder="Digite o título (ex: ACORDO JUDICIAL)"
+                           oninput="limparSelectEncarte()">
+                    <small class="text-muted">O novo encarte será salvo na biblioteca para uso futuro</small>
+                </div>
+                
+                <!-- Preview do encarte selecionado -->
+                <div id="previewEncarte" class="preview-encarte" style="display: none;">
+                    <div class="preview-header">📄 Encarte selecionado:</div>
+                    <div class="preview-nome" id="previewEncarteNome"></div>
+                </div>
+                
+                <button class="btn btn-primary btn-full mt-3" onclick="confirmarEncarte()">
+                    ✅ Confirmar Encarte
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Upload Documento -->
+    <div class="modal-overlay" id="modalUpload">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📤 Upload de Documento</h3>
+                <button class="btn-close" onclick="fecharModal('modalUpload')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Encarte: <strong id="encarteAtualNome">ESCLARECIMENTOS</strong></p>
+                
+                <!-- Opção: Documento Gerado Automaticamente -->
+                <div id="opcaoDocGerado" style="display: none;">
+                    <div class="alert alert-info">
+                        <strong>📄 Documento disponível!</strong><br>
+                        Este documento pode ser gerado automaticamente pelo sistema.
+                    </div>
+                    <button class="btn btn-success btn-full mb-3" onclick="usarDocumentoGerado()">
+                        ✨ Usar Documento Gerado pelo Sistema
+                    </button>
+                    <div class="ou-divisor">
+                        <span>ou faça upload manual</span>
+                    </div>
+                </div>
+                
+                <!-- Área de Upload -->
+                <div class="upload-area" id="uploadArea" 
+                     ondrop="handleDrop(event)" 
+                     ondragover="handleDragOver(event)" 
+                     ondragleave="handleDragLeave(event)">
+                    <div class="upload-icon">📁</div>
+                    <p><strong>Arraste o PDF aqui</strong></p>
+                    <p class="text-muted">ou</p>
+                    <input type="file" id="inputFile" accept=".pdf" style="display: none;" onchange="handleFileSelect(event)">
+                    <button class="btn btn-outline" onclick="document.getElementById('inputFile').click()">
+                        Selecionar Arquivo
+                    </button>
+                </div>
+                
+                <!-- Info do arquivo selecionado -->
+                <div class="upload-info" id="uploadInfo" style="display: none;">
+                    <div class="arquivo-info">
+                        <span class="arquivo-nome" id="arquivoNome">documento.pdf</span>
+                        <span class="arquivo-tamanho" id="arquivoTamanho">2.5 MB</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline" onclick="limparUpload()">✕ Remover</button>
+                </div>
+                
+                <button class="btn btn-primary btn-full mt-3" id="btnConfirmarUpload" onclick="confirmarUpload()" disabled>
+                    ✅ Confirmar e Adicionar ao Kit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Sucesso -->
+    <div class="modal-overlay" id="modalSucesso">
+        <div class="modal modal-pequeno">
+            <div class="modal-body text-center">
+                <div class="sucesso-icon">✅</div>
+                <h3>Kit IR Gerado com Sucesso!</h3>
+                <p id="sucessoMensagem">Arquivo: DocumentosRRAAcaoTrabalhista.pdf</p>
+                <div class="sucesso-acoes">
+                    <button class="btn btn-outline" onclick="fecharModal('modalSucesso')">Fechar</button>
+                    <button class="btn btn-primary" onclick="baixarKit()">📥 Baixar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/kit-ir.js"></script>
+</body>
+</html>

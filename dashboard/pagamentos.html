@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamentos - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pagamentos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item" data-permissao="visualizarTodosClientes,visualizarSeusClientes">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item" data-permissao="crmVerTodos">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                    <a href="calculos.html" class="nav-item" data-permissao="realizarCalculos">
+                        <span class="nav-item-icon">🧮</span>
+                        Cálculos
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navOperacoes">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="kit-ir.html" class="nav-item" data-permissao="gerarKitIR">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item active" data-permissao="verPagamentos">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                    <a href="contratos.html" class="nav-item" data-permissao="criarContratos">
+                        <span class="nav-item-icon">📝</span>
+                        Contratos
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navParceiro">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item" data-permissao="verComissoes">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navFinanceiro">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item" data-permissao="controleFinanceiro">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item" data-permissao="verRelatorios">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section" id="navAdmin">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item" data-permissao="gerenciarUsuarios">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item" data-permissao="alterarConfiguracoes">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">💳 Pagamentos</h1>
+                <p class="header-date" id="dataAtual"></p>
+                
+                <div class="header-actions">
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Administrador</span>
+                            <span class="user-role" id="userRole">Admin</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <!-- Cards de Resumo -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalRecebido">R$ 0,00</span>
+                            <span class="stat-label">Total Recebido (Mês)</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalPagamentos">0</span>
+                            <span class="stat-label">Pagamentos no Mês</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="pagamentosPendentes">0</span>
+                            <span class="stat-label">Pendentes</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="pagamentosConfirmados">0</span>
+                            <span class="stat-label">Confirmados</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtros -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>🔍 Filtros</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="filtros-grid">
+                            <div class="filtro-group">
+                                <label>Período</label>
+                                <select id="filtroPeriodo">
+                                    <option value="hoje">Hoje</option>
+                                    <option value="semana">Esta Semana</option>
+                                    <option value="mes" selected>Este Mês</option>
+                                    <option value="ano">Este Ano</option>
+                                    <option value="personalizado">Personalizado</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group" id="filtroDataInicio" style="display: none;">
+                                <label>Data Início</label>
+                                <input type="date" id="dataInicio">
+                            </div>
+                            <div class="filtro-group" id="filtroDataFim" style="display: none;">
+                                <label>Data Fim</label>
+                                <input type="date" id="dataFim">
+                            </div>
+                            <div class="filtro-group">
+                                <label>Status</label>
+                                <select id="filtroStatus">
+                                    <option value="">Todos</option>
+                                    <option value="CONFIRMED">✅ Confirmado</option>
+                                    <option value="PENDING">⏳ Pendente</option>
+                                    <option value="RECEIVED">💰 Recebido</option>
+                                    <option value="OVERDUE">⚠️ Vencido</option>
+                                    <option value="REFUNDED">↩️ Estornado</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group">
+                                <label>Tipo</label>
+                                <select id="filtroTipo">
+                                    <option value="">Todos</option>
+                                    <option value="PIX">PIX</option>
+                                    <option value="CREDIT_CARD">Cartão de Crédito</option>
+                                    <option value="BOLETO">Boleto</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group">
+                                <label>Produto</label>
+                                <select id="filtroProduto">
+                                    <option value="">Todos</option>
+                                    <option value="descubra">Descubra Seu Valor (R$ 5,99)</option>
+                                    <option value="faca_voce">Faça Você Mesmo (R$ 15,99)</option>
+                                    <option value="kit_ir">Kit IR (R$ 10,00)</option>
+                                </select>
+                            </div>
+                            <div class="filtro-group">
+                                <label>Buscar Cliente</label>
+                                <input type="text" id="buscaCliente" placeholder="Nome ou CPF...">
+                            </div>
+                            <div class="filtro-group filtro-actions">
+                                <button class="btn btn-primary" onclick="aplicarFiltros()">🔍 Filtrar</button>
+                                <button class="btn btn-secondary" onclick="limparFiltros()">🗑️ Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lista de Pagamentos -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📋 Lista de Pagamentos</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" onclick="exportarPagamentos()">📥 Exportar CSV</button>
+                            <button class="btn btn-secondary" onclick="atualizarLista()">🔄 Atualizar</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="tabelaPagamentos">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Data</th>
+                                        <th>Cliente</th>
+                                        <th>CPF</th>
+                                        <th>Produto</th>
+                                        <th>Valor</th>
+                                        <th>Tipo</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaPagamentos">
+                                    <!-- Dados serão carregados via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginação -->
+                        <div class="paginacao" id="paginacao">
+                            <button class="btn btn-secondary" onclick="paginaAnterior()" id="btnAnterior" disabled>← Anterior</button>
+                            <span id="infoPagina">Página 1 de 1</span>
+                            <button class="btn btn-secondary" onclick="proximaPagina()" id="btnProximo" disabled>Próxima →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal de Detalhes do Pagamento -->
+    <div class="modal" id="modalDetalhes">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 Detalhes do Pagamento</h2>
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="detalhesConteudo">
+                <!-- Conteúdo carregado via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/pagamentos.js"></script>
+</body>
+</html>

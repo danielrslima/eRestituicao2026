@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+                <span class="sidebar-title">e-Restituição</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-item-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="clientes.html" class="nav-item">
+                        <span class="nav-item-icon">👥</span>
+                        Clientes
+                    </a>
+                    <a href="crm.html" class="nav-item">
+                        <span class="nav-item-icon">📋</span>
+                        CRM
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Operações</div>
+                    <a href="kit-ir.html" class="nav-item">
+                        <span class="nav-item-icon">📦</span>
+                        Kit IR / PDFs
+                    </a>
+                    <a href="pagamentos.html" class="nav-item">
+                        <span class="nav-item-icon">💳</span>
+                        Pagamentos
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Parceiro</div>
+                    <a href="comissoes.html" class="nav-item">
+                        <span class="nav-item-icon">💰</span>
+                        Comissões
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financeiro</div>
+                    <a href="financeiro.html" class="nav-item">
+                        <span class="nav-item-icon">💵</span>
+                        Controle Financeiro
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <span class="nav-item-icon">📈</span>
+                        Relatórios
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administração</div>
+                    <a href="usuarios.html" class="nav-item active">
+                        <span class="nav-item-icon">⚙️</span>
+                        Usuários
+                    </a>
+                    <a href="configuracoes.html" class="nav-item">
+                        <span class="nav-item-icon">🔧</span>
+                        Configurações
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h1>👤 Usuários</h1>
+                    <span class="header-date" id="dataAtual"></span>
+                </div>
+                <div class="header-right">
+                    <span class="user-name" id="userName">Admin</span>
+                    <button class="btn-icon" title="Notificações">🔔</button>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Cards de Resumo -->
+                <div class="cards-resumo">
+                    <div class="card-resumo">
+                        <div class="card-icon blue">👥</div>
+                        <div class="card-info">
+                            <span class="card-valor" id="totalUsuarios">0</span>
+                            <span class="card-label">Total de Usuários</span>
+                        </div>
+                    </div>
+                    <div class="card-resumo">
+                        <div class="card-icon green">✅</div>
+                        <div class="card-info">
+                            <span class="card-valor" id="usuariosAtivos">0</span>
+                            <span class="card-label">Usuários Ativos</span>
+                        </div>
+                    </div>
+                    <div class="card-resumo">
+                        <div class="card-icon purple">🤝</div>
+                        <div class="card-info">
+                            <span class="card-valor" id="totalParceiros">0</span>
+                            <span class="card-label">Parceiros</span>
+                        </div>
+                    </div>
+                    <div class="card-resumo">
+                        <div class="card-icon orange">🔑</div>
+                        <div class="card-info">
+                            <span class="card-valor" id="totalAdmins">0</span>
+                            <span class="card-label">Administradores</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações e Filtros -->
+                <div class="acoes-card">
+                    <div class="acoes-left">
+                        <button class="btn btn-primary" onclick="abrirModalNovoUsuario()">
+                            ➕ Novo Usuário
+                        </button>
+                    </div>
+                    <div class="acoes-right">
+                        <div class="filtro-group">
+                            <select id="filtroTipo" onchange="filtrarUsuarios()">
+                                <option value="">Todos os Tipos</option>
+                                <option value="admin">Administrador</option>
+                                <option value="operador">Operador</option>
+                                <option value="parceiro">Parceiro</option>
+                            </select>
+                        </div>
+                        <div class="filtro-group">
+                            <select id="filtroStatus" onchange="filtrarUsuarios()">
+                                <option value="">Todos os Status</option>
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                                <option value="pendente">Pendente</option>
+                            </select>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="buscarUsuario" placeholder="Buscar usuário..." onkeyup="filtrarUsuarios()">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Usuários -->
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Usuário</th>
+                                <th>Email</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Último Acesso</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaUsuarios">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginação -->
+                <div class="paginacao">
+                    <span class="paginacao-info">Mostrando <strong id="paginacaoInicio">1</strong> - <strong id="paginacaoFim">10</strong> de <strong id="paginacaoTotal">0</strong> usuários</span>
+                    <div class="paginacao-btns">
+                        <button class="btn-pag" onclick="paginaAnterior()">← Anterior</button>
+                        <button class="btn-pag" onclick="proximaPagina()">Próxima →</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Novo/Editar Usuário -->
+    <div class="modal" id="modalUsuario">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalUsuarioTitulo">➕ Novo Usuário</h2>
+                <button class="modal-close" onclick="fecharModal('modalUsuario')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="formUsuario">
+                    <input type="hidden" id="usuarioId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome Completo *</label>
+                            <input type="text" id="usuarioNome" required placeholder="Digite o nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="usuarioEmail" required placeholder="email@exemplo.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="tel" id="usuarioTelefone" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Usuário *</label>
+                            <select id="usuarioTipo" required onchange="mostrarCamposParceiro()">
+                                <option value="">Selecione...</option>
+                                <option value="admin">Administrador</option>
+                                <option value="operador">Operador</option>
+                                <option value="parceiro">Parceiro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos específicos para Parceiro -->
+                    <div id="camposParceiro" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Código do Parceiro</label>
+                                <input type="text" id="parceiroCodigo" placeholder="Ex: JOAO2026">
+                            </div>
+                            <div class="form-group">
+                                <label>Taxa de Comissão (%)</label>
+                                <input type="number" id="parceiroComissao" value="10" min="0" max="100">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Chave PIX para Pagamento</label>
+                            <input type="text" id="parceiroPix" placeholder="CPF, Email ou Telefone">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Senha *</label>
+                            <input type="password" id="usuarioSenha" placeholder="Mínimo 6 caracteres">
+                            <small class="form-hint">Deixe em branco para manter a senha atual (ao editar)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="usuarioStatus">
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                                <option value="pendente">Pendente</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Permissões</label>
+                        <div class="permissoes-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permClientes" checked> Clientes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permCRM" checked> CRM
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permKitIR" checked> Kit IR
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permFinanceiro"> Financeiro
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permPagamentos"> Pagamentos
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permRelatorios"> Relatórios
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permUsuarios"> Usuários
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="permConfig"> Configurações
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fecharModal('modalUsuario')">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarUsuario()">💾 Salvar Usuário</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Exclusão -->
+    <div class="modal" id="modalExcluir">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2>⚠️ Confirmar Exclusão</h2>
+                <button class="modal-close" onclick="fecharModal('modalExcluir')">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o usuário <strong id="nomeUsuarioExcluir"></strong>?</p>
+                <p class="text-muted">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fecharModal('modalExcluir')">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmarExclusao()">🗑️ Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/usuarios.js"></script>
+</body>
+</html>

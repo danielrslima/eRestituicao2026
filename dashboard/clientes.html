@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Dashboard e-Restituição</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/clientes.css">
+</head>
+<body>
+    <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/logo_e_restituicao.jpg" alt="e-Restituição" class="sidebar-logo">
+            <span class="sidebar-title">e-Restituição</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Principal</div>
+                <a href="index.html" class="nav-item">
+                    <span class="nav-item-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="clientes.html" class="nav-item active">
+                    <span class="nav-item-icon">👥</span>
+                    Clientes
+                </a>
+                <a href="crm.html" class="nav-item">
+                    <span class="nav-item-icon">📋</span>
+                    CRM
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Operações</div>
+                <a href="kit-ir.html" class="nav-item">
+                    <span class="nav-item-icon">📦</span>
+                    Kit IR / PDFs
+                </a>
+                <a href="pagamentos.html" class="nav-item">
+                    <span class="nav-item-icon">💳</span>
+                    Pagamentos
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Parceiro</div>
+                <a href="comissoes.html" class="nav-item">
+                    <span class="nav-item-icon">💰</span>
+                    Comissões
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Financeiro</div>
+                <a href="financeiro.html" class="nav-item">
+                    <span class="nav-item-icon">💵</span>
+                    Controle Financeiro
+                </a>
+                <a href="relatorios.html" class="nav-item">
+                    <span class="nav-item-icon">📈</span>
+                    Relatórios
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Administração</div>
+                <a href="usuarios.html" class="nav-item">
+                    <span class="nav-item-icon">⚙️</span>
+                    Usuários
+                </a>
+                <a href="configuracoes.html" class="nav-item">
+                    <span class="nav-item-icon">🔧</span>
+                    Configurações
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <h1>👥 Clientes</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="abrirModalNovoCliente()">
+                    ➕ Novo Cliente
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name" id="userName">Usuário</span>
+                        <span class="user-role" id="userRole">Nível</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Lista de Clientes -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>Lista de Clientes</h2>
+                <div class="filtros">
+                    <input type="text" placeholder="🔍 Buscar por nome ou CPF..." class="input-busca" id="buscaCliente">
+                    <select class="select-filtro" id="filtroStatus">
+                        <option value="">Todos os status</option>
+                        <option value="novo">🆕 Novo</option>
+                        <option value="calculado">📊 Calculado</option>
+                        <option value="contrato">📝 Contrato</option>
+                        <option value="analise">⏳ Em Análise</option>
+                        <option value="concluido">✅ Concluído</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Status</th>
+                            <th>Valor Restituição</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaClientes">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Novo Cliente -->
+    <div class="modal-overlay" id="modalNovoCliente">
+        <div class="modal modal-grande">
+            <div class="modal-header">
+                <h2>➕ Cadastrar Novo Cliente</h2>
+                <button class="btn-fechar" onclick="fecharModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="formNovoCliente">
+                    <!-- Abas -->
+                    <div class="tabs">
+                        <button type="button" class="tab active" data-tab="dados-pessoais">
+                            👤 Dados Pessoais
+                        </button>
+                        <button type="button" class="tab" data-tab="dados-processo">
+                            📋 Dados do Processo
+                        </button>
+                        <button type="button" class="tab" data-tab="documentos">
+                            📄 Documentos
+                        </button>
+                    </div>
+
+                    <!-- Tab: Dados Pessoais -->
+                    <div class="tab-content active" id="tab-dados-pessoais">
+                        <!-- SEÇÃO 1: DADOS PESSOAIS -->
+                        <h3>👤 Dados Pessoais</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nome">Nome Completo *</label>
+                                <input type="text" id="nome" name="nome" required placeholder="Nome completo do cliente" tabindex="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf">CPF *</label>
+                                <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" maxlength="14" tabindex="2">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">E-mail *</label>
+                                <input type="email" id="email" name="email" required placeholder="email@exemplo.com" tabindex="3">
+                            </div>
+                            <div class="form-group">
+                                <label for="dataNascimento">Data de Nascimento *</label>
+                                <input type="date" id="dataNascimento" name="dataNascimento" required tabindex="4">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profissao">Profissão</label>
+                                <input type="text" id="profissao" name="profissao" placeholder="Profissão do cliente" tabindex="5">
+                            </div>
+                        </div>
+                        
+                        <!-- SEÇÃO 2: ENDEREÇO -->
+                        <h3>📍 Endereço</h3>
+                        <div class="form-row">
+                            <div class="form-group" style="max-width: 150px;">
+                                <label for="cep">CEP</label>
+                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" tabindex="6">
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label for="logradouro">Logradouro</label>
+                                <input type="text" id="logradouro" name="logradouro" placeholder="Rua, Avenida, etc." tabindex="7">
+                            </div>
+                            <div class="form-group" style="max-width: 100px;">
+                                <label for="numero">Número</label>
+                                <input type="text" id="numero" name="numero" placeholder="Nº" tabindex="8">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="complemento">Complemento</label>
+                                <input type="text" id="complemento" name="complemento" placeholder="Apto, Sala, etc." tabindex="9">
+                            </div>
+                            <div class="form-group">
+                                <label for="bairro">Bairro</label>
+                                <input type="text" id="bairro" name="bairro" placeholder="Bairro" tabindex="10">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cidade">Cidade</label>
+                                <input type="text" id="cidade" name="cidade" placeholder="Cidade" tabindex="11">
+                            </div>
+                            <div class="form-group" style="max-width: 100px;">
+                                <label for="uf">UF</label>
+                                <select id="uf" name="uf" tabindex="12">
+                                    <option value="">--</option>
+                                    <option value="AC">AC</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AP">AP</option>
+                                    <option value="AM">AM</option>
+                                    <option value="BA">BA</option>
+                                    <option value="CE">CE</option>
+                                    <option value="DF">DF</option>
+                                    <option value="ES">ES</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MT">MT</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MG">MG</option>
+                                    <option value="PA">PA</option>
+                                    <option value="PB">PB</option>
+                                    <option value="PR">PR</option>
+                                    <option value="PE">PE</option>
+                                    <option value="PI">PI</option>
+                                    <option value="RJ">RJ</option>
+                                    <option value="RN">RN</option>
+                                    <option value="RS">RS</option>
+                                    <option value="RO">RO</option>
+                                    <option value="RR">RR</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SP">SP</option>
+                                    <option value="SE">SE</option>
+                                    <option value="TO">TO</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- SEÇÃO 3: TELEFONES (DINÂMICO) -->
+                        <h3>📞 Telefones</h3>
+                        <p class="info-text">Adicione um ou mais telefones de contato. Informe se é o telefone do próprio cliente ou de outra pessoa.</p>
+                        
+                        <div id="containerTelefones">
+                            <!-- Telefone 1 (obrigatório) -->
+                            <div class="telefone-item" data-telefone-index="0">
+                                <div class="form-row">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label>Telefone *</label>
+                                        <input type="text" name="telefones[0][numero]" placeholder="(00) 00000-0000" maxlength="15" class="input-telefone" required tabindex="13">
+                                    </div>
+                                    <div class="form-group" style="max-width: 130px;">
+                                        <label>Tipo</label>
+                                        <select name="telefones[0][tipo]" class="select-tipo-telefone" tabindex="14">
+                                            <option value="proprio">Próprio</option>
+                                            <option value="outro">Outro</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group nome-responsavel" style="flex: 1; display: none;">
+                                        <label>Nome do Responsável</label>
+                                        <input type="text" name="telefones[0][nomeResponsavel]" placeholder="Nome de quem atende" tabindex="15">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarTelefone()" style="margin-top: 10px;">
+                            ➕ Adicionar Telefone
+                        </button>
+                        
+                        <!-- SEÇÃO 4: ACESSO GOV.BR -->
+                        <h3>🔐 Acesso Gov.br</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="senhaGov">Senha Gov.br</label>
+                                <div class="input-senha-container">
+                                    <input type="password" id="senhaGov" name="senhaGov" placeholder="Senha do Gov.br (confidencial)" tabindex="100">
+                                    <button type="button" class="btn-mostrar-senha" onclick="toggleSenha('senhaGov')" title="Mostrar/Ocultar senha">👁️</button>
+                                </div>
+                                <small class="campo-info">🔒 Esta senha será armazenada de forma segura e criptografada.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="procuracaoEletronica">Procuração Eletrônica</label>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="procuracaoEletronica" name="procuracaoEletronica" tabindex="101">
+                                    <label for="procuracaoEletronica" class="checkbox-label">✅ Possui Procuração Eletrônica</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions-tab">
+                            <button type="button" class="btn btn-secondary" onclick="proximaAba('dados-processo')">
+                                Próximo: Dados do Processo →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Dados do Processo -->
+                    <div class="tab-content" id="tab-dados-processo">
+                        <h3>Dados do Processo <span class="opcional">(Opcional)</span></h3>
+                        <p class="info-text">💡 Preencha os dados do processo para executar o cálculo automaticamente. Se não preencher, o cliente ficará aguardando preenchimento posterior.</p>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="numeroProcesso">Número do Processo</label>
+                                <input type="text" id="numeroProcesso" name="numeroProcesso" placeholder="0000000-00.0000.0.00.0000" tabindex="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="vara">Vara</label>
+                                <input type="text" id="vara" name="vara" placeholder="Ex: 1ª Vara do Trabalho" tabindex="201">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="comarca">Comarca</label>
+                                <input type="text" id="comarca" name="comarca" placeholder="Ex: São Paulo/SP" tabindex="202">
+                            </div>
+                            <div class="form-group">
+                                <label for="cnpjReclamada">CNPJ da Reclamada</label>
+                                <input type="text" id="cnpjReclamada" name="cnpjReclamada" placeholder="00.000.000/0000-00" maxlength="18" tabindex="203">
+                            </div>
+                        </div>
+                        
+                        <h4>Valores Homologados</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="valorBruto">Valor Bruto Homologado</label>
+                                <input type="text" id="valorBruto" name="valorBruto" placeholder="R$ 0,00" class="input-moeda" tabindex="204">
+                            </div>
+                            <div class="form-group">
+                                <label for="valorTributavel">Valor Tributável</label>
+                                <input type="text" id="valorTributavel" name="valorTributavel" placeholder="R$ 0,00" class="input-moeda" tabindex="205">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="numeroMeses">Número de Meses *</label>
+                                <input type="number" id="numeroMeses" name="numeroMeses" placeholder="Ex: 24" min="1" max="480" tabindex="206">
+                            </div>
+                            <div class="form-group">
+                                <label for="valorINSS">Valor de INSS</label>
+                                <input type="text" id="valorINSS" name="valorINSS" placeholder="R$ 0,00" class="input-moeda" tabindex="207">
+                            </div>
+                        </div>
+                        <small class="campo-info" style="display: block; margin-top: -10px; margin-bottom: 15px;">📅 Número de Meses: Quantidade de meses de acumulação dos rendimentos (essencial para o cálculo) | 💰 INSS: Valor do INSS Reclamante (opcional)</small>
+                        
+                        <h4>Alvarás</h4>
+                        <div id="containerAlvaras">
+                            <div class="form-row alvara-item">
+                                <div class="form-group">
+                                    <label>Valor do Alvará</label>
+                                    <input type="text" name="alvaraValor[]" placeholder="R$ 0,00" class="input-moeda" tabindex="206">
+                                </div>
+                                <div class="form-group">
+                                    <label>Data do Alvará</label>
+                                    <input type="date" name="alvaraData[]" tabindex="207">
+                                </div>
+                                <button type="button" class="btn btn-icon btn-danger" onclick="removerAlvara(this)" title="Remover">🗑️</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarAlvara()">
+                            ➕ Adicionar Alvará
+                        </button>
+                        
+                        <h4>DARFs</h4>
+                        <div id="containerDarfs">
+                            <div class="form-row darf-item">
+                                <div class="form-group">
+                                    <label>Valor do DARF</label>
+                                    <input type="text" name="darfValor[]" placeholder="R$ 0,00" class="input-moeda" tabindex="208">
+                                </div>
+                                <div class="form-group">
+                                    <label>Data do DARF</label>
+                                    <input type="date" name="darfData[]" tabindex="209">
+                                </div>
+                                <button type="button" class="btn btn-icon btn-danger" onclick="removerDarf(this)" title="Remover">🗑️</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarDarf()">
+                            ➕ Adicionar DARF
+                        </button>
+                        
+                        <h4>Honorários</h4>
+                        <div id="containerHonorarios">
+                            <div class="form-row honorario-item">
+                                <div class="form-group">
+                                    <label>Valor do Honorário</label>
+                                    <input type="text" name="honorarioValor[]" placeholder="R$ 0,00" class="input-moeda" tabindex="210">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ano do Honorário</label>
+                                    <select name="honorarioAno[]" tabindex="211">
+                                        <option value="">Selecione</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-icon btn-danger" onclick="removerHonorario(this)" title="Remover">🗑️</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarHonorario()">
+                            ➕ Adicionar Honorário
+                        </button>
+                        
+                        <div class="form-actions-tab">
+                            <button type="button" class="btn btn-outline" onclick="proximaAba('dados-pessoais')">
+                                ← Voltar
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="proximaAba('documentos')">
+                                Próximo: Documentos →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Documentos -->
+                    <div class="tab-content" id="tab-documentos">
+                        <h3>Upload de Documentos <span class="opcional">(PDF)</span></h3>
+                        <p class="info-text">📄 Faça upload dos documentos do cliente em formato PDF.</p>
+                        
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📁</div>
+                            <p>Arraste arquivos PDF aqui ou</p>
+                            <label for="inputDocumentos" class="btn btn-secondary">
+                                Selecionar Arquivos
+                            </label>
+                            <input type="file" id="inputDocumentos" name="documentos" multiple accept=".pdf" style="display: none;">
+                            <p class="upload-info">Formatos aceitos: PDF | Máximo: 10MB por arquivo</p>
+                        </div>
+                        
+                        <div class="lista-documentos" id="listaDocumentos">
+                            <!-- Documentos adicionados aparecem aqui -->
+                        </div>
+                        
+                        <div class="form-actions-tab">
+                            <button type="button" class="btn btn-outline" onclick="proximaAba('dados-processo')">
+                                ← Voltar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="salvarCliente()">
+                    💾 Salvar Cliente
+                </button>
+                <button type="button" class="btn btn-primary" onclick="salvarECalcular()" data-permissao="realizarCalculos" id="btnSalvarCalcular">
+                    🧮 Salvar e Calcular
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/clientes.js"></script>
+</body>
+</html>
