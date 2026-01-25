@@ -144,6 +144,10 @@
 - [x] **Fixação de cliente** - Clique no nome para fixar cliente na visualização (NOVO)
 - [x] **Cabeçalhos destacados** - Ícones e texto em maiúsculas nos títulos das colunas (NOVO)
 - [x] **Nomes em destaque** - Nomes dos clientes em verde com hover (NOVO)
+- [x] **Validação de CPF** - Máscara automática e verificação de dígitos (NOVO)
+- [x] **Validação de CNPJ** - Máscara automática e verificação de dígitos (NOVO)
+- [x] **Busca de CEP** - Preenchimento automático de endereço via ViaCEP (NOVO)
+- [x] **Campos obrigatórios** - CEP, Número, Complemento, Bairro (NOVO)
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status

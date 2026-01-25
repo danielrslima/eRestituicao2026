@@ -103,10 +103,6 @@
             <div class="section-header">
                 <h2>Lista de Clientes</h2>
                 <div class="filtros">
-                    <div class="busca-container" style="position: relative;">
-                        <input type="text" placeholder="🔍 Buscar cliente por nome..." class="input-busca" id="buscaCliente" autocomplete="off">
-                        <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
-                    </div>
                     <select class="select-filtro" id="filtroStatus">
                         <option value="">Todos os status</option>
                         <option value="novo">🆕 Novo</option>
@@ -139,6 +135,15 @@
                             <th class="th-destaque"><span class="th-icon">📅</span> DATA CÁLCULO</th>
                             <th class="th-destaque"><span class="th-icon">🗓️</span> DATA INCLUSÃO</th>
                             <th class="th-destaque"><span class="th-icon">⚙️</span> AÇÕES</th>
+                        </tr>
+                        <!-- Barra de busca abaixo dos cabeçalhos -->
+                        <tr class="tr-busca">
+                            <th colspan="9" style="padding: 0; background: #f8f9fa;">
+                                <div class="busca-container-inline">
+                                    <input type="text" placeholder="🔍 Digite o nome ou CPF do cliente para buscar..." class="input-busca-inline" id="buscaCliente" autocomplete="off">
+                                    <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="tabelaClientes">
@@ -199,18 +204,17 @@
                             </div>
                         </div>
                         
-                        <div class="form-row">
+                        <div class="form-row" style="align-items: flex-start;">
                             <div class="form-group">
                                 <label for="profissao">Profissão</label>
                                 <input type="text" id="profissao" name="profissao" placeholder="Profissão do cliente" tabindex="5">
                             </div>
                             <div class="form-group">
                                 <label for="indicadoPor">Indicado por</label>
-                                <select id="indicadoPor" name="indicadoPor" tabindex="6">
+                                <select id="indicadoPor" name="indicadoPor" tabindex="6" style="height: 46px;">
                                     <option value="">Nenhum (Captação Direta)</option>
                                     <!-- Parceiros/Vendedores serão carregados via JavaScript -->
                                 </select>
-                                <small>Parceiro, vendedor ou operador que indicou este cliente</small>
                             </div>
                         </div>
                         

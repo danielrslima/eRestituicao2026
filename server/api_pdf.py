@@ -42,43 +42,68 @@ def api_gerar_esclarecimentos():
     {
         "nome": "JOSÉ RAMOS DA SILVA",
         "cpf": "070.817.318-72",
+        "data_nascimento": "01/01/1980",
         "processo": "0001234-56.2020.5.02.0001",
+        "vara": "1ª Vara do Trabalho de São Paulo",
         "exercicio": 2021,
         "valor_bruto": 150000.00,
         "valor_tributavel": 100000.00,
         "numero_meses": 48,
-        "inss": 5000.00
+        "inss": 5000.00,
+        "fonte_nome": "EMPRESA XYZ LTDA",
+        "fonte_cnpj": "00.000.000/0001-00"
     }
     """
     try:
-        dados = request.get_json()
+        dados_req = request.get_json()
         
-        if not dados:
+        if not dados_req:
             return jsonify({'error': 'Dados não fornecidos'}), 400
         
         # Validar campos obrigatórios
         campos_obrigatorios = ['nome', 'cpf', 'exercicio', 'valor_bruto', 'valor_tributavel', 'numero_meses']
         for campo in campos_obrigatorios:
-            if campo not in dados:
+            if campo not in dados_req:
                 return jsonify({'error': f'Campo obrigatório ausente: {campo}'}), 400
         
         # Gerar nome do arquivo
-        nome_limpo = dados['nome'].replace(' ', '_').upper()
-        nome_arquivo = f"Esclarecimentos_{nome_limpo}_DIRPF_{dados['exercicio']}.pdf"
+        nome_limpo = dados_req['nome'].replace(' ', '_').upper()
+        nome_arquivo = f"Esclarecimentos_{nome_limpo}_DIRPF_{dados_req['exercicio']}.pdf"
         caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
         
+        # Montar estrutura de dados esperada pela função
+        dados = {
+            'cliente': {
+                'nome': dados_req['nome'],
+                'cpf': dados_req['cpf'],
+                'data_nascimento': dados_req.get('data_nascimento', '-')
+            },
+            'processo': {
+                'numero': dados_req.get('processo', '-'),
+                'vara': dados_req.get('vara', 'Vara do Trabalho')
+            },
+            'fonte': {
+                'nome': dados_req.get('fonte_nome', 'FONTE PAGADORA'),
+                'cnpj': dados_req.get('fonte_cnpj', '00.000.000/0001-00')
+            },
+            'calculo': {
+                'ano_dirpf': dados_req['exercicio'],
+                'valor_total_exercicio': dados_req['valor_bruto'],
+                'imposto_retido_fonte': dados_req.get('imposto_retido', 0),
+                'valor_bruto_acao': dados_req['valor_bruto'],
+                'valor_atualizado_rt': dados_req['valor_tributavel'],
+                'percentual_rt': (dados_req['valor_tributavel'] / dados_req['valor_bruto'] * 100) if dados_req['valor_bruto'] > 0 else 0,
+                'despesas_dedutiveis': dados_req.get('despesas_dedutiveis', 0),
+                'rra_rendimentos_tributaveis': dados_req['valor_tributavel'],
+                'rra_inss_reclamante': dados_req.get('inss', 0),
+                'rra_imposto_retido': dados_req.get('imposto_retido', 0),
+                'rra_meses_discutidos': dados_req['numero_meses'],
+                'rendimentos_isentos': dados_req['valor_bruto'] - dados_req['valor_tributavel']
+            }
+        }
+        
         # Gerar PDF
-        gerar_esclarecimentos(
-            nome=dados['nome'],
-            cpf=dados['cpf'],
-            processo=dados.get('processo', ''),
-            exercicio=dados['exercicio'],
-            valor_bruto=dados['valor_bruto'],
-            valor_tributavel=dados['valor_tributavel'],
-            numero_meses=dados['numero_meses'],
-            inss=dados.get('inss', 0),
-            output_path=caminho_arquivo
-        )
+        gerar_esclarecimentos(dados, caminho_arquivo)
         
         return jsonify({
             'success': True,
@@ -88,7 +113,8 @@ def api_gerar_esclarecimentos():
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
 
 @app.route('/api/gerar-planilha-rt', methods=['POST'])
 def api_gerar_planilha_rt():
@@ -111,37 +137,51 @@ def api_gerar_planilha_rt():
     }
     """
     try:
-        dados = request.get_json()
+        dados_req = request.get_json()
         
-        if not dados:
+        if not dados_req:
             return jsonify({'error': 'Dados não fornecidos'}), 400
         
         # Validar campos obrigatórios
         campos_obrigatorios = ['nome', 'cpf', 'exercicio', 'valor_bruto', 'valor_tributavel', 'numero_meses']
         for campo in campos_obrigatorios:
-            if campo not in dados:
+            if campo not in dados_req:
                 return jsonify({'error': f'Campo obrigatório ausente: {campo}'}), 400
         
         # Gerar nome do arquivo
-        nome_limpo = dados['nome'].replace(' ', '_').upper()
-        nome_arquivo = f"PlanilhaRT_{nome_limpo}_DIRPF_{dados['exercicio']}.pdf"
+        nome_limpo = dados_req['nome'].replace(' ', '_').upper()
+        nome_arquivo = f"PlanilhaRT_{nome_limpo}_DIRPF_{dados_req['exercicio']}.pdf"
         caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
         
+        # Montar estrutura de dados esperada pela função
+        dados = {
+            'cliente': {
+                'nome': dados_req['nome'],
+                'cpf': dados_req['cpf']
+            },
+            'processo': {
+                'numero': dados_req.get('processo', '-'),
+                'vara': dados_req.get('vara', 'Vara do Trabalho'),
+                'comarca': dados_req.get('comarca', '-')
+            },
+            'fonte': {
+                'nome': dados_req.get('fonte_nome', 'FONTE PAGADORA'),
+                'cnpj': dados_req.get('fonte_cnpj', '00.000.000/0001-00')
+            },
+            'calculo': {
+                'ano_dirpf': dados_req['exercicio'],
+                'valor_bruto': dados_req['valor_bruto'],
+                'valor_tributavel': dados_req['valor_tributavel'],
+                'numero_meses': dados_req['numero_meses'],
+                'inss': dados_req.get('inss', 0)
+            },
+            'alvaras': dados_req.get('alvaras', []),
+            'darfs': dados_req.get('darfs', []),
+            'honorarios': dados_req.get('honorarios', [])
+        }
+        
         # Gerar PDF
-        gerar_planilha_rt(
-            nome=dados['nome'],
-            cpf=dados['cpf'],
-            processo=dados.get('processo', ''),
-            exercicio=dados['exercicio'],
-            valor_bruto=dados['valor_bruto'],
-            valor_tributavel=dados['valor_tributavel'],
-            numero_meses=dados['numero_meses'],
-            inss=dados.get('inss', 0),
-            alvaras=dados.get('alvaras', []),
-            darfs=dados.get('darfs', []),
-            honorarios=dados.get('honorarios', []),
-            output_path=caminho_arquivo
-        )
+        gerar_planilha_rt(dados, caminho_arquivo)
         
         return jsonify({
             'success': True,
@@ -151,7 +191,8 @@ def api_gerar_planilha_rt():
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
 
 @app.route('/api/gerar-encarte', methods=['POST'])
 def api_gerar_encarte():
@@ -173,16 +214,23 @@ def api_gerar_encarte():
         tipo = dados.get('tipo', 'esclarecimentos')
         titulo_personalizado = dados.get('titulo_personalizado', '')
         
+        # Mapear tipo para título
+        titulos = {
+            'esclarecimentos': 'ESCLARECIMENTOS',
+            'planilha_rt': 'PLANILHA RT',
+            'alvara': 'ALVARÁ',
+            'darf': 'DARF',
+            'honorarios': 'HONORÁRIOS'
+        }
+        
+        titulo = titulo_personalizado if titulo_personalizado else titulos.get(tipo, tipo.upper())
+        
         # Gerar nome do arquivo
         nome_arquivo = f"Encarte_{tipo}.pdf"
         caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
         
-        # Gerar PDF
-        gerar_encarte(
-            tipo=tipo,
-            titulo_personalizado=titulo_personalizado,
-            output_path=caminho_arquivo
-        )
+        # Gerar PDF - função espera (titulo, output_path, subtitulo)
+        gerar_encarte(titulo, caminho_arquivo)
         
         return jsonify({
             'success': True,
@@ -192,7 +240,8 @@ def api_gerar_encarte():
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
 
 @app.route('/api/gerar-kit-completo', methods=['POST'])
 def api_gerar_kit_completo():
@@ -222,22 +271,32 @@ def api_gerar_kit_completo():
     }
     """
     try:
-        dados = request.get_json()
+        dados_req = request.get_json()
         
-        if not dados or 'cliente' not in dados or 'exercicios' not in dados:
+        if not dados_req or 'cliente' not in dados_req or 'exercicios' not in dados_req:
             return jsonify({'error': 'Dados incompletos'}), 400
         
-        cliente = dados['cliente']
-        exercicios = dados['exercicios']
-        encartes_solicitados = dados.get('encartes', ['esclarecimentos', 'planilha_rt'])
+        cliente = dados_req['cliente']
+        exercicios = dados_req['exercicios']
+        encartes_solicitados = dados_req.get('encartes', ['esclarecimentos', 'planilha_rt'])
         
         arquivos_gerados = []
+        
+        # Mapear tipo para título
+        titulos = {
+            'esclarecimentos': 'ESCLARECIMENTOS',
+            'planilha_rt': 'PLANILHA RT',
+            'alvara': 'ALVARÁ',
+            'darf': 'DARF',
+            'honorarios': 'HONORÁRIOS'
+        }
         
         # Gerar encartes
         for encarte_tipo in encartes_solicitados:
             nome_arquivo = f"Encarte_{encarte_tipo}.pdf"
             caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
-            gerar_encarte(tipo=encarte_tipo, output_path=caminho_arquivo)
+            titulo = titulos.get(encarte_tipo, encarte_tipo.upper())
+            gerar_encarte(titulo, caminho_arquivo)
             arquivos_gerados.append({
                 'tipo': 'encarte',
                 'encarte': encarte_tipo,
@@ -254,17 +313,39 @@ def api_gerar_kit_completo():
             if 'esclarecimentos' in encartes_solicitados:
                 nome_esc = f"Esclarecimentos_{nome_limpo}_DIRPF_{ano}.pdf"
                 caminho_esc = os.path.join(OUTPUT_DIR, nome_esc)
-                gerar_esclarecimentos(
-                    nome=cliente['nome'],
-                    cpf=cliente['cpf'],
-                    processo=cliente.get('processo', ''),
-                    exercicio=ano,
-                    valor_bruto=exercicio['valor_bruto'],
-                    valor_tributavel=exercicio['valor_tributavel'],
-                    numero_meses=exercicio['numero_meses'],
-                    inss=exercicio.get('inss', 0),
-                    output_path=caminho_esc
-                )
+                
+                # Montar estrutura de dados
+                dados_esc = {
+                    'cliente': {
+                        'nome': cliente['nome'],
+                        'cpf': cliente['cpf'],
+                        'data_nascimento': cliente.get('data_nascimento', '-')
+                    },
+                    'processo': {
+                        'numero': cliente.get('processo', '-'),
+                        'vara': cliente.get('vara', 'Vara do Trabalho')
+                    },
+                    'fonte': {
+                        'nome': cliente.get('fonte_nome', 'FONTE PAGADORA'),
+                        'cnpj': cliente.get('fonte_cnpj', '00.000.000/0001-00')
+                    },
+                    'calculo': {
+                        'ano_dirpf': ano,
+                        'valor_total_exercicio': exercicio['valor_bruto'],
+                        'imposto_retido_fonte': exercicio.get('imposto_retido', 0),
+                        'valor_bruto_acao': exercicio['valor_bruto'],
+                        'valor_atualizado_rt': exercicio['valor_tributavel'],
+                        'percentual_rt': (exercicio['valor_tributavel'] / exercicio['valor_bruto'] * 100) if exercicio['valor_bruto'] > 0 else 0,
+                        'despesas_dedutiveis': exercicio.get('despesas_dedutiveis', 0),
+                        'rra_rendimentos_tributaveis': exercicio['valor_tributavel'],
+                        'rra_inss_reclamante': exercicio.get('inss', 0),
+                        'rra_imposto_retido': exercicio.get('imposto_retido', 0),
+                        'rra_meses_discutidos': exercicio['numero_meses'],
+                        'rendimentos_isentos': exercicio['valor_bruto'] - exercicio['valor_tributavel']
+                    }
+                }
+                
+                gerar_esclarecimentos(dados_esc, caminho_esc)
                 arquivos_gerados.append({
                     'tipo': 'esclarecimentos',
                     'exercicio': ano,
@@ -276,20 +357,35 @@ def api_gerar_kit_completo():
             if 'planilha_rt' in encartes_solicitados:
                 nome_rt = f"PlanilhaRT_{nome_limpo}_DIRPF_{ano}.pdf"
                 caminho_rt = os.path.join(OUTPUT_DIR, nome_rt)
-                gerar_planilha_rt(
-                    nome=cliente['nome'],
-                    cpf=cliente['cpf'],
-                    processo=cliente.get('processo', ''),
-                    exercicio=ano,
-                    valor_bruto=exercicio['valor_bruto'],
-                    valor_tributavel=exercicio['valor_tributavel'],
-                    numero_meses=exercicio['numero_meses'],
-                    inss=exercicio.get('inss', 0),
-                    alvaras=exercicio.get('alvaras', []),
-                    darfs=exercicio.get('darfs', []),
-                    honorarios=exercicio.get('honorarios', []),
-                    output_path=caminho_rt
-                )
+                
+                # Montar estrutura de dados
+                dados_rt = {
+                    'cliente': {
+                        'nome': cliente['nome'],
+                        'cpf': cliente['cpf']
+                    },
+                    'processo': {
+                        'numero': cliente.get('processo', '-'),
+                        'vara': cliente.get('vara', 'Vara do Trabalho'),
+                        'comarca': cliente.get('comarca', '-')
+                    },
+                    'fonte': {
+                        'nome': cliente.get('fonte_nome', 'FONTE PAGADORA'),
+                        'cnpj': cliente.get('fonte_cnpj', '00.000.000/0001-00')
+                    },
+                    'calculo': {
+                        'ano_dirpf': ano,
+                        'valor_bruto': exercicio['valor_bruto'],
+                        'valor_tributavel': exercicio['valor_tributavel'],
+                        'numero_meses': exercicio['numero_meses'],
+                        'inss': exercicio.get('inss', 0)
+                    },
+                    'alvaras': exercicio.get('alvaras', []),
+                    'darfs': exercicio.get('darfs', []),
+                    'honorarios': exercicio.get('honorarios', [])
+                }
+                
+                gerar_planilha_rt(dados_rt, caminho_rt)
                 arquivos_gerados.append({
                     'tipo': 'planilha_rt',
                     'exercicio': ano,

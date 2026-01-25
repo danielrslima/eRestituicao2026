@@ -112,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Atualizar data
     atualizarData();
     
+    // Carregar parceiros que têm clientes vinculados
+    carregarParceirosComClientes();
+    
     // Carregar informações do parceiro
     carregarInfoParceiro();
     
@@ -126,6 +129,109 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Página de Comissões carregada');
 });
+
+// Carregar parceiros que têm clientes vinculados
+function carregarParceirosComClientes() {
+    // Buscar clientes do localStorage
+    const clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+    
+    // Filtrar clientes que têm indicado_por preenchido
+    const clientesIndicados = clientes.filter(c => c.indicado_por && c.indicado_por.trim() !== '');
+    
+    // Agrupar por parceiro
+    const parceirosComClientes = {};
+    
+    clientesIndicados.forEach(cliente => {
+        const parceiro = cliente.indicado_por;
+        if (!parceirosComClientes[parceiro]) {
+            parceirosComClientes[parceiro] = {
+                nome: parceiro,
+                clientes: [],
+                totalComissao: 0
+            };
+        }
+        parceirosComClientes[parceiro].clientes.push(cliente);
+        
+        // Calcular comissão (10% do valor de restituição)
+        const valorRestituicao = parseFloat(cliente.valor_restituicao) || 0;
+        parceirosComClientes[parceiro].totalComissao += valorRestituicao * 0.10;
+    });
+    
+    // Atualizar COMISSOES com dados reais dos clientes
+    if (clientesIndicados.length > 0) {
+        // Limpar comissões mock e adicionar reais
+        COMISSOES.length = 0;
+        
+        clientesIndicados.forEach((cliente, index) => {
+            const valorRestituicao = parseFloat(cliente.valor_restituicao) || 0;
+            const comissao = valorRestituicao * 0.10;
+            
+            COMISSOES.push({
+                id: `COM-${String(index + 1).padStart(3, '0')}`,
+                clienteNome: cliente.nome,
+                clienteCpf: cliente.cpf,
+                dataIndicacao: cliente.data_inclusao?.split(' ')[0] || new Date().toISOString().split('T')[0],
+                produto: cliente.status === 'Pago Kit IR' ? 'Kit IR' : (cliente.status === 'Concluído' ? 'Contrato 15%' : 'Descubra Seu Valor'),
+                valorPago: valorRestituicao,
+                comissao: comissao,
+                status: cliente.status === 'Concluído' ? 'pago' : (cliente.status === 'Em Análise' ? 'processando' : 'pendente'),
+                dataPagamento: cliente.status === 'Concluído' ? new Date().toISOString().split('T')[0] : null
+            });
+        });
+    }
+    
+    // Atualizar lista de parceiros disponíveis
+    const selectParceiro = document.getElementById('selectParceiro');
+    if (selectParceiro) {
+        selectParceiro.innerHTML = '<option value="">Selecione um parceiro...</option>';
+        
+        Object.keys(parceirosComClientes).forEach(parceiro => {
+            const option = document.createElement('option');
+            option.value = parceiro;
+            option.textContent = `${parceiro} (${parceirosComClientes[parceiro].clientes.length} clientes)`;
+            selectParceiro.appendChild(option);
+        });
+        
+        // Se houver parceiros, selecionar o primeiro
+        if (Object.keys(parceirosComClientes).length > 0) {
+            const primeiroParceiro = Object.keys(parceirosComClientes)[0];
+            selectParceiro.value = primeiroParceiro;
+            selecionarParceiro(primeiroParceiro);
+        }
+    }
+    
+    // Mostrar mensagem se não houver parceiros com clientes
+    if (clientesIndicados.length === 0) {
+        const containerComissoes = document.querySelector('.comissoes-container');
+        if (containerComissoes) {
+            const aviso = document.createElement('div');
+            aviso.className = 'aviso-sem-parceiros';
+            aviso.innerHTML = `
+                <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 20px; margin-bottom: 20px; text-align: center;">
+                    <h4 style="color: #856404; margin: 0 0 10px 0;">⚠️ Nenhum parceiro com clientes</h4>
+                    <p style="color: #856404; margin: 0;">Para gerar o link de indicação de um parceiro, primeiro cadastre um cliente e preencha o campo "Indicado por" com o nome do parceiro.</p>
+                </div>
+            `;
+            containerComissoes.insertBefore(aviso, containerComissoes.firstChild);
+        }
+    }
+    
+    return parceirosComClientes;
+}
+
+// Selecionar parceiro
+function selecionarParceiro(nomeParceiro) {
+    if (!nomeParceiro) return;
+    
+    // Atualizar dados do parceiro selecionado
+    PARCEIRO.nome = nomeParceiro;
+    PARCEIRO.codigo = nomeParceiro.replace(/\s+/g, '').toUpperCase().substring(0, 8) + '2026';
+    
+    // Recarregar informações
+    carregarInfoParceiro();
+    carregarEstatisticas();
+    carregarComissoes();
+}
 
 // Atualizar data no header
 function atualizarData() {

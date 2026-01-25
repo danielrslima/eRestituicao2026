@@ -297,17 +297,298 @@ function atualizarRelatorios() {
     }
 }
 
-// Gerar relatório
+// Gerar relatório em PDF
 function gerarRelatorio() {
     const periodo = document.getElementById('filtroPeriodo').value;
     const tipo = document.getElementById('filtroTipo').value;
     
-    alert(`Relatório "${tipo}" gerado para o período de ${periodo} dias.\n\nEm uma implementação real, isso geraria um relatório detalhado em PDF.`);
+    // Verificar se jsPDF está disponível
+    if (typeof jspdf === 'undefined' && typeof jsPDF === 'undefined') {
+        alert('⚠️ Carregando biblioteca de PDF...');
+        // Carregar jsPDF dinamicamente
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.onload = () => gerarRelatorioPDF(periodo, tipo);
+        document.head.appendChild(script);
+        return;
+    }
+    
+    gerarRelatorioPDF(periodo, tipo);
 }
 
-// Exportar relatório
+function gerarRelatorioPDF(periodo, tipo) {
+    const { jsPDF } = window.jspdf || window;
+    const doc = new jsPDF();
+    
+    // Configurações
+    const corVerde = [26, 127, 55];
+    const corCinza = [100, 100, 100];
+    let y = 20;
+    
+    // Cabeçalho
+    doc.setFillColor(...corVerde);
+    doc.rect(0, 0, 210, 35, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('e-Restituição', 105, 15, { align: 'center' });
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Relatório Gerencial', 105, 25, { align: 'center' });
+    
+    y = 45;
+    
+    // Título do relatório
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    
+    const tiposLabel = {
+        'geral': 'Relatório Geral',
+        'clientes': 'Relatório de Clientes',
+        'financeiro': 'Relatório Financeiro',
+        'conversao': 'Relatório de Conversão'
+    };
+    
+    doc.text(tiposLabel[tipo] || 'Relatório', 20, y);
+    
+    y += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...corCinza);
+    doc.text(`Período: Últimos ${periodo} dias | Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, 20, y);
+    
+    y += 15;
+    
+    // KPIs
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Indicadores Principais (KPIs)', 20, y);
+    
+    y += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const kpis = [
+        ['Total de Clientes:', document.getElementById('kpiTotalClientes')?.textContent || '500'],
+        ['Receita Total:', document.getElementById('kpiReceita')?.textContent || 'R$ 77.300'],
+        ['Kits IR Gerados:', document.getElementById('kpiKitsGerados')?.textContent || '185'],
+        ['Taxa de Conversão:', document.getElementById('kpiConversao')?.textContent || '13%']
+    ];
+    
+    kpis.forEach(([label, valor]) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(label, 25, y);
+        doc.setFont('helvetica', 'bold');
+        doc.text(valor, 80, y);
+        y += 7;
+    });
+    
+    y += 10;
+    
+    // Resumo por Status
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Resumo por Status', 20, y);
+    
+    y += 8;
+    
+    // Cabeçalho da tabela
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, y - 4, 170, 8, 'F');
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Status', 25, y);
+    doc.text('Qtd', 80, y);
+    doc.text('%', 110, y);
+    doc.text('Valor', 140, y);
+    
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    
+    dadosMock.statusResumo.forEach((item, i) => {
+        if (i % 2 === 0) {
+            doc.setFillColor(250, 250, 250);
+            doc.rect(20, y - 4, 170, 7, 'F');
+        }
+        doc.text(item.status, 25, y);
+        doc.text(item.quantidade.toString(), 80, y);
+        doc.text(item.percentual + '%', 110, y);
+        doc.text('R$ ' + item.valor.toLocaleString('pt-BR'), 140, y);
+        y += 7;
+    });
+    
+    y += 10;
+    
+    // Top 5 Clientes
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Top 5 Clientes por Valor', 20, y);
+    
+    y += 8;
+    
+    // Cabeçalho da tabela
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, y - 4, 170, 8, 'F');
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('#', 25, y);
+    doc.text('Cliente', 35, y);
+    doc.text('Valor', 120, y);
+    doc.text('Produtos', 160, y);
+    
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    
+    dadosMock.topClientes.forEach((cliente, i) => {
+        if (i % 2 === 0) {
+            doc.setFillColor(250, 250, 250);
+            doc.rect(20, y - 4, 170, 7, 'F');
+        }
+        doc.text((i + 1) + 'º', 25, y);
+        doc.text(cliente.nome.substring(0, 30), 35, y);
+        doc.text('R$ ' + cliente.valor.toLocaleString('pt-BR'), 120, y);
+        doc.text(cliente.produtos.toString(), 165, y);
+        y += 7;
+    });
+    
+    // Rodapé
+    doc.setFontSize(8);
+    doc.setTextColor(...corCinza);
+    doc.text('e-Restituição - Sistema de Gestão de Restituição de Imposto de Renda', 105, 285, { align: 'center' });
+    
+    // Salvar
+    const nomeArquivo = `Relatorio_${tipo}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(nomeArquivo);
+    
+    mostrarNotificacao(`✅ Relatório gerado: ${nomeArquivo}`, 'success');
+}
+
+// Exportar relatório em Excel
 function exportarRelatorio() {
-    alert('Exportando relatório em PDF...\n\nEm uma implementação real, isso geraria um arquivo PDF para download.');
+    // Verificar se SheetJS está disponível
+    if (typeof XLSX === 'undefined') {
+        alert('⚠️ Carregando biblioteca de Excel...');
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        script.onload = () => exportarRelatorioExcel();
+        document.head.appendChild(script);
+        return;
+    }
+    
+    exportarRelatorioExcel();
+}
+
+function exportarRelatorioExcel() {
+    const periodo = document.getElementById('filtroPeriodo').value;
+    const tipo = document.getElementById('filtroTipo').value;
+    
+    // Criar workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Aba 1: KPIs
+    const kpisData = [
+        ['RELATÓRIO GERENCIAL - e-Restituição'],
+        ['Gerado em:', new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')],
+        ['Período:', `Últimos ${periodo} dias`],
+        [''],
+        ['INDICADORES PRINCIPAIS (KPIs)'],
+        ['Indicador', 'Valor'],
+        ['Total de Clientes', document.getElementById('kpiTotalClientes')?.textContent || '500'],
+        ['Receita Total', document.getElementById('kpiReceita')?.textContent || 'R$ 77.300'],
+        ['Kits IR Gerados', document.getElementById('kpiKitsGerados')?.textContent || '185'],
+        ['Taxa de Conversão', document.getElementById('kpiConversao')?.textContent || '13%']
+    ];
+    const wsKPIs = XLSX.utils.aoa_to_sheet(kpisData);
+    XLSX.utils.book_append_sheet(wb, wsKPIs, 'KPIs');
+    
+    // Aba 2: Resumo por Status
+    const statusData = [
+        ['RESUMO POR STATUS'],
+        ['Status', 'Quantidade', 'Percentual', 'Valor (R$)'],
+        ...dadosMock.statusResumo.map(item => [
+            item.status,
+            item.quantidade,
+            item.percentual + '%',
+            item.valor
+        ])
+    ];
+    const wsStatus = XLSX.utils.aoa_to_sheet(statusData);
+    XLSX.utils.book_append_sheet(wb, wsStatus, 'Status');
+    
+    // Aba 3: Top Clientes
+    const clientesData = [
+        ['TOP 5 CLIENTES POR VALOR'],
+        ['Posição', 'Cliente', 'Valor (R$)', 'Produtos'],
+        ...dadosMock.topClientes.map((cliente, i) => [
+            i + 1,
+            cliente.nome,
+            cliente.valor,
+            cliente.produtos
+        ])
+    ];
+    const wsClientes = XLSX.utils.aoa_to_sheet(clientesData);
+    XLSX.utils.book_append_sheet(wb, wsClientes, 'Top Clientes');
+    
+    // Aba 4: Receitas Mensais
+    const receitasData = [
+        ['RECEITAS MENSAIS'],
+        ['Mês', 'Valor (R$)'],
+        ...dadosMock.receitas.labels.map((mes, i) => [
+            mes,
+            dadosMock.receitas.valores[i]
+        ])
+    ];
+    const wsReceitas = XLSX.utils.aoa_to_sheet(receitasData);
+    XLSX.utils.book_append_sheet(wb, wsReceitas, 'Receitas');
+    
+    // Aba 5: Clientes Mensais
+    const clientesMensaisData = [
+        ['NOVOS CLIENTES POR MÊS'],
+        ['Mês', 'Quantidade'],
+        ...dadosMock.clientes.labels.map((mes, i) => [
+            mes,
+            dadosMock.clientes.valores[i]
+        ])
+    ];
+    const wsClientesMensais = XLSX.utils.aoa_to_sheet(clientesMensaisData);
+    XLSX.utils.book_append_sheet(wb, wsClientesMensais, 'Clientes Mensais');
+    
+    // Salvar arquivo
+    const nomeArquivo = `Relatorio_${tipo}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, nomeArquivo);
+    
+    mostrarNotificacao(`✅ Relatório Excel exportado: ${nomeArquivo}`, 'success');
+}
+
+// Mostrar notificação
+function mostrarNotificacao(mensagem, tipo) {
+    const notificacao = document.createElement('div');
+    notificacao.className = `notificacao notificacao-${tipo}`;
+    notificacao.innerHTML = mensagem;
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        background: ${tipo === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+        notificacao.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notificacao.remove(), 300);
+    }, 3000);
 }
 
 // Toggle sidebar
