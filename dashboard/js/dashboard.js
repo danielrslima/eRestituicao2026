@@ -226,36 +226,104 @@ function carregarUltimosClientes() {
     }).join('');
 }
 
+// Dados de notificações (em produção, virão do banco de dados)
+let NOTIFICACOES = [
+    { id: 1, tipo: 'novo', icone: '🆕', texto: 'Novo cálculo realizado: Maria Fernanda Costa', tempo: '5 min atrás', lido: false },
+    { id: 2, tipo: 'pagamento', icone: '💳', texto: 'Pagamento confirmado: Ana Carmen Souza - R$ 5,99', tempo: '1 hora atrás', lido: false },
+    { id: 3, tipo: 'kit', icone: '📦', texto: 'Kit IR enviado para: José Ramos da Silva', tempo: '3 horas atrás', lido: true }
+];
+
 // Carregar notificações
 function carregarNotificacoes() {
     const container = document.getElementById('listaNotificacoes');
+    const badge = document.getElementById('notificationBadge');
     
-    // Notificações de exemplo
-    const notificacoes = [
-        { tipo: 'novo', texto: 'Novo cálculo realizado: Maria Fernanda Costa', tempo: '5 min atrás' },
-        { tipo: 'pagamento', texto: 'Pagamento confirmado: Ana Carmen Souza - R$ 5,99', tempo: '1 hora atrás' },
-        { tipo: 'kit', texto: 'Kit IR enviado para: José Ramos da Silva', tempo: '3 horas atrás' }
-    ];
+    if (!container) return;
     
-    if (notificacoes.length === 0) {
+    // Contar não lidas
+    const naoLidas = NOTIFICACOES.filter(n => !n.lido).length;
+    
+    // Atualizar badge
+    if (badge) {
+        badge.textContent = naoLidas;
+        badge.style.display = naoLidas > 0 ? 'flex' : 'none';
+    }
+    
+    if (NOTIFICACOES.length === 0) {
         container.innerHTML = `
-            <p style="color: var(--gray-600); text-align: center; padding: 20px;">
-                Nenhuma notificação no momento.
-            </p>
+            <div class="notification-empty">
+                <span>🔔</span>
+                <p>Nenhuma notificação no momento</p>
+            </div>
         `;
         return;
     }
     
-    container.innerHTML = notificacoes.map(n => `
-        <div style="padding: 12px 16px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
-            <span>${n.texto}</span>
-            <span style="font-size: 12px; color: var(--gray-600);">${n.tempo}</span>
+    container.innerHTML = NOTIFICACOES.map(n => `
+        <div class="notification-item ${n.lido ? '' : 'unread'}" onclick="marcarComoLida(${n.id})">
+            <div class="notification-icon ${n.tipo}">${n.icone}</div>
+            <div class="notification-content">
+                <div class="notification-text">${n.texto}</div>
+                <div class="notification-time">${n.tempo}</div>
+            </div>
         </div>
     `).join('');
+}
+
+// Toggle dropdown de notificações
+function toggleNotificacoes() {
+    const dropdown = document.getElementById('notificationDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+        
+        // Fechar ao clicar fora
+        if (dropdown.classList.contains('show')) {
+            setTimeout(() => {
+                document.addEventListener('click', fecharNotificacoesAoClicarFora);
+            }, 100);
+        }
+    }
+}
+
+// Fechar dropdown ao clicar fora
+function fecharNotificacoesAoClicarFora(e) {
+    const wrapper = document.querySelector('.notification-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+        document.removeEventListener('click', fecharNotificacoesAoClicarFora);
+    }
+}
+
+// Marcar notificação como lida
+function marcarComoLida(id) {
+    const notificacao = NOTIFICACOES.find(n => n.id === id);
+    if (notificacao) {
+        notificacao.lido = true;
+        carregarNotificacoes();
+    }
+}
+
+// Limpar todas as notificações
+function limparNotificacoes() {
+    if (confirm('Deseja limpar todas as notificações?')) {
+        NOTIFICACOES = [];
+        carregarNotificacoes();
+        
+        // Fechar dropdown
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+    }
+}
+
+// Ver todas as notificações
+function verTodasNotificacoes() {
+    // Marcar todas como lidas
+    NOTIFICACOES.forEach(n => n.lido = true);
+    carregarNotificacoes();
     
-    // Atualizar badge
-    document.getElementById('notificationBadge').textContent = notificacoes.length;
-    document.getElementById('notificationBadge').style.display = 'flex';
+    alert('🔔 Central de Notificações\n\nEm breve, uma página dedicada para gerenciar todas as notificações.');
+    return false;
 }
 
 // Configurar menu do usuário

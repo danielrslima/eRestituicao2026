@@ -1320,3 +1320,24 @@ tr.highlight-new {
     background: #1a7f37;
     color: white;
 }
+
+/* Botões de ação adicionais na busca */
+.acoes-busca .btn-pdfs {
+    background: #e8f5e9;
+    color: #1a7f37;
+}
+
+.acoes-busca .btn-pdfs:hover {
+    background: #1a7f37;
+    color: white;
+}
+
+.acoes-busca .btn-enviar {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.acoes-busca .btn-enviar:hover {
+    background: #f57c00;
+    color: white;
+}

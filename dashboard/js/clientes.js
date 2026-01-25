@@ -1716,13 +1716,13 @@ function buscarClienteInput(valor) {
         return;
     }
     
-    // Filtrar clientes que correspondem ao termo
+    // Filtrar clientes cujo NOME COMEÇA com o termo digitado (não contém, mas inicia)
     let clientesFiltrados = CLIENTES.filter(c => 
-        c.nome.toLowerCase().includes(termo) || 
-        c.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
+        c.nome.toLowerCase().startsWith(termo) || 
+        c.cpf.replace(/\D/g, '').startsWith(termo.replace(/\D/g, ''))
     );
     
-    // Ordenar alfabeticamente
+    // Ordenar alfabeticamente (A → Z)
     clientesFiltrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
     
     if (clientesFiltrados.length === 0) {
@@ -1784,7 +1784,8 @@ function buscarClienteInput(valor) {
                 <span class="acoes-busca">
                     <button class="btn-acao btn-ver" onclick="event.stopPropagation(); verCliente('${cliente.id}')" title="Ver detalhes">👁️</button>
                     <button class="btn-acao btn-editar" onclick="event.stopPropagation(); editarCliente('${cliente.id}')" title="Editar">✏️</button>
-                    <button class="btn-acao btn-kit" onclick="event.stopPropagation(); abrirKitIR('${cliente.id}')" title="Kit IR">📦</button>
+                    <button class="btn-acao btn-pdfs" onclick="event.stopPropagation(); verPDFs('${cliente.id}')" title="Ver/Imprimir PDFs">📄</button>
+                    <button class="btn-acao btn-enviar" onclick="event.stopPropagation(); enviarAoCliente('${cliente.id}')" title="Enviar ao Cliente">📧</button>
                 </span>
             </div>
         `;
@@ -2082,3 +2083,18 @@ function confirmarEnvio(clienteId) {
     
     fecharModalEnviar();
 }
+
+// Alias para enviarPDFs (usado na busca)
+function enviarAoCliente(clienteId) {
+    enviarPDFs(clienteId);
+}
+
+// Exportar funções de PDFs globalmente
+window.verPDFs = verPDFs;
+window.fecharModalPDFs = fecharModalPDFs;
+window.visualizarPDF = visualizarPDF;
+window.imprimirPDFs = imprimirPDFs;
+window.enviarPDFs = enviarPDFs;
+window.enviarAoCliente = enviarAoCliente;
+window.fecharModalEnviar = fecharModalEnviar;
+window.confirmarEnvio = confirmarEnvio;

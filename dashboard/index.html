@@ -87,10 +87,26 @@
                 <h1 class="header-title">Dashboard</h1>
                 
                 <div class="header-actions">
-                    <button class="notification-btn" id="btnNotificacoes">
-                        🔔
-                        <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
-                    </button>
+                    <div class="notification-wrapper">
+                        <button class="notification-btn" id="btnNotificacoes" onclick="toggleNotificacoes()">
+                            🔔
+                            <span class="notification-badge" id="notificationBadge">3</span>
+                        </button>
+                        
+                        <!-- Dropdown de Notificações -->
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>🔔 Notificações</h3>
+                                <button class="btn-limpar-notificacoes" onclick="limparNotificacoes()">Limpar todas</button>
+                            </div>
+                            <div class="notification-list" id="listaNotificacoes">
+                                <!-- Notificações serão carregadas aqui -->
+                            </div>
+                            <div class="notification-footer">
+                                <a href="#" onclick="verTodasNotificacoes()">Ver todas as notificações</a>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="user-menu" id="userMenu">
                         <div class="user-avatar" id="userAvatar">AD</div>
