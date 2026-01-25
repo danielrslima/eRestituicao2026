@@ -1,6 +1,6 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 25/01/2026 - 11:55 (Horário de Brasília)
+## Última Atualização: 25/01/2026 - 12:50 (Horário de Brasília)
 
 ---
 
@@ -11,6 +11,15 @@
 - [x] Casos José Ramos (+R$ 74.028,67) e Ana Carmen (+R$ 26.604,54) validados
 - [x] Proporcionalização de DARFs e honorários
 - [x] Deflação por índices IPCA-E
+
+### Firebase - CONFIGURADO ✅
+- [x] Projeto: erestituicao-ffa5c (Plano Blaze)
+- [x] Localização: southamerica-east1 (São Paulo)
+- [x] firebaseConfig obtido e documentado
+- [x] Estrutura de dados `calculos2026` documentada
+- [x] Arquivo `firebase-config.js` criado (frontend e dashboard)
+- [x] Utilitários de conversão (centavos ↔ reais)
+- [x] Arrays dinâmicos para alvarás/DARFs/honorários
 
 ### Validações e Máscaras - BLINDADO ✅
 - [x] CPF com dígitos verificadores
@@ -150,10 +159,12 @@
 - [ ] Verificar consistência de dados
 - [ ] Testar fluxo completo
 
-### 4. Sistema de Cálculos
-- [ ] Verificar se cálculos do frontend chegam ao dashboard
-- [ ] Implementar novo sistema de cálculo no backend
-- [ ] Integrar frontend ↔ backend ↔ dashboard
+### 4. Sistema de Cálculos - FIREBASE CONFIGURADO
+- [x] Firebase configurado com nova coleção `calculos2026`
+- [x] Estrutura de dados documentada (valores em centavos)
+- [ ] Conectar frontend com Firebase
+- [ ] Testar salvamento de cálculos
+- [ ] Verificar listagem no dashboard
 
 ---
 
