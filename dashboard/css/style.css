@@ -770,3 +770,129 @@ hr {
 .modal-footer {
     border-top: 1px solid var(--gray-400) !important;
 }
+
+
+/* ========================================
+   VALIDAÇÃO DE CAMPOS - ESTILOS GLOBAIS
+   ======================================== */
+
+/* Campo válido */
+.input-valido,
+input.input-valido,
+select.input-valido {
+    border-color: #28a745 !important;
+    background-color: #f8fff9 !important;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
+}
+
+.input-valido::after {
+    content: '✓';
+    position: absolute;
+    right: 10px;
+    color: #28a745;
+}
+
+/* Campo inválido */
+.input-invalido,
+input.input-invalido,
+select.input-invalido {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Campo com loading (buscando CEP) */
+.input-loading,
+input.input-loading {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cstyle%3E.spinner{transform-origin:center;animation:spin 1s linear infinite}@keyframes spin{100%{transform:rotate(360deg)}}%3C/style%3E%3Ccircle class='spinner' cx='12' cy='12' r='10' stroke='%231a7f37' stroke-width='3' fill='none' stroke-dasharray='31.4 31.4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 40px !important;
+}
+
+/* Mensagem de erro abaixo do campo */
+.campo-erro {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.input-invalido + .campo-erro {
+    display: block;
+}
+
+/* Campos obrigatórios */
+.campo-obrigatorio label::after {
+    content: ' *';
+    color: #dc3545;
+}
+
+/* Animação de shake para campos inválidos */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.input-invalido.shake {
+    animation: shake 0.5s ease;
+}
+
+/* Tooltip de validação */
+.validacao-tooltip {
+    position: absolute;
+    background: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.validacao-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #dc3545;
+}
+
+.input-invalido:focus + .validacao-tooltip,
+.input-invalido:hover + .validacao-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Grupo de campo com ícone de status */
+.form-group-validacao {
+    position: relative;
+}
+
+.form-group-validacao .icone-status {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.form-group-validacao .icone-status.valido {
+    color: #28a745;
+}
+
+.form-group-validacao .icone-status.invalido {
+    color: #dc3545;
+}

@@ -139,6 +139,11 @@
 - [x] **Ordenação alfabética** - Todas as listas de clientes ordenadas
 - [x] **Modal Ver Detalhes** - Abre modal com informações completas
 - [x] **Modal Editar** - Permite edição rápida do cliente
+- [x] **Busca com Autocomplete** - Lista alfabética ao digitar (NOVO)
+- [x] **Exibição dos 6 últimos** - Mostra apenas os 6 clientes mais recentes por padrão (NOVO)
+- [x] **Fixação de cliente** - Clique no nome para fixar cliente na visualização (NOVO)
+- [x] **Cabeçalhos destacados** - Ícones e texto em maiúsculas nos títulos das colunas (NOVO)
+- [x] **Nomes em destaque** - Nomes dos clientes em verde com hover (NOVO)
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status
