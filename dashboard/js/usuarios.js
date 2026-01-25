@@ -235,7 +235,31 @@ function abrirModalNovoUsuario() {
     document.getElementById('modalUsuarioTitulo').textContent = '➕ Novo Usuário';
     document.getElementById('formUsuario').reset();
     document.getElementById('usuarioId').value = '';
-    document.getElementById('camposParceiro').style.display = 'none';
+    
+    // Esconder campos de comissão inicialmente
+    const camposComissao = document.getElementById('camposComissao');
+    if (camposComissao) camposComissao.style.display = 'none';
+    
+    // Resetar campos de comissão para valores padrão
+    const tipoComissao = document.getElementById('tipoComissao');
+    if (tipoComissao) tipoComissao.value = 'percentual';
+    
+    const percentualComissao = document.getElementById('percentualComissao');
+    if (percentualComissao) percentualComissao.value = '10';
+    
+    const valorFixoComissao = document.getElementById('valorFixoComissao');
+    if (valorFixoComissao) valorFixoComissao.value = '5,00';
+    
+    // Resetar checkboxes de produtos
+    const comissaoBasico = document.getElementById('comissaoBasico');
+    if (comissaoBasico) comissaoBasico.checked = true;
+    
+    const comissaoKitIR = document.getElementById('comissaoKitIR');
+    if (comissaoKitIR) comissaoKitIR.checked = true;
+    
+    const comissaoContrato = document.getElementById('comissaoContrato');
+    if (comissaoContrato) comissaoContrato.checked = false;
+    
     abrirModal('modalUsuario');
 }
 

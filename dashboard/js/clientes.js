@@ -42,6 +42,7 @@ let CLIENTES = [
             }
         ],
         tipo: 'externo',
+        indicadoPor: null, // Captação direta
         parceiroId: null
     },
     {
@@ -64,6 +65,7 @@ let CLIENTES = [
             }
         ],
         tipo: 'externo',
+        indicadoPor: 3, // Indicado por João Silva (parceiro)
         parceiroId: null
     },
     {
@@ -101,10 +103,11 @@ let CLIENTES = [
         dataInclusao: '2026-01-23 16:18:42',
         casos: [],
         tipo: 'externo',
+        indicadoPor: 4, // Indicado por Ana Souza (parceiro)
         parceiroId: null
     },
     {
-        id: 'CLI-0005',
+        id: 'CLI-0004',
         nome: 'Roberto Almeida Santos',
         cpf: '789.123.456-00',
         email: 'roberto.santos@email.com',
@@ -674,11 +677,42 @@ function toggleSenha(inputId) {
 }
 
 // Função para abrir modal de novo cliente
+// Lista de parceiros/vendedores para o campo "Indicado por"
+let PARCEIROS_VENDEDORES = [
+    { id: 3, nome: 'João Silva', tipo: 'parceiro', codigo: 'JOAO2026' },
+    { id: 4, nome: 'Ana Souza', tipo: 'parceiro', codigo: 'ANA2026' },
+    { id: 2, nome: 'Maria Operadora', tipo: 'operador', codigo: 'MARIA2026' },
+    { id: 6, nome: 'Pedro Novo', tipo: 'parceiro', codigo: 'PEDRO2026' }
+];
+
+// Função para carregar parceiros/vendedores no select
+function carregarParceirosVendedores() {
+    const select = document.getElementById('indicadoPor');
+    if (!select) return;
+    
+    // Limpar opções anteriores (manter apenas a primeira)
+    select.innerHTML = '<option value="">Nenhum (Captação Direta)</option>';
+    
+    // Ordenar alfabeticamente
+    const parceirosOrdenados = [...PARCEIROS_VENDEDORES].sort((a, b) => a.nome.localeCompare(b.nome));
+    
+    // Adicionar opções
+    parceirosOrdenados.forEach(p => {
+        const option = document.createElement('option');
+        option.value = p.id;
+        option.textContent = `${p.nome} (${p.codigo}) - ${p.tipo === 'parceiro' ? 'Parceiro' : 'Operador'}`;
+        select.appendChild(option);
+    });
+}
+
 function abrirModalNovoCliente() {
     document.getElementById('modalNovoCliente').classList.add('active');
     document.getElementById('formNovoCliente').reset();
     documentosParaUpload = [];
     document.getElementById('listaDocumentos').innerHTML = '';
+    
+    // Carregar lista de parceiros/vendedores
+    carregarParceirosVendedores();
     
     // Resetar telefones para apenas 1
     const containerTelefones = document.getElementById('containerTelefones');
@@ -1029,6 +1063,7 @@ function salvarCliente() {
         procuracaoEletronica: document.getElementById('procuracaoEletronica').checked,
         casos: [],
         tipo: 'interno',
+        indicadoPor: document.getElementById('indicadoPor').value ? parseInt(document.getElementById('indicadoPor').value) : null,
         parceiroId: auth.getNivel() === 'parceiro' ? auth.getUsuario().id : null,
         documentos: documentosParaUpload.map(f => f.name),
         dataInclusao: new Date().toLocaleString('pt-BR').replace(',', '')
