@@ -275,11 +275,160 @@ function formatarMoeda(valor) {
 }
 
 function verCliente(id) {
-    alert('Ver detalhes do cliente ID: ' + id + '\n\n(Funcionalidade será implementada na página de clientes)');
+    const cliente = CLIENTES_EXEMPLO.find(c => c.id === id);
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    
+    const statusInfo = STATUS_LABELS[cliente.status] || { texto: cliente.status, classe: 'novo' };
+    
+    // Criar modal dinâmico
+    const modalHtml = `
+        <div class="modal-overlay" id="modalVerClienteDash" style="display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+            <div class="modal" style="background: white; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: #1a7f37;">📋 Detalhes do Cliente</h3>
+                    <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modalVerClienteDash').remove()">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <p style="margin: 8px 0;"><strong>ID:</strong> ${cliente.id}</p>
+                        <p style="margin: 8px 0;"><strong>Nome:</strong> ${cliente.nome}</p>
+                        <p style="margin: 8px 0;"><strong>CPF:</strong> ${cliente.cpf}</p>
+                        <p style="margin: 8px 0;"><strong>E-mail:</strong> ${cliente.email}</p>
+                        <p style="margin: 8px 0;"><strong>Telefone:</strong> ${cliente.telefone}</p>
+                        <p style="margin: 8px 0;"><strong>Status:</strong> <span class="status-badge ${statusInfo.classe}">${statusInfo.texto}</span></p>
+                        <p style="margin: 8px 0;"><strong>Valor Restituição:</strong> ${cliente.valorRestituicao > 0 ? formatarMoeda(cliente.valorRestituicao) : '-'}</p>
+                        <p style="margin: 8px 0;"><strong>Data Cálculo:</strong> ${cliente.dataCalculo ? new Date(cliente.dataCalculo).toLocaleDateString('pt-BR') : '-'}</p>
+                        <p style="margin: 8px 0;"><strong>Tipo:</strong> ${cliente.tipo === 'externo' ? '🌐 Externo (via site)' : '🏢 Interno'}</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn btn-secondary" style="padding: 8px 16px; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('modalVerClienteDash').remove()">Fechar</button>
+                    <a href="clientes.html" class="btn btn-primary" style="padding: 8px 16px; border-radius: 6px; background: #1a7f37; color: white; text-decoration: none;">Ver na Página de Clientes</a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalVerClienteDash');
+    if (modalAnterior) modalAnterior.remove();
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
 function editarCliente(id) {
-    alert('Editar cliente ID: ' + id + '\n\n(Funcionalidade será implementada na página de clientes)');
+    const cliente = CLIENTES_EXEMPLO.find(c => c.id === id);
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    
+    // Criar modal de edição
+    const modalHtml = `
+        <div class="modal-overlay" id="modalEditarClienteDash" style="display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+            <div class="modal" style="background: white; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: #1a7f37;">✏️ Editar Cliente</h3>
+                    <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modalEditarClienteDash').remove()">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <form id="formEditarClienteDash">
+                        <input type="hidden" id="editIdDash" value="${cliente.id}">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Nome</label>
+                            <input type="text" id="editNomeDash" value="${cliente.nome}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">E-mail</label>
+                            <input type="email" id="editEmailDash" value="${cliente.email}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Telefone</label>
+                            <input type="text" id="editTelefoneDash" value="${cliente.telefone}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Status</label>
+                            <select id="editStatusDash" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                                <option value="novo" ${cliente.status === 'novo' ? 'selected' : ''}>🆕 Novo</option>
+                                <option value="calculado" ${cliente.status === 'calculado' ? 'selected' : ''}>📊 Calculado</option>
+                                <option value="pago_basico" ${cliente.status === 'pago_basico' ? 'selected' : ''}>💰 Pago Básico</option>
+                                <option value="pago_kit" ${cliente.status === 'pago_kit' ? 'selected' : ''}>💰 Pago Kit IR</option>
+                                <option value="contrato" ${cliente.status === 'contrato' ? 'selected' : ''}>📝 Contrato</option>
+                                <option value="enviado" ${cliente.status === 'enviado' ? 'selected' : ''}>📧 Kit Enviado</option>
+                                <option value="analise" ${cliente.status === 'analise' ? 'selected' : ''}>⏳ Em Análise</option>
+                                <option value="concluido" ${cliente.status === 'concluido' ? 'selected' : ''}>✅ Concluído</option>
+                                <option value="cancelado" ${cliente.status === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn btn-secondary" style="padding: 8px 16px; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('modalEditarClienteDash').remove()">Cancelar</button>
+                    <button class="btn btn-primary" style="padding: 8px 16px; border-radius: 6px; background: #1a7f37; color: white; cursor: pointer;" onclick="salvarEdicaoClienteDash()">💾 Salvar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalEditarClienteDash');
+    if (modalAnterior) modalAnterior.remove();
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function salvarEdicaoClienteDash() {
+    const id = parseInt(document.getElementById('editIdDash').value);
+    const cliente = CLIENTES_EXEMPLO.find(c => c.id === id);
+    
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    
+    // Atualizar dados
+    cliente.nome = document.getElementById('editNomeDash').value.trim();
+    cliente.email = document.getElementById('editEmailDash').value.trim();
+    cliente.telefone = document.getElementById('editTelefoneDash').value.trim();
+    cliente.status = document.getElementById('editStatusDash').value;
+    
+    // Fechar modal
+    document.getElementById('modalEditarClienteDash').remove();
+    
+    // Recarregar tabela
+    carregarUltimosClientes();
+    carregarEstatisticas();
+    
+    // Feedback
+    mostrarNotificacaoDash('✅ Cliente atualizado com sucesso!', 'success');
+}
+
+function mostrarNotificacaoDash(mensagem, tipo) {
+    const notificacao = document.createElement('div');
+    notificacao.innerHTML = mensagem;
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        background: ${tipo === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+        notificacao.remove();
+    }, 3000);
 }
 
 // Exportar funções globais

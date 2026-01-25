@@ -605,9 +605,142 @@ function filtrarPeriodo() {
     mostrarNotificacao('Filtro aplicado!', 'info');
 }
 
-// Exportar relatório
+// Exportar relatório - CORRIGIDO
 function exportarRelatorio(formato) {
-    mostrarNotificacao(`Exportando relatório em ${formato.toUpperCase()}...`, 'info');
+    if (formato === 'pdf') {
+        exportarPDF();
+    } else if (formato === 'excel') {
+        exportarExcel();
+    } else {
+        mostrarNotificacao(`Formato ${formato} não suportado`, 'warning');
+    }
+}
+
+// Exportar para PDF
+function exportarPDF() {
+    // Criar conteúdo do relatório
+    const mes = document.getElementById('periodoMes').value;
+    const ano = document.getElementById('periodoAno').value;
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const nomeMes = meses[parseInt(mes) - 1];
+    
+    const totalRec = receitas.filter(r => r.status !== 'cancelado').reduce((sum, r) => sum + r.valor, 0);
+    const totalDesp = despesas.filter(d => d.status !== 'cancelado').reduce((sum, d) => sum + d.valor, 0);
+    const saldo = totalRec - totalDesp;
+    
+    // Criar HTML para impressão
+    const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Relatório Financeiro - ${nomeMes}/${ano}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; }
+                h1 { color: #1a5f2a; border-bottom: 2px solid #1a5f2a; padding-bottom: 10px; }
+                h2 { color: #333; margin-top: 30px; }
+                table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                th { background: #f5f5f5; }
+                .receita { color: #10b981; }
+                .despesa { color: #ef4444; }
+                .resumo { background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0; }
+                .resumo-item { display: inline-block; margin-right: 40px; }
+                .valor { font-size: 24px; font-weight: bold; }
+                @media print { body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+            </style>
+        </head>
+        <body>
+            <h1>📊 Relatório Financeiro - e-Restituição</h1>
+            <p><strong>Período:</strong> ${nomeMes} de ${ano}</p>
+            <p><strong>Gerado em:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+            
+            <div class="resumo">
+                <div class="resumo-item">
+                    <div>Total Receitas</div>
+                    <div class="valor receita">${formatarMoeda(totalRec)}</div>
+                </div>
+                <div class="resumo-item">
+                    <div>Total Despesas</div>
+                    <div class="valor despesa">${formatarMoeda(totalDesp)}</div>
+                </div>
+                <div class="resumo-item">
+                    <div>Saldo</div>
+                    <div class="valor" style="color: ${saldo >= 0 ? '#10b981' : '#ef4444'}">${formatarMoeda(saldo)}</div>
+                </div>
+            </div>
+            
+            <h2>🟢 Receitas</h2>
+            <table>
+                <tr><th>Data</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Status</th></tr>
+                ${receitas.map(r => `<tr><td>${formatarData(r.data)}</td><td>${r.cliente}</td><td>${getTipoLabel(r.tipo)}</td><td>${r.descricao}</td><td class="receita">${formatarMoeda(r.valor)}</td><td>${capitalizar(r.status)}</td></tr>`).join('')}
+            </table>
+            
+            <h2>🔴 Despesas</h2>
+            <table>
+                <tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Fornecedor</th><th>Valor</th><th>Status</th></tr>
+                ${despesas.map(d => `<tr><td>${formatarData(d.data)}</td><td>${getCategoriaLabel(d.categoria)}</td><td>${d.descricao}</td><td>${d.fornecedor}</td><td class="despesa">${formatarMoeda(d.valor)}</td><td>${capitalizar(d.status)}</td></tr>`).join('')}
+            </table>
+            
+            <p style="margin-top: 40px; color: #666; font-size: 12px;">e-Restituição IA - Sistema de Gestão de Restituição de IRPF</p>
+        </body>
+        </html>
+    `;
+    
+    // Abrir em nova janela para impressão/PDF
+    const janela = window.open('', '_blank');
+    janela.document.write(html);
+    janela.document.close();
+    janela.print();
+    
+    mostrarNotificacao('✅ Relatório PDF gerado! Use Ctrl+P para salvar como PDF.', 'success');
+}
+
+// Exportar para Excel (CSV)
+function exportarExcel() {
+    const mes = document.getElementById('periodoMes').value;
+    const ano = document.getElementById('periodoAno').value;
+    
+    // Criar CSV com receitas e despesas
+    let csv = 'RELATÓRIO FINANCEIRO - e-Restituição\n';
+    csv += `Período: ${mes}/${ano}\n`;
+    csv += `Gerado em: ${new Date().toLocaleString('pt-BR')}\n\n`;
+    
+    // Receitas
+    csv += 'RECEITAS\n';
+    csv += 'Data,Cliente,Tipo,Descrição,Valor,Status\n';
+    receitas.forEach(r => {
+        csv += `${formatarData(r.data)},"${r.cliente}",${getTipoLabel(r.tipo)},"${r.descricao}",${r.valor.toFixed(2)},${capitalizar(r.status)}\n`;
+    });
+    
+    const totalRec = receitas.filter(r => r.status !== 'cancelado').reduce((sum, r) => sum + r.valor, 0);
+    csv += `,,,,${totalRec.toFixed(2)},TOTAL RECEITAS\n\n`;
+    
+    // Despesas
+    csv += 'DESPESAS\n';
+    csv += 'Data,Categoria,Descrição,Fornecedor,Valor,Status\n';
+    despesas.forEach(d => {
+        csv += `${formatarData(d.data)},${getCategoriaLabel(d.categoria)},"${d.descricao}","${d.fornecedor}",${d.valor.toFixed(2)},${capitalizar(d.status)}\n`;
+    });
+    
+    const totalDesp = despesas.filter(d => d.status !== 'cancelado').reduce((sum, d) => sum + d.valor, 0);
+    csv += `,,,,${totalDesp.toFixed(2)},TOTAL DESPESAS\n\n`;
+    
+    // Resumo
+    csv += 'RESUMO\n';
+    csv += `Total Receitas,${totalRec.toFixed(2)}\n`;
+    csv += `Total Despesas,${totalDesp.toFixed(2)}\n`;
+    csv += `Saldo,${(totalRec - totalDesp).toFixed(2)}\n`;
+    
+    // Download
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `relatorio_financeiro_${mes}_${ano}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    mostrarNotificacao('✅ Relatório Excel (CSV) exportado com sucesso!', 'success');
 }
 
 // =====================================================

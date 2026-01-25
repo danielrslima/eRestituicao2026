@@ -6,6 +6,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (!auth.verificarAcesso()) return;
     
+    // Carregar dados salvos do localStorage
+    carregarDadosCRM();
+    
     atualizarInterfaceUsuario();
     carregarClientes();
     configurarEventos();
@@ -483,13 +486,77 @@ function salvarNovoStatus() {
             data: new Date().toLocaleString('pt-BR').replace(',', ''),
             obs: observacao || 'Status alterado'
         });
+        
+        // Persistir no localStorage
+        salvarDadosCRM();
     }
     
     fecharModalStatus();
     carregarClientes();
     
     // Feedback
-    alert(`✅ Status alterado para: ${STATUS_MAP[novoStatus].emoji} ${STATUS_MAP[novoStatus].nome}`);
+    mostrarNotificacao(`✅ Status alterado para: ${STATUS_MAP[novoStatus].emoji} ${STATUS_MAP[novoStatus].nome}`, 'success');
+}
+
+// Salvar dados do CRM no localStorage
+function salvarDadosCRM() {
+    try {
+        localStorage.setItem('clientesCRM', JSON.stringify(clientesCRM));
+        console.log('✅ Dados do CRM salvos com sucesso!');
+        return true;
+    } catch (error) {
+        console.error('❌ Erro ao salvar dados do CRM:', error);
+        return false;
+    }
+}
+
+// Carregar dados do CRM do localStorage
+function carregarDadosCRM() {
+    try {
+        const dados = localStorage.getItem('clientesCRM');
+        if (dados) {
+            const clientesSalvos = JSON.parse(dados);
+            // Mesclar com dados mock (manter novos e atualizar existentes)
+            clientesSalvos.forEach(clienteSalvo => {
+                const index = clientesCRM.findIndex(c => c.id === clienteSalvo.id);
+                if (index > -1) {
+                    clientesCRM[index] = clienteSalvo;
+                } else {
+                    clientesCRM.push(clienteSalvo);
+                }
+            });
+            console.log('✅ Dados do CRM carregados do localStorage');
+        }
+    } catch (error) {
+        console.error('❌ Erro ao carregar dados do CRM:', error);
+    }
+}
+
+// Mostrar notificação
+function mostrarNotificacao(mensagem, tipo) {
+    const notificacao = document.createElement('div');
+    notificacao.className = `notificacao notificacao-${tipo}`;
+    notificacao.innerHTML = mensagem;
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        background: ${tipo === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+        notificacao.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notificacao.remove(), 300);
+    }, 3000);
 }
 
 // Abrir modal de detalhes

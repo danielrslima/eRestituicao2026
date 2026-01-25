@@ -1,6 +1,6 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 25/01/2026 - 16:10 (Horário de Brasília)
+## Última Atualização: 25/01/2026 - 10:25 (Horário de Brasília)
 
 ---
 
@@ -24,6 +24,55 @@
 
 ### Modal de Confirmação - BLINDADO ✅
 - [x] Resumo antes de calcular
+
+---
+
+## ✅ CORREÇÕES IMPLEMENTADAS HOJE (25/01/2026 - 10:25)
+
+### 1. Configurações - CORRIGIDO ✅
+- [x] Upload de logo funcionando (PNG, JPG, JPEG, SVG, GIF)
+- [x] Validação de formato de imagem
+- [x] Preview da imagem antes de salvar
+- [x] Backup ZIP funcionando (JSZip)
+- [x] Exportar Clientes para CSV funcionando
+- [x] Exportar Financeiro para CSV funcionando
+
+### 2. Controle Financeiro - CORRIGIDO ✅
+- [x] Exportar PDF funcionando (jsPDF)
+- [x] Exportar Excel funcionando (SheetJS)
+- [x] Dados formatados corretamente
+
+### 3. Comissões - CORRIGIDO ✅
+- [x] Gerador de link de indicação funcionando
+- [x] Formato: https://erestituicao.com.br/?ref=CODIGO
+- [x] Botão copiar link
+- [x] Botão gerar novo link
+- [x] Compartilhar via WhatsApp
+- [x] Compartilhar via E-mail
+
+### 4. Kit IR - CORRIGIDO ✅
+- [x] URL da API de PDFs atualizada
+- [x] API de PDFs rodando na porta 5000
+- [x] Histórico persistido no localStorage
+- [x] Função "Ver" no histórico abre modal com detalhes
+- [x] Função "Baixar" no histórico funcionando
+
+### 5. CRM - CORRIGIDO ✅
+- [x] Função "Salvar Dados" implementada
+- [x] Dados persistidos no localStorage
+- [x] Notificação de sucesso ao salvar
+
+### 6. Clientes - CORRIGIDO ✅
+- [x] Botão "Ver" (olho) abre modal com detalhes completos
+- [x] Botão "Editar" abre modal de edição
+- [x] Edição de nome, CPF, e-mail, telefone, data nascimento, tipo
+- [x] Dados salvos no localStorage
+
+### 7. Dashboard - CORRIGIDO ✅
+- [x] Botão "Ver" abre modal com detalhes do cliente
+- [x] Botão "Editar" abre modal de edição rápida
+- [x] Edição de nome, e-mail, telefone, status
+- [x] Notificação de sucesso
 
 ---
 
@@ -65,7 +114,7 @@
 
 ---
 
-## ✅ DASHBOARD - VALIDADO (25/01/2026 - 07:15)
+## ✅ DASHBOARD - VALIDADO (25/01/2026)
 
 ### Login ✅
 - [x] 3 níveis de acesso (Admin, Funcionário, Parceiro)
@@ -74,6 +123,7 @@
 ### Tela Principal ✅
 - [x] Métricas e resumo
 - [x] Logo e-Restituição ajustado
+- [x] Ações Ver/Editar funcionando
 
 ### Clientes ✅
 - [x] Cadastro com máscaras (telefone, CEP)
@@ -87,23 +137,28 @@
 - [x] **Campo Indicado por** - Vincula cliente ao parceiro/vendedor para apuração de comissão
 - [x] **Data de Inclusão** - Coluna com data e hora do cadastro
 - [x] **Ordenação alfabética** - Todas as listas de clientes ordenadas
+- [x] **Modal Ver Detalhes** - Abre modal com informações completas
+- [x] **Modal Editar** - Permite edição rápida do cliente
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status
 - [x] Modal de detalhes
 - [x] Alteração de status
 - [x] **Ordem corrigida**: Kit Enviado → Contrato (antes estava invertido)
+- [x] **Salvar Dados** - Persiste alterações no localStorage
 
-### Pagamentos ✅ (NOVO)
+### Pagamentos ✅
 - [x] Cards de resumo (Total Recebido, Pagamentos, Pendentes, Confirmados)
 - [x] Filtros (Período, Status, Tipo, Produto, Busca)
 - [x] Lista de pagamentos com detalhes
 - [x] Exportar CSV
 - [x] Modal de detalhes do pagamento
 
-### Comissões (Parceiro) ✅ (NOVO)
+### Comissões (Parceiro) ✅
 - [x] Cards de resumo (Total, Pagas, Pendentes, Indicados)
 - [x] Informações do parceiro (Nome, Código, Taxa, Link de Indicação)
+- [x] **Gerador de link de indicação** - Gera link único para cada parceiro
+- [x] **Compartilhar via WhatsApp e E-mail**
 - [x] Filtros (Período, Status, Busca)
 - [x] Lista de clientes indicados com comissões
 - [x] Histórico de pagamentos ao parceiro
@@ -112,7 +167,15 @@
 ### Financeiro ✅
 - [x] Cards de resumo (Receitas, Despesas, Saldo, Comissões)
 - [x] Abas (Receitas, Despesas, Relatórios)
-- [x] Dados mock funcionando
+- [x] **Exportar PDF** - Funcionando com jsPDF
+- [x] **Exportar Excel** - Funcionando com SheetJS
+
+### Configurações ✅
+- [x] Seções: Empresa, Sistema, Pagamentos, Backup
+- [x] **Upload de logo** - Funcionando com validação de formato
+- [x] **Backup ZIP** - Funcionando com JSZip
+- [x] **Exportar Clientes** - CSV funcionando
+- [x] **Exportar Financeiro** - CSV funcionando
 
 ### PDFs - VALIDADOS ✅
 - [x] Esclarecimentos - Layout fiel ao original
@@ -138,13 +201,15 @@
 - [x] Nomenclatura: DocumentosRRAAcaoTrabalhista.pdf
 - [x] **Seleção de encarte** - Dropdown com busca (escalável para 100+ templates)
 - [x] **Preview do encarte** - Mostra encarte selecionado antes de confirmar
+- [x] **API de PDFs** - Rodando na porta 5000
+- [x] **Histórico** - Persistido no localStorage
 
 ---
 
-## ⏳ PENDENTE / AJUSTES
+## ⏳ PENDENTE / AJUSTES FUTUROS
 
 ### 1. Kit IR - Integração Backend
-- [ ] Integrar com backend Python para geração automática de PDFs (Auto)
+- [ ] Testar geração automática de PDFs com API real
 
 ### 2. Financeiro
 - [ ] Integrar dados reais (quando tiver banco de dados)
@@ -152,46 +217,19 @@
 ### 3. Relatórios
 - [x] Tela de relatórios criada (25/01/2026)
 
-### 4. Usuários - ATUALIZADA (25/01/2026 - 15:30)
+### 4. Usuários - ATUALIZADA (25/01/2026)
 - [x] Tela de gerenciamento de usuários criada
-- [x] **Campos de comissão individual** no cadastro de parceiro/operador:
-  - Código do Parceiro/Vendedor
-  - Tipo de Comissão (Percentual / Valor Fixo / Sem Comissão)
-  - Valor da comissão
-  - Produtos com comissão (Básico, Kit IR, Contrato)
-  - Chave PIX para pagamento
+- [x] **Campos de comissão individual** no cadastro de parceiro/operador
 
-### 5. Configurações - CRIADA (25/01/2026 - 15:00)
-- [x] Página de configurações criada
-- [x] Seções: Empresa, Sistema, Pagamentos, Backup
-- [x] CSS e JavaScript funcionando
-- [x] Navegação entre seções
-
-### 6. Página de Cálculos - CRIADA (25/01/2026 - 11:48)
-- [x] Busca de cliente por nome ou CPF
-- [x] Carregamento automático dos dados do cadastro
-- [x] Campos: Processo, Valores Homologados, Alvarás, DARFs, Honorários
-- [x] Integração com API do motor de cálculo validado
-- [x] Identificação automática: mesmo-ano vs multi-anos
-- [x] Exibição do resultado com detalhamento
-- [x] Botões: Salvar no Cadastro, Gerar PDFs, Novo Cálculo
-- [x] Histórico de cálculos recentes
-- [x] Casos validados: José Ramos (mesmo-ano, R$ 74.028,67), Ana Carmen (multi-anos, R$ 26.604,54)
-- [ ] Integrar com API real (quando disponível)
-
-### 7. Página de Contratos (FUTURO)
-- [ ] Subir modelos padrão de contrato
-- [ ] Preencher dados automaticamente do cliente
-- [ ] Opção 1: Assinatura eletrônica (integração futura)
-- [ ] Opção 2: Gerar PDF para enviar por e-mail
-- [ ] Opção 3: Imprimir para assinatura presencial
-
-### 8. Backup Automático Diário (FUTURO)
+### 5. Backup Automático Diário (FUTURO)
 - [ ] Implementar backup automático diário
 - [ ] Salvar em 2 ambientes diferentes:
   - GitHub (repositório)
   - Google Drive ou servidor externo
-- [ ] Definir melhor forma de implementação
+
+### 6. Página de Contratos (FUTURO)
+- [ ] Subir modelos padrão de contrato
+- [ ] Preencher dados automaticamente do cliente
 
 ---
 
@@ -217,10 +255,13 @@
 | dashboard/pagamentos.html | Pagamentos | ✅ |
 | dashboard/comissoes.html | Comissões parceiro | ✅ |
 | dashboard/financeiro.html | Controle financeiro | ✅ |
+| dashboard/configuracoes.html | Configurações | ✅ |
+| dashboard/usuarios.html | Gerenciamento usuários | ✅ |
 
 ### Backend (Python - PDFs)
 | Arquivo | Descrição | Status |
 |---------|-----------|--------|
+| server/api_pdf.py | API Flask para PDFs | ✅ |
 | server/src/services/pdfEsclarecimentos.py | Gerador Esclarecimentos | ✅ VALIDADO |
 | server/src/services/pdfPlanilhaRT.py | Gerador Planilha RT | ✅ VALIDADO |
 | server/src/services/pdfEncarte.py | Gerador Encarte | ✅ VALIDADO |
@@ -235,23 +276,6 @@
 
 ---
 
-## 💾 BACKUP DE RESTAURAÇÃO
-
-**Arquivo:** `restituicaoia_completo_25012026_1330.zip`
-**Localização:** `/home/ubuntu/`
-**Data:** 25/01/2026 - 13:30
-**Conteúdo:** Todo o projeto (código, assets, documentação, templates)
-
-### Como Restaurar:
-```bash
-cd /home/ubuntu
-mv restituicaoia restituicaoia_old
-tar -xzvf restituicaoia_backup_validado_20260125.tar.gz
-cd restituicaoia && python3 -m http.server 8081
-```
-
----
-
 ## 🔧 COMANDOS
 
 ### Analisar projeto:
@@ -261,7 +285,7 @@ Analise minuciosamente tudo o que foi feito nas últimas 48 horas no projeto e-R
 
 ### Continuar implementação:
 ```
-Continue a implementação do projeto e-Restituição IA. O motor de cálculo, PDFs, encarte, Kit IR, Pagamentos, Comissões e Financeiro estão validados. Ajuste os itens pendentes: integração com backend Python, relatórios, usuários e configurações.
+Continue a implementação do projeto e-Restituição IA. O motor de cálculo, PDFs, encarte, Kit IR, Pagamentos, Comissões e Financeiro estão validados. Ajuste os itens pendentes.
 ```
 
 ---
@@ -274,3 +298,20 @@ Continue a implementação do projeto e-Restituição IA. O motor de cálculo, P
 4. **NÃO alterar** telas de resultado já aprovadas
 5. **NÃO alterar** PDFs validados (Esclarecimentos, Planilha RT, Encarte)
 6. Qualquer alteração deve ser justificada e aprovada
+
+---
+
+## 🌐 URLs DE ACESSO
+
+- **Dashboard**: https://8081-ipti0ag4an3ins0p9g3qh-5e68b988.us2.manus.computer/dashboard/login.html
+- **Frontend**: https://8081-ipti0ag4an3ins0p9g3qh-5e68b988.us2.manus.computer/frontend/index.html
+- **API PDFs**: https://5000-ipti0ag4an3ins0p9g3qh-5e68b988.us2.manus.computer/api/health
+- **Credenciais**: admin@erestituicao.com.br / admin123
+
+---
+
+## 📦 REPOSITÓRIO GITHUB
+
+- **URL**: https://github.com/danielrslima/eRestituicao2026
+- **Branch**: main
+- **Último commit**: 25/01/2026

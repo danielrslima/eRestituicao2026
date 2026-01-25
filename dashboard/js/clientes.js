@@ -1182,55 +1182,247 @@ function salvarECalcular() {
 // Ver detalhes do cliente
 function verCliente(id) {
     const cliente = CLIENTES.find(c => c.id === id);
-    if (!cliente) return;
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
     
-    // Formatar telefones
-    let telefonesStr = '';
+    // Formatar telefones para HTML
+    let telefonesHtml = '';
     if (cliente.telefones && cliente.telefones.length > 0) {
-        telefonesStr = cliente.telefones.map((t, i) => {
-            let str = `  ${i + 1}. ${t.numero} (${t.tipo === 'proprio' ? 'Próprio' : 'Outro'})`;
+        telefonesHtml = cliente.telefones.map((t, i) => {
+            let str = `<li>${t.numero} <span class="badge badge-secondary">${t.tipo === 'proprio' ? 'Próprio' : 'Outro'}</span>`;
             if (t.tipo === 'outro' && t.nomeResponsavel) {
-                str += ` - ${t.nomeResponsavel}`;
+                str += ` - <em>${t.nomeResponsavel}</em>`;
             }
+            str += '</li>';
             return str;
-        }).join('\n');
+        }).join('');
     } else if (cliente.telefone) {
-        telefonesStr = `  1. ${cliente.telefone}`;
-    }
-    
-    let detalhes = `
-📋 DETALHES DO CLIENTE
-
-ID: ${cliente.id}
-Nome: ${cliente.nome}
-CPF: ${cliente.cpf}
-E-mail: ${cliente.email}
-Data Nascimento: ${new Date(cliente.dataNascimento).toLocaleDateString('pt-BR')}
-
-📞 Telefones:
-${telefonesStr}
-`;
-    
-    if (cliente.casos.length > 0) {
-        detalhes += `\n📁 CASOS (${cliente.casos.length}):\n`;
-        cliente.casos.forEach((caso, i) => {
-            detalhes += `
-Caso ${i + 1}: ${caso.casoId}
-  Processo: ${caso.numeroProcesso}
-  Status: ${STATUS_LABELS[caso.status]?.texto || caso.status}
-  Valor: ${caso.valorRestituicao > 0 ? formatarMoeda(caso.valorRestituicao) : '-'}
-`;
-        });
+        telefonesHtml = `<li>${cliente.telefone}</li>`;
     } else {
-        detalhes += '\n⚠️ Nenhum caso cadastrado ainda.';
+        telefonesHtml = '<li class="text-muted">Nenhum telefone cadastrado</li>';
     }
     
-    alert(detalhes);
+    // Formatar casos para HTML
+    let casosHtml = '';
+    if (cliente.casos && cliente.casos.length > 0) {
+        casosHtml = cliente.casos.map((caso, i) => {
+            const statusInfo = STATUS_LABELS[caso.status] || { texto: caso.status, classe: 'novo' };
+            return `
+                <div class="caso-item" style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong>Caso ${i + 1}: ${caso.casoId}</strong>
+                        <span class="status-badge ${statusInfo.classe}">${statusInfo.texto}</span>
+                    </div>
+                    <p style="margin: 5px 0; font-size: 13px; color: #666;">Processo: ${caso.numeroProcesso}</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Valor:</strong> ${caso.valorRestituicao > 0 ? formatarMoeda(caso.valorRestituicao) : '-'}</p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #888;">Data Cálculo: ${caso.dataCalculo ? new Date(caso.dataCalculo).toLocaleDateString('pt-BR') : '-'}</p>
+                </div>
+            `;
+        }).join('');
+    } else {
+        casosHtml = '<p class="text-muted">⚠️ Nenhum caso cadastrado ainda.</p>';
+    }
+    
+    // Formatar indicação
+    let indicacaoHtml = 'Captação direta';
+    if (cliente.indicadoPor) {
+        // Buscar nome do parceiro
+        const parceiros = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        const parceiro = parceiros.find(p => p.id === cliente.indicadoPor);
+        indicacaoHtml = parceiro ? `Indicado por: <strong>${parceiro.nome}</strong>` : `Indicado por ID: ${cliente.indicadoPor}`;
+    }
+    
+    // Criar modal dinâmico
+    const modalHtml = `
+        <div class="modal-overlay" id="modalVerCliente" style="display: flex;">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <h3>📋 Detalhes do Cliente</h3>
+                    <button class="btn-close" onclick="document.getElementById('modalVerCliente').remove()">&times;</button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <div class="cliente-detalhes-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="info-section">
+                            <h4 style="color: #1a7f37; margin-bottom: 15px;">👤 Dados Pessoais</h4>
+                            <p><strong>ID:</strong> ${cliente.id}</p>
+                            <p><strong>Nome:</strong> ${cliente.nome}</p>
+                            <p><strong>CPF:</strong> ${cliente.cpf}</p>
+                            <p><strong>E-mail:</strong> ${cliente.email}</p>
+                            <p><strong>Data Nascimento:</strong> ${cliente.dataNascimento ? new Date(cliente.dataNascimento).toLocaleDateString('pt-BR') : '-'}</p>
+                            <p><strong>Data Inclusão:</strong> ${cliente.dataInclusao || '-'}</p>
+                            <p><strong>Tipo:</strong> ${cliente.tipo === 'externo' ? '🌐 Externo (via site)' : '🏢 Interno'}</p>
+                            <p>${indicacaoHtml}</p>
+                        </div>
+                        <div class="info-section">
+                            <h4 style="color: #1a7f37; margin-bottom: 15px;">📞 Telefones</h4>
+                            <ul style="list-style: none; padding: 0;">${telefonesHtml}</ul>
+                        </div>
+                    </div>
+                    <div class="casos-section" style="margin-top: 20px;">
+                        <h4 style="color: #1a7f37; margin-bottom: 15px;">📁 Casos (${cliente.casos ? cliente.casos.length : 0})</h4>
+                        ${casosHtml}
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding: 15px 20px; border-top: 1px solid #eee;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('modalVerCliente').remove()">Fechar</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('modalVerCliente').remove(); editarCliente('${cliente.id}')">✏️ Editar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalVerCliente');
+    if (modalAnterior) modalAnterior.remove();
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
 // Editar cliente
 function editarCliente(id) {
-    alert(`Funcionalidade de edição para o cliente ${id} será implementada em breve.`);
+    const cliente = CLIENTES.find(c => c.id === id);
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    
+    // Preencher formulário de edição
+    const telefonePrincipal = cliente.telefones && cliente.telefones.length > 0 
+        ? cliente.telefones[0].numero 
+        : (cliente.telefone || '');
+    
+    const modalHtml = `
+        <div class="modal-overlay" id="modalEditarCliente" style="display: flex;">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <h3>✏️ Editar Cliente</h3>
+                    <button class="btn-close" onclick="document.getElementById('modalEditarCliente').remove()">&times;</button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <form id="formEditarCliente">
+                        <input type="hidden" id="editClienteId" value="${cliente.id}">
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="editNome">Nome Completo *</label>
+                                <input type="text" id="editNome" class="form-control" value="${cliente.nome}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editCpf">CPF *</label>
+                                <input type="text" id="editCpf" class="form-control" value="${cliente.cpf}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="editEmail">E-mail *</label>
+                                <input type="email" id="editEmail" class="form-control" value="${cliente.email}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTelefone">Telefone Principal</label>
+                                <input type="text" id="editTelefone" class="form-control" value="${telefonePrincipal}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="editDataNascimento">Data de Nascimento</label>
+                                <input type="date" id="editDataNascimento" class="form-control" value="${cliente.dataNascimento || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editTipo">Tipo</label>
+                                <select id="editTipo" class="form-control">
+                                    <option value="externo" ${cliente.tipo === 'externo' ? 'selected' : ''}>Externo (via site)</option>
+                                    <option value="interno" ${cliente.tipo === 'interno' ? 'selected' : ''}>Interno</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding: 15px 20px; border-top: 1px solid #eee;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('modalEditarCliente').remove()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="salvarEdicaoCliente()">💾 Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalEditarCliente');
+    if (modalAnterior) modalAnterior.remove();
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// Salvar edição do cliente
+function salvarEdicaoCliente() {
+    const id = document.getElementById('editClienteId').value;
+    const cliente = CLIENTES.find(c => c.id === id);
+    
+    if (!cliente) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    
+    // Atualizar dados
+    cliente.nome = document.getElementById('editNome').value.trim();
+    cliente.cpf = document.getElementById('editCpf').value.trim();
+    cliente.email = document.getElementById('editEmail').value.trim();
+    cliente.dataNascimento = document.getElementById('editDataNascimento').value;
+    cliente.tipo = document.getElementById('editTipo').value;
+    
+    // Atualizar telefone principal
+    const novoTelefone = document.getElementById('editTelefone').value.trim();
+    if (novoTelefone) {
+        if (cliente.telefones && cliente.telefones.length > 0) {
+            cliente.telefones[0].numero = novoTelefone;
+        } else {
+            cliente.telefones = [{ numero: novoTelefone, tipo: 'proprio', nomeResponsavel: '' }];
+        }
+    }
+    
+    // Persistir no localStorage
+    localStorage.setItem('clientes', JSON.stringify(CLIENTES));
+    
+    // Fechar modal
+    document.getElementById('modalEditarCliente').remove();
+    
+    // Recarregar tabela
+    carregarClientes();
+    
+    // Feedback
+    mostrarNotificacaoClientes('✅ Cliente atualizado com sucesso!', 'success');
+}
+
+// Mostrar notificação
+function mostrarNotificacaoClientes(mensagem, tipo) {
+    const notificacao = document.createElement('div');
+    notificacao.className = `notificacao notificacao-${tipo}`;
+    notificacao.innerHTML = mensagem;
+    notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        background: ${tipo === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+        notificacao.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notificacao.remove(), 300);
+    }, 3000);
 }
 
 // Ver todos os casos

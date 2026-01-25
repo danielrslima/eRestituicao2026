@@ -159,11 +159,17 @@
                                 <span class="info-label">Taxa de Comissão</span>
                                 <span class="info-value" id="parceiroTaxa">10%</span>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item info-item-full">
                                 <span class="info-label">Link de Indicação</span>
                                 <div class="link-copy">
                                     <input type="text" id="linkIndicacao" readonly value="https://erestituicao.com.br/?ref=PARCEIRO123">
-                                    <button class="btn btn-secondary btn-sm" onclick="copiarLink()">📋 Copiar</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="copiarLink()" title="Copiar link">📋 Copiar</button>
+                                    <button class="btn btn-success btn-sm" onclick="gerarNovoLink()" title="Gerar novo link">🔄 Novo Link</button>
+                                </div>
+                                <div class="compartilhar-links" style="margin-top: 10px;">
+                                    <span style="font-size: 12px; color: #666; margin-right: 10px;">Compartilhar via:</span>
+                                    <button class="btn btn-sm" style="background: #25D366; color: white;" onclick="compartilharWhatsApp()" title="Compartilhar no WhatsApp">📱 WhatsApp</button>
+                                    <button class="btn btn-sm" style="background: #0078D4; color: white;" onclick="compartilharEmail()" title="Enviar por E-mail">📧 E-mail</button>
                                 </div>
                             </div>
                         </div>

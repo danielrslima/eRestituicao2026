@@ -295,7 +295,42 @@ function copiarLink() {
     input.select();
     document.execCommand('copy');
     
-    alert('Link copiado para a área de transferência!');
+    // Feedback visual
+    const btn = event.target;
+    const textoOriginal = btn.innerHTML;
+    btn.innerHTML = '✅ Copiado!';
+    btn.style.background = '#10b981';
+    
+    setTimeout(() => {
+        btn.innerHTML = textoOriginal;
+        btn.style.background = '';
+    }, 2000);
+}
+
+// Gerar novo link de indicação
+function gerarNovoLink() {
+    // Gerar código único baseado no código do parceiro + timestamp
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const novoLink = `https://erestituicao.com.br/?ref=${PARCEIRO.codigo}&t=${timestamp}`;
+    
+    document.getElementById('linkIndicacao').value = novoLink;
+    
+    alert(`✅ Novo link gerado!\n\n${novoLink}\n\nEste link é exclusivo e rastreará suas indicações.`);
+}
+
+// Compartilhar link via WhatsApp
+function compartilharWhatsApp() {
+    const link = document.getElementById('linkIndicacao').value;
+    const mensagem = encodeURIComponent(`Olá! Descubra se você tem direito à restituição de Imposto de Renda sobre ações trabalhistas. Acesse: ${link}`);
+    window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+}
+
+// Compartilhar link via Email
+function compartilharEmail() {
+    const link = document.getElementById('linkIndicacao').value;
+    const assunto = encodeURIComponent('Descubra sua Restituição de IR');
+    const corpo = encodeURIComponent(`Olá!\n\nVocê sabia que pode ter direito à restituição de Imposto de Renda sobre ações trabalhistas?\n\nDescubra agora acessando: ${link}\n\nAtenciosamente,\n${PARCEIRO.nome}`);
+    window.open(`mailto:?subject=${assunto}&body=${corpo}`, '_blank');
 }
 
 function exportarComissoes() {

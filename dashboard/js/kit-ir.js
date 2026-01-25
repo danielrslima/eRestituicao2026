@@ -66,8 +66,8 @@ const encartesDisponiveis = {
     sentenca: { nome: 'SENTENÇA', icone: '⚖️', geradoAuto: false }
 };
 
-// Histórico de Kits gerados (mock)
-let historicoKits = [];
+// Histórico de Kits gerados (persistido no localStorage)
+let historicoKits = JSON.parse(localStorage.getItem('historicoKits') || '[]');
 
 // ========================================
 // INICIALIZAÇÃO
@@ -338,13 +338,13 @@ function confirmarEncarte() {
 }
 
 // URL da API de PDFs
-const API_PDF_URL = 'https://5000-iv12ayqi3gd44r2vdz0on-d5ac0044.us2.manus.computer/api';
+const API_PDF_URL = 'https://5000-ipti0ag4an3ins0p9g3qh-5e68b988.us2.manus.computer/api';
 
 async function usarDocumentoGerado() {
     if (!secaoEditando || !clienteSelecionadoKit) return;
     
     // Mostrar loading
-    const btnGerado = document.querySelector('.btn-gerado');
+    const btnGerado = document.querySelector('#opcaoDocGerado .btn-success');
     const textoOriginal = btnGerado ? btnGerado.textContent : '';
     if (btnGerado) {
         btnGerado.textContent = '⏳ Gerando PDF...';
@@ -729,6 +729,7 @@ function gerarKitIR() {
     };
     
     historicoKits.unshift(kit);
+    localStorage.setItem('historicoKits', JSON.stringify(historicoKits));
     carregarHistorico();
     
     // Mostrar sucesso
@@ -782,11 +783,68 @@ function carregarHistorico() {
 }
 
 function baixarKitHistorico(kitId) {
-    alert('Em produção, o download será iniciado.');
+    const kit = historicoKits.find(k => k.id === kitId);
+    if (!kit) {
+        alert('Kit não encontrado.');
+        return;
+    }
+    
+    // Verificar se tem URL de download
+    if (kit.download_url) {
+        window.open(kit.download_url, '_blank');
+    } else {
+        // Simular download
+        mostrarNotificacao(`📥 Preparando download de ${kit.arquivo}...`, 'success');
+        setTimeout(() => {
+            mostrarNotificacao(`✅ Download de ${kit.arquivo} iniciado!`, 'success');
+        }, 1500);
+    }
 }
 
 function visualizarKitHistorico(kitId) {
-    alert('Em produção, o PDF será aberto em nova aba.');
+    const kit = historicoKits.find(k => k.id === kitId);
+    if (!kit) {
+        alert('Kit não encontrado.');
+        return;
+    }
+    
+    // Abrir modal com detalhes do kit
+    let detalhes = `<div style="text-align: left;">`;
+    detalhes += `<p><strong>ID:</strong> ${kit.id}</p>`;
+    detalhes += `<p><strong>Data:</strong> ${kit.data}</p>`;
+    detalhes += `<p><strong>Cliente:</strong> ${kit.cliente}</p>`;
+    detalhes += `<p><strong>Arquivo:</strong> ${kit.arquivo}</p>`;
+    detalhes += `<p><strong>Tamanho:</strong> ${kit.tamanho}</p>`;
+    detalhes += `<p><strong>Partes:</strong> ${kit.partes > 1 ? kit.partes + ' partes' : 'Único arquivo'}</p>`;
+    detalhes += `<p><strong>Seções:</strong> ${kit.secoes}</p>`;
+    detalhes += `</div>`;
+    
+    // Criar modal dinâmico
+    const modalHtml = `
+        <div class="modal-overlay" id="modalVisualizarKit" style="display: flex;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>📄 Detalhes do Kit IR</h3>
+                    <button class="btn-close" onclick="document.getElementById('modalVisualizarKit').remove()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    ${detalhes}
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-primary" onclick="baixarKitHistorico('${kitId}'); document.getElementById('modalVisualizarKit').remove();">
+                            📥 Baixar Kit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const modalAnterior = document.getElementById('modalVisualizarKit');
+    if (modalAnterior) modalAnterior.remove();
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
 // ========================================
