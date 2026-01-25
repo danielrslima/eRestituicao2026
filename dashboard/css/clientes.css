@@ -38,6 +38,7 @@
     border: none;
     outline: none;
     font-size: 18px;
+    font-weight: 600;
     padding: 18px 0;
     background: transparent;
     color: #333;
@@ -110,15 +111,16 @@
 .busca-resultado-nome {
     font-weight: 700;
     color: #1a7f37;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .busca-resultado-cpf,
 .busca-resultado-email,
 .busca-resultado-telefone,
 .busca-resultado-data {
-    font-size: 13px;
-    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
 }
 
 .busca-resultado-valor {
@@ -1021,8 +1023,8 @@ h4 {
    ======================================== */
 
 .cliente-nome-destaque {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
     color: #1a5d2a;
     display: block;
     margin-bottom: 4px;
@@ -1263,9 +1265,9 @@ tr.highlight-new {
 }
 
 .cliente-nome-busca {
-    font-weight: 700;
+    font-weight: 800;
     color: #1a7f37;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .valor-restituicao {
@@ -1340,4 +1342,52 @@ tr.highlight-new {
 .acoes-busca .btn-enviar:hover {
     background: #f57c00;
     color: white;
+}
+
+/* ========================================
+   FONTES MAIS ESPESSAS - TABELA DE CLIENTES
+   ======================================== */
+
+/* Todas as células da tabela */
+.tabela-clientes td {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Nome do cliente na tabela */
+.tabela-clientes .cliente-nome-destaque {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+/* CPF */
+.tabela-clientes td:nth-child(2) {
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+/* E-mail */
+.tabela-clientes td:nth-child(3) {
+    font-weight: 500;
+}
+
+/* Telefone */
+.tabela-clientes td:nth-child(4) {
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+/* Valor */
+.tabela-clientes td:nth-child(6) {
+    font-weight: 700;
+    color: #1a7f37;
+}
+
+/* Cabeçalhos da tabela */
+.tabela-clientes th {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }

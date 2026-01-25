@@ -153,6 +153,57 @@ def api_gerar_planilha_rt():
         nome_arquivo = f"PlanilhaRT_{nome_limpo}_DIRPF_{dados_req['exercicio']}.pdf"
         caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
         
+        # Calcular os itens da planilha RT
+        valor_bruto = dados_req['valor_bruto']
+        valor_tributavel = dados_req['valor_tributavel']
+        numero_meses = dados_req['numero_meses']
+        inss = dados_req.get('inss', 0)
+        
+        # Calcular valores
+        # Item 1: Total de rendimentos retirado pelo autor
+        item1_rendimentos_autor = valor_bruto
+        
+        # Item 2: Total de DARF paga (soma das DARFs)
+        darfs = dados_req.get('darfs', [])
+        item2_darf_paga = sum(d.get('valor', 0) for d in darfs) if darfs else 0
+        
+        # Item 3: Total da causa
+        item3_total_causa = item1_rendimentos_autor + item2_darf_paga
+        
+        # Item 4: Rendimentos bruto
+        item4_rendimentos_bruto = valor_bruto
+        
+        # Item 5: RT calculados
+        item5_rt_calculados = valor_tributavel
+        
+        # Item 6: Proporção RT (%)
+        item6_proporcao_rt = (valor_tributavel / valor_bruto * 100) if valor_bruto > 0 else 0
+        
+        # Item 7: Rendimentos isentos
+        item7_rendimentos_isentos = valor_bruto - valor_tributavel
+        
+        # Item 8: RT normal
+        item8_rt_normal = valor_tributavel
+        
+        # Item 9: Despesas totais (honorários)
+        honorarios = dados_req.get('honorarios', [])
+        item9_despesas_totais = sum(h.get('valor', 0) for h in honorarios) if honorarios else 0
+        
+        # Item 10: Proporção despesas
+        item10_proporcao_despesas = item9_despesas_totais * (item6_proporcao_rt / 100) if item6_proporcao_rt > 0 else 0
+        
+        # Item 13: Rendimentos tributáveis
+        item13_rendimentos_tributaveis = item8_rt_normal - item10_proporcao_despesas
+        
+        # Item 14: INSS
+        item14_inss = inss if inss > 0 else None
+        
+        # Item 15: IRRF
+        item15_irrf = item2_darf_paga
+        
+        # Item 18: Rendimentos isentos
+        item18_rendimentos_isentos = item7_rendimentos_isentos
+        
         # Montar estrutura de dados esperada pela função
         dados = {
             'cliente': {
@@ -171,14 +222,32 @@ def api_gerar_planilha_rt():
             },
             'calculo': {
                 'ano_dirpf': dados_req['exercicio'],
-                'valor_bruto': dados_req['valor_bruto'],
-                'valor_tributavel': dados_req['valor_tributavel'],
-                'numero_meses': dados_req['numero_meses'],
-                'inss': dados_req.get('inss', 0)
+                'mes_recebimento': dados_req.get('mes_recebimento', 'DEZEMBRO'),
+                'meses_discutidos': numero_meses,
+                
+                # Itens 1-3
+                'item1_rendimentos_autor': item1_rendimentos_autor,
+                'item2_darf_paga': item2_darf_paga,
+                'item3_total_causa': item3_total_causa,
+                
+                # Itens 4-10
+                'item4_rendimentos_bruto': item4_rendimentos_bruto,
+                'item5_rt_calculados': item5_rt_calculados,
+                'item6_proporcao_rt': item6_proporcao_rt,
+                'item7_rendimentos_isentos': item7_rendimentos_isentos,
+                'item8_rt_normal': item8_rt_normal,
+                'item9_despesas_totais': item9_despesas_totais,
+                'item10_proporcao_despesas': item10_proporcao_despesas,
+                
+                # Itens 11-18
+                'item13_rendimentos_tributaveis': item13_rendimentos_tributaveis,
+                'item14_inss': item14_inss,
+                'item15_irrf': item15_irrf,
+                'item18_rendimentos_isentos': item18_rendimentos_isentos
             },
             'alvaras': dados_req.get('alvaras', []),
-            'darfs': dados_req.get('darfs', []),
-            'honorarios': dados_req.get('honorarios', [])
+            'darfs': darfs,
+            'honorarios': honorarios
         }
         
         # Gerar PDF
