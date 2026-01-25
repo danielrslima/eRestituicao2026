@@ -1,6 +1,6 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 25/01/2026 - 13:30 (Horário de Brasília)
+## Última Atualização: 25/01/2026 - 16:10 (Horário de Brasília)
 
 ---
 
@@ -84,11 +84,15 @@
 - [x] **Campo Valor de INSS** - Adicionado
 - [x] **TAB inteligente** - Alvarás, DARFs, Honorários dinâmicos
 - [x] **Cursor vai para início** ao clicar "Próximos Dados"
+- [x] **Campo Indicado por** - Vincula cliente ao parceiro/vendedor para apuração de comissão
+- [x] **Data de Inclusão** - Coluna com data e hora do cadastro
+- [x] **Ordenação alfabética** - Todas as listas de clientes ordenadas
 
 ### CRM ✅
 - [x] Kanban com 7 colunas de status
 - [x] Modal de detalhes
 - [x] Alteração de status
+- [x] **Ordem corrigida**: Kit Enviado → Contrato (antes estava invertido)
 
 ### Pagamentos ✅ (NOVO)
 - [x] Cards de resumo (Total Recebido, Pagamentos, Pendentes, Confirmados)
@@ -148,11 +152,20 @@
 ### 3. Relatórios
 - [x] Tela de relatórios criada (25/01/2026)
 
-### 4. Usuários
-- [x] Tela de gerenciamento de usuários criada (25/01/2026)
+### 4. Usuários - ATUALIZADA (25/01/2026 - 15:30)
+- [x] Tela de gerenciamento de usuários criada
+- [x] **Campos de comissão individual** no cadastro de parceiro/operador:
+  - Código do Parceiro/Vendedor
+  - Tipo de Comissão (Percentual / Valor Fixo / Sem Comissão)
+  - Valor da comissão
+  - Produtos com comissão (Básico, Kit IR, Contrato)
+  - Chave PIX para pagamento
 
-### 5. Configurações
-- [ ] Criar tela de configurações do sistema
+### 5. Configurações - CRIADA (25/01/2026 - 15:00)
+- [x] Página de configurações criada
+- [x] Seções: Empresa, Sistema, Pagamentos, Backup
+- [x] CSS e JavaScript funcionando
+- [x] Navegação entre seções
 
 ### 6. Página de Cálculos - CRIADA (25/01/2026 - 11:48)
 - [x] Busca de cliente por nome ou CPF
@@ -172,6 +185,13 @@
 - [ ] Opção 1: Assinatura eletrônica (integração futura)
 - [ ] Opção 2: Gerar PDF para enviar por e-mail
 - [ ] Opção 3: Imprimir para assinatura presencial
+
+### 8. Backup Automático Diário (FUTURO)
+- [ ] Implementar backup automático diário
+- [ ] Salvar em 2 ambientes diferentes:
+  - GitHub (repositório)
+  - Google Drive ou servidor externo
+- [ ] Definir melhor forma de implementação
 
 ---
 
