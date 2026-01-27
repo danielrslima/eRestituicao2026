@@ -436,3 +436,247 @@ Aguardo sua confirmação antes de fazer qualquer alteração.
 
 **Documento gerado em:** 27/01/2026 - 19:15 (Horário de Brasília)
 **Identificação:** MEMORIA-ERESTITUICAO-V1.0
+
+
+---
+
+## 🚨 PROBLEMAS MAIORES FINAIS PARA IMPLEMENTAR O PROJETO
+
+### PROBLEMA 1: PAGAMENTO NÃO FUNCIONA (CRÍTICO)
+
+**Descrição:** O sistema de pagamento via Asaas (PIX e Cartão) não funciona no ambiente de teste porque o servidor do Manus está fora do Brasil e o Asaas bloqueia requisições internacionais.
+
+**Impacto:** Sem pagamento funcionando, o sistema não gera receita.
+
+**Solução:** Hospedar o servidor de pagamento na Hostinger (Brasil).
+
+**Comando para resolver:**
+```
+RESOLVER PROBLEMA DE PAGAMENTO - e-Restituição
+
+Contexto: O pagamento via Asaas não funciona porque o servidor está fora do Brasil.
+
+Tarefa:
+1. Criar um servidor PHP ou Node.js para a Hostinger que:
+   - Receba requisições do frontend
+   - Chame a API do Asaas para criar cobranças
+   - Retorne o link de pagamento ou QR Code PIX
+
+2. O servidor deve ter os endpoints:
+   - POST /api/create-payment (criar cobrança)
+   - GET /api/payment-status/:id (verificar status)
+
+3. Credenciais do Asaas:
+   - Chave API: Está no arquivo .env do servidor
+   - Ambiente: Sandbox para testes, Produção para real
+
+4. Após criar, me envie os arquivos para fazer upload na Hostinger.
+
+REGRAS:
+- Use linguagem simples
+- NÃO altere o motor de cálculo
+- Teste localmente antes de enviar
+```
+
+---
+
+### PROBLEMA 2: DASHBOARD COM DADOS MOCKADOS (MÉDIO)
+
+**Descrição:** O Dashboard mostra dados falsos (mockados) em vez de ler os dados reais do Firebase.
+
+**Impacto:** O administrador não consegue ver os clientes e cálculos reais.
+
+**Solução:** Conectar as páginas do Dashboard à coleção `calculos2026` do Firebase.
+
+**Comando para resolver:**
+```
+CONECTAR DASHBOARD AO FIREBASE - e-Restituição
+
+Contexto: O Dashboard mostra dados falsos. Precisa ler do Firebase.
+
+Tarefa:
+1. Analisar os arquivos do Dashboard em /dashboard/js/
+2. Identificar onde os dados mockados estão sendo usados
+3. Substituir por chamadas ao Firebase (coleção calculos2026)
+4. Manter a mesma estrutura visual, só mudar a fonte dos dados
+
+Páginas prioritárias:
+- clientes.html → Listar clientes do Firebase
+- pagamentos.html → Listar pagamentos do Firebase
+- crm.html → Mostrar status dos clientes
+
+Firebase:
+- Projeto: erestituicao-ffa5c
+- Coleção: calculos2026
+- Configuração já existe em firebase-config.js
+
+REGRAS:
+- Use linguagem simples
+- NÃO altere o layout das páginas
+- Teste cada página após conectar
+```
+
+---
+
+### PROBLEMA 3: KIT IR NÃO GERA PDF (BAIXO)
+
+**Descrição:** Quando clica em "Download" no Kit IR, o PDF não é gerado.
+
+**Impacto:** Cliente da 2ª etapa não recebe os documentos.
+
+**Solução:** Investigar e corrigir a chamada à API de PDFs.
+
+**Comando para resolver:**
+```
+CORRIGIR GERAÇÃO DE PDF DO KIT IR - e-Restituição
+
+Contexto: O Kit IR não gera PDF quando clica em Download.
+
+Tarefa:
+1. Verificar o arquivo /dashboard/js/kit-ir.js
+2. Identificar a função que chama a API de PDFs
+3. Verificar se a API em /server/api_pdf.py está funcionando
+4. Corrigir a chamada ou a API conforme necessário
+5. Testar a geração completa do Kit IR
+
+API de PDFs:
+- Arquivo: /server/api_pdf.py
+- Porta: 5000
+- Endpoint: /api/gerar-kit-ir
+
+REGRAS:
+- Use linguagem simples
+- NÃO altere os templates de PDF já validados
+- Teste com um cliente real do Firebase
+```
+
+---
+
+### PROBLEMA 4: DEPLOY NA HOSTINGER (FINAL)
+
+**Descrição:** Todo o sistema precisa ser hospedado na Hostinger para funcionar em produção.
+
+**Impacto:** Sistema não está acessível para clientes reais.
+
+**Solução:** Fazer upload de todos os arquivos para a Hostinger.
+
+**Comando para resolver:**
+```
+DEPLOY NA HOSTINGER - e-Restituição
+
+Contexto: O sistema precisa ser hospedado na Hostinger.
+
+Tarefa:
+1. Preparar todos os arquivos para upload:
+   - Frontend (pasta /frontend/)
+   - Dashboard (pasta /dashboard/)
+   - Servidor de pagamento (a ser criado)
+
+2. Criar arquivo ZIP com a estrutura correta para Hostinger
+
+3. Configurar:
+   - Domínio: e-restituicao.com.br (ou similar)
+   - SSL: Ativar HTTPS
+   - PHP/Node.js: Conforme disponível no plano
+
+4. Testar todas as funcionalidades após upload:
+   - Formulário de cálculo
+   - Pagamento PIX
+   - Dashboard
+   - Geração de PDFs
+
+REGRAS:
+- Use linguagem simples
+- Faça backup antes de qualquer alteração
+- Teste cada funcionalidade após deploy
+```
+
+---
+
+## 🎯 COMANDO MESTRE - LEMBRAR DE TUDO E CONTINUAR
+
+Use este comando para que o sistema lembre de TUDO e continue de onde parou:
+
+```
+🔄 RETOMADA COMPLETA - PROJETO e-RESTITUIÇÃO IA
+
+ANTES DE QUALQUER AÇÃO, EXECUTE ESTES PASSOS OBRIGATÓRIOS:
+
+1. CLONE O REPOSITÓRIO:
+   git clone https://github.com/danielrslima/eRestituicao2026
+
+2. LEIA ESTES ARQUIVOS NA ORDEM:
+   - MEMORIA_PROJETO_ERESTITUICAO_COMPLETA.md (documento principal)
+   - todo.md (lista de tarefas)
+
+3. APÓS LER, RESPONDA:
+   a) O que é o projeto e-Restituição? (funil de 3 etapas)
+   b) Quais são os casos validados? (José Ramos R$ 74.028,67, Ana Carmen R$ 26.604,54)
+   c) O que é BLINDADO e não pode alterar? (motor de cálculo, PDFs)
+   d) Quais são os 4 problemas finais?
+   e) Qual é o problema mais crítico? (pagamento)
+
+RESUMO RÁPIDO DO PROJETO:
+- Sistema de cálculo de restituição de IRPF
+- Funil: Descubra o Valor → Kit IR → Especialista
+- Motor de cálculo: VALIDADO e BLINDADO
+- Firebase: FUNCIONANDO (coleção calculos2026)
+- Pagamento: NÃO FUNCIONA (precisa Hostinger)
+- Dashboard: FUNCIONANDO mas com dados mockados
+
+PROBLEMAS FINAIS (em ordem de prioridade):
+1. 🔴 CRÍTICO: Pagamento não funciona (servidor fora do Brasil)
+2. 🟡 MÉDIO: Dashboard com dados mockados
+3. 🟢 BAIXO: Kit IR não gera PDF
+4. 🔵 FINAL: Deploy na Hostinger
+
+REGRAS OBRIGATÓRIAS:
+- Sou LEIGO, use linguagem SIMPLES
+- NÃO altere o motor de cálculo (irpf-calculator.js) sem meu consentimento
+- NÃO altere os casos validados
+- NÃO altere os PDFs já aprovados
+- Sempre mencione o horário de Brasília
+- Faça checkpoint quando eu pedir para parar
+
+AGUARDO SUA CONFIRMAÇÃO DE QUE ENTENDEU TUDO ANTES DE CONTINUAR.
+```
+
+---
+
+## 📊 CHECKLIST FINAL PARA CONCLUSÃO DO PROJETO
+
+| # | Tarefa | Status | Prioridade |
+|---|--------|--------|------------|
+| 1 | Motor de cálculo | ✅ VALIDADO | - |
+| 2 | Firebase salvando cálculos | ✅ FUNCIONANDO | - |
+| 3 | Botão DESCOBRIR AGORA | ✅ CORRIGIDO | - |
+| 4 | PDFs (Esclarecimentos, Planilha RT, Encarte) | ✅ VALIDADOS | - |
+| 5 | **Servidor de pagamento na Hostinger** | ❌ PENDENTE | 🔴 CRÍTICO |
+| 6 | **Dashboard conectado ao Firebase** | ❌ PENDENTE | 🟡 MÉDIO |
+| 7 | **Kit IR gerando PDF** | ❌ PENDENTE | 🟢 BAIXO |
+| 8 | **Deploy completo na Hostinger** | ❌ PENDENTE | 🔵 FINAL |
+
+---
+
+## 🏁 ORDEM DE EXECUÇÃO RECOMENDADA
+
+```
+PASSO 1: Criar servidor de pagamento para Hostinger
+         ↓
+PASSO 2: Fazer deploy do frontend + servidor na Hostinger
+         ↓
+PASSO 3: Testar pagamento em produção
+         ↓
+PASSO 4: Conectar Dashboard ao Firebase
+         ↓
+PASSO 5: Corrigir Kit IR PDF
+         ↓
+PASSO 6: Testes finais e ajustes
+         ↓
+🎉 PROJETO CONCLUÍDO!
+```
+
+---
+
+**Documento atualizado em:** 27/01/2026 - 19:25 (Horário de Brasília)
+**Versão:** 1.1
