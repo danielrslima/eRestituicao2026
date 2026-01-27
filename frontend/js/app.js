@@ -4,7 +4,7 @@
  */
 
 // Configuração da API
-const API_BASE_URL = 'https://3001-itfvrrs4m7492nauxpxq5-33c5d432.us2.manus.computer/api'; // URL pública do backend
+const API_BASE_URL = 'https://3001-isl9mupqox510bpyveu4s-003b4b82.us1.manus.computer/api'; // URL pública do backend
 const ASAAS_URL = 'https://assas-payment-new-account.onrender.com/create-payment';
 
 // Estado da aplicação
@@ -18,6 +18,9 @@ let state = {
   darfs: [],
   honorarios: []
 };
+
+// Expor state globalmente para outros módulos (resultado.js, tabBehavior.js)
+window.state = state;
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
@@ -516,26 +519,45 @@ async function calcular() {
   btnCalcular.disabled = true;
   
   try {
-    const response = await fetch(`${API_BASE_URL}/calcular`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dados)
-    });
-    
-    const resultado = await response.json();
-    
-    if (resultado.sucesso) {
-      state.resultado = resultado;
-      exibirResultado(resultado);
-      goToStep(4);
-    } else {
-      alert('Erro ao calcular: ' + (resultado.erros ? resultado.erros.join(', ') : 'Erro desconhecido'));
+    // Cálculo LOCAL usando o motor irpf-calculator.js (BLINDADO)
+    if (!window.IRPFCalculator || !window.IRPFCalculator.calcular) {
+      throw new Error('Motor de cálculo não carregado. Recarregue a página.');
     }
+    
+    // Chama o motor de cálculo local
+    const resultadoCalculo = window.IRPFCalculator.calcular(dados);
+    
+    // Formata o resultado no padrão esperado
+    const resultado = {
+      sucesso: true,
+      totalIrpf: resultadoCalculo.totalIrpf,
+      descricaoTotal: resultadoCalculo.descricaoTotal,
+      exercicios: resultadoCalculo.exercicios,
+      proporcaoTributavel: resultadoCalculo.proporcaoTributavel,
+      tipoCalculo: resultadoCalculo.tipoCalculo,
+      _interno: resultadoCalculo
+    };
+    
+    // Salva os dados do formulário no state para uso posterior
+    state.dadosFormulario = dados;
+    state.resultado = resultado;
+    
+    // Salva no Firebase (se disponível)
+    if (window.FirebaseService && window.FirebaseService.salvarCalculo) {
+      try {
+        await window.FirebaseService.salvarCalculo(dados, resultado);
+        console.log('✅ Cálculo salvo no Firebase');
+      } catch (firebaseError) {
+        console.warn('⚠️ Erro ao salvar no Firebase:', firebaseError);
+      }
+    }
+    
+    exibirResultado(resultado);
+    goToStep(4);
+    
   } catch (error) {
     console.error('Erro:', error);
-    alert('Erro ao conectar com o servidor. Tente novamente.');
+    alert('Erro ao calcular: ' + error.message);
   } finally {
     btnCalcular.innerHTML = originalText;
     btnCalcular.disabled = false;

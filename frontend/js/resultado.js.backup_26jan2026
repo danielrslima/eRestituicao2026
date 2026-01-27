@@ -1,7 +1,7 @@
 /**
  * e-Restituição - Módulo de Resultado
  * Gerencia a exibição do resultado e fluxo de pagamento
- * Versão: 2.2.0 - CORREÇÃO PIX (Conexão Render)
+ * Versão: 2.1.0 - Integração Asaas
  */
 
 // Estado do resultado
@@ -79,12 +79,10 @@ function gerarHTMLPrecoComAbatimento() {
 // WhatsApp do Especialista
 const WHATSAPP_ESPECIALISTA = '5511941139391';
 
-// URL da API de Pagamento
-// No Manus: usa proxy local para contornar CORS
-// Em produção: usa a API do Render diretamente
-const API_URL = window.location.hostname.includes('manus.computer')
-  ? 'https://3001-isl9mupqox510bpyveu4s-003b4b82.us1.manus.computer/api'
-  : 'https://assas-payment-new-account.onrender.com';
+// URL da API de Pagamento (backend local ou produção)
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname.includes('manus.computer')
+  ? 'http://localhost:3001/api'
+  : '/api';
 
 /**
  * Exibe o resultado inicial (ANTES do pagamento do Plano Básico)
@@ -122,15 +120,18 @@ function exibirResultadoInicial(resultado) {
   
   container.innerHTML = `
     <div class="resultado-card resultado-inicial">
+      <!-- Ícone de celebração ou atenção -->
       <div class="resultado-icon-grande ${isRestituicao ? 'confetes' : 'atencao-icon'}">
         ${icones}
       </div>
       
+      <!-- Mensagem principal -->
       <h2 class="resultado-mensagem-principal ${isRestituicao ? 'sucesso' : 'atencao'}">
         ${mensagemPrincipal}
       </h2>
       ${mensagemSecundaria}
       
+      <!-- Card DESCUBRA SEU VALOR -->
       <div class="plano-destaque-card">
         <div class="plano-destaque-icone">🔍</div>
         <h3 class="plano-destaque-titulo">DESCUBRA SEU VALOR</h3>
@@ -182,14 +183,17 @@ function exibirResultadoAposBasico() {
   
   container.innerHTML = `
     <div class="resultado-card resultado-completo">
+      <!-- Ícone de celebração -->
       <div class="resultado-icon-grande confetes">
         <span>🎉</span><span>🎉</span><span>🎉</span>
       </div>
       
+      <!-- Mensagem principal -->
       <h2 class="resultado-mensagem-principal sucesso">
         Parabéns! Você possui valor à restituir!
       </h2>
       
+      <!-- Card do Valor Total -->
       <div class="valor-total-card">
         <span class="valor-total-label">Total a restituir:</span>
         <div class="valor-total-numero ${isRestituicao ? 'positivo' : 'negativo'}">
@@ -197,6 +201,7 @@ function exibirResultadoAposBasico() {
         </div>
       </div>
       
+      <!-- Detalhamento por Exercício -->
       <div class="detalhamento-section">
         <h3 class="detalhamento-titulo">Detalhamento por Exercício</h3>
         <div class="exercicios-lista">
@@ -204,6 +209,7 @@ function exibirResultadoAposBasico() {
         </div>
       </div>
       
+      <!-- Card FAÇA VOCÊ MESMO (Kit IR) -->
       <div class="plano-destaque-card kit-ir">
         <div class="plano-destaque-icone">📦</div>
         <h3 class="plano-destaque-titulo">FAÇA VOCÊ MESMO</h3>
@@ -217,6 +223,7 @@ function exibirResultadoAposBasico() {
         </button>
       </div>
       
+      <!-- Observação -->
       <div class="observacao-box">
         <strong>OBS:</strong> Você receberá em até 08 dias o link para baixar o KIT IR completo, 
         com todos os documentos devidamente pronto para lhe auxiliar no ajuste/retificação da 
@@ -242,6 +249,7 @@ function exibirResultadoAposCompleto() {
   
   container.innerHTML = `
     <div class="resultado-card resultado-final">
+      <!-- Mensagem sobre Kit IR -->
       <div class="mensagem-kit-enviado">
         <span class="icone-email">📧</span>
         <p>Você receberá por e-mail o <strong>KIT IR</strong> em até <strong>08 dias</strong>.</p>
@@ -249,6 +257,7 @@ function exibirResultadoAposCompleto() {
         <p class="aviso-spam">⚠️ <strong>IMPORTANTE:</strong> Verifique também sua caixa de <strong>SPAM</strong> ou <strong>Lixo Eletrônico</strong>.</p>
       </div>
       
+      <!-- Card Especialista (Centralizado) -->
       <div class="plano-destaque-card especialista">
         <div class="plano-destaque-icone">🤝</div>
         <h3 class="plano-destaque-titulo">Quer Ter um Especialista Para Cuidar de Tudo?</h3>
@@ -257,6 +266,7 @@ function exibirResultadoAposCompleto() {
         </button>
       </div>
       
+      <!-- Observação -->
       <div class="observacao-box especialista-obs">
         <strong>OBS:</strong> Aqui cuidamos de tudo para você: Desde a apresentação ou retificação 
         da Declaração, do Protocolo da documentação na Malha e acompanhamento até final resolução, 
