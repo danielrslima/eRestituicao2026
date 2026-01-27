@@ -1,19 +1,23 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 26/01/2026 - 18:10 (Horário de Brasília)
+## Última Atualização: 26/01/2026 - 18:16 (Horário de Brasília)
 
 ---
 
-## ✅ STATUS ATUAL: CORRIGIDO
+## ✅ STATUS ATUAL: FUNCIONANDO
 
-### PROBLEMA RESOLVIDO (26/01/2026 - 18:10):
-O botão "DESCOBRIR AGORA" agora abre o modal de pagamento corretamente.
+### CORREÇÕES REALIZADAS (26/01/2026):
 
-### CAUSA DO PROBLEMA:
-Os botões dentro do `<form>` estavam sendo interpretados como submit, causando redirecionamento.
+**1. Botão DESCOBRIR AGORA (18:10):**
+- Problema: Redirecionava para Step 1 em vez de abrir modal
+- Causa: Botões dentro do `<form>` interpretados como submit
+- Solução: Adicionado `type="button"` a todos os botões no resultado.js
 
-### SOLUÇÃO APLICADA:
-Adicionado `type="button"` a todos os botões no resultado.js para evitar submit do formulário.
+**2. Firebase Service (18:16):**
+- Problema: Função `salvarCalculo` não estava sendo encontrada
+- Causa: Nome da função exportada diferente (`salvarCalculoFirebase` vs `FirebaseService.salvarCalculo`)
+- Solução: Adicionado objeto `window.FirebaseService` com todas as funções
+- **CONFIRMADO:** Dados salvos no Firebase ao clicar em Calcular (independente do pagamento)
 
 ---
 

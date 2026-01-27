@@ -316,4 +316,13 @@ window.buscarPorCPF = buscarPorCPF;
 window.listarCalculos = listarCalculos;
 window.initFirebase = initFirebase;
 
+// Exporta como FirebaseService para compatibilidade com app.js
+window.FirebaseService = {
+  salvarCalculo: salvarCalculoFirebase,
+  atualizarPagamento: atualizarPagamento,
+  buscarPorAccessCode: buscarPorAccessCode,
+  buscarPorCPF: buscarPorCPF,
+  listarCalculos: listarCalculos
+};
+
 console.log('✅ Firebase Service carregado');
