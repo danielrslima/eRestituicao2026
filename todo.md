@@ -1,6 +1,18 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 25/01/2026 - 12:50 (Horário de Brasília)
+## Última Atualização: 26/01/2026 - 17:55 (Horário de Brasília)
+
+---
+
+## 🔴 STATUS ATUAL: EM DEBUG
+
+### PROBLEMA ATUAL (26/01/2026):
+Quando o usuário clica em "DESCOBRIR AGORA" na tela de resultado, a página **redireciona para o início (Step 1)** em vez de abrir o modal de pagamento.
+
+### DIAGNÓSTICO:
+- `window.state.dadosFormulario` está sendo preenchido corretamente após o cálculo
+- As funções do resultado.js estão exportadas globalmente
+- O botão está causando redirecionamento em vez de chamar `iniciarPagamentoBasico()`
 
 ---
 
@@ -400,4 +412,5 @@ Continue a implementação do projeto e-Restituição IA. O motor de cálculo, P
 
 - **URL**: https://github.com/danielrslima/eRestituicao2026
 - **Branch**: main
-- **Último commit**: 25/01/2026 - 11:55
+- **Último commit**: 26/01/2026 - 17:55
+- **Commit**: `e31a2a1` - Checkpoint 26/01/2026 17:55 - Motor IRPF validado, proxy Asaas, fluxo pagamento em debug
