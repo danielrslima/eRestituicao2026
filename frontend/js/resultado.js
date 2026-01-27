@@ -141,7 +141,7 @@ function exibirResultadoInicial(resultado) {
           R$ ${PRECO_BASICO.toFixed(2).replace('.', ',')}
         </div>
         ${MODO_TESTE ? '<span class="badge-teste">Preço de Teste</span>' : ''}
-        <button class="btn-descobrir" onclick="iniciarPagamentoBasico()">
+        <button type="button" class="btn-descobrir" onclick="iniciarPagamentoBasico()">
           👉 DESCOBRIR AGORA
         </button>
       </div>
@@ -212,7 +212,7 @@ function exibirResultadoAposBasico() {
         </p>
         ${gerarHTMLPrecoComAbatimento()}
         ${MODO_TESTE ? '<span class="badge-teste">Preço de Teste</span>' : ''}
-        <button class="btn-descobrir btn-kit" onclick="iniciarPagamentoCompleto()">
+        <button type="button" class="btn-descobrir btn-kit" onclick="iniciarPagamentoCompleto()">
           👉 QUERO O KIT IR
         </button>
       </div>
@@ -252,7 +252,7 @@ function exibirResultadoAposCompleto() {
       <div class="plano-destaque-card especialista">
         <div class="plano-destaque-icone">🤝</div>
         <h3 class="plano-destaque-titulo">Quer Ter um Especialista Para Cuidar de Tudo?</h3>
-        <button class="btn-descobrir btn-especialista" onclick="contatarEspecialista()">
+        <button type="button" class="btn-descobrir btn-especialista" onclick="contatarEspecialista()">
           👉 CLIQUE AQUI
         </button>
       </div>

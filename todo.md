@@ -1,18 +1,19 @@
 # TODO - Projeto e-Restituição IA
 
-## Última Atualização: 26/01/2026 - 17:55 (Horário de Brasília)
+## Última Atualização: 26/01/2026 - 18:10 (Horário de Brasília)
 
 ---
 
-## 🔴 STATUS ATUAL: EM DEBUG
+## ✅ STATUS ATUAL: CORRIGIDO
 
-### PROBLEMA ATUAL (26/01/2026):
-Quando o usuário clica em "DESCOBRIR AGORA" na tela de resultado, a página **redireciona para o início (Step 1)** em vez de abrir o modal de pagamento.
+### PROBLEMA RESOLVIDO (26/01/2026 - 18:10):
+O botão "DESCOBRIR AGORA" agora abre o modal de pagamento corretamente.
 
-### DIAGNÓSTICO:
-- `window.state.dadosFormulario` está sendo preenchido corretamente após o cálculo
-- As funções do resultado.js estão exportadas globalmente
-- O botão está causando redirecionamento em vez de chamar `iniciarPagamentoBasico()`
+### CAUSA DO PROBLEMA:
+Os botões dentro do `<form>` estavam sendo interpretados como submit, causando redirecionamento.
+
+### SOLUÇÃO APLICADA:
+Adicionado `type="button"` a todos os botões no resultado.js para evitar submit do formulário.
 
 ---
 
