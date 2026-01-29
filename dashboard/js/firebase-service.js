@@ -17,6 +17,60 @@ const FirebaseService = {
     initialized: false,
 
     /**
+     * Formata data do Firebase (pode ser Timestamp ou string)
+     * @param {any} data - Data do Firebase
+     * @returns {string} Data formatada
+     */
+    formatarData(data) {
+        if (!data) return '';
+        
+        try {
+            // Se for Timestamp do Firebase
+            if (data && typeof data.toDate === 'function') {
+                const d = data.toDate();
+                return d.toISOString();
+            }
+            // Se for string
+            if (typeof data === 'string') {
+                return data;
+            }
+            // Se for objeto com seconds (Timestamp serializado)
+            if (data && data.seconds) {
+                const d = new Date(data.seconds * 1000);
+                return d.toISOString();
+            }
+            return String(data);
+        } catch (e) {
+            console.warn('Erro ao formatar data:', e);
+            return '';
+        }
+    },
+
+    /**
+     * Formata data curta (apenas YYYY-MM-DD)
+     * @param {any} data - Data do Firebase
+     * @returns {string} Data formatada
+     */
+    formatarDataCurta(data) {
+        const dataFormatada = this.formatarData(data);
+        if (!dataFormatada) return '';
+        
+        try {
+            if (dataFormatada.includes('T')) {
+                return dataFormatada.split('T')[0];
+            }
+            // Tentar extrair apenas a data
+            const d = new Date(dataFormatada);
+            if (!isNaN(d.getTime())) {
+                return d.toISOString().split('T')[0];
+            }
+            return dataFormatada.substring(0, 10);
+        } catch (e) {
+            return '';
+        }
+    },
+
+    /**
      * Inicializa a conexão com o Firebase
      */
     async init() {
@@ -207,14 +261,14 @@ const FirebaseService = {
                 { numero: FirebaseUtils.formatarTelefone(cliente.telefone || ''), tipo: 'proprio', nomeResponsavel: '' }
             ],
             dataNascimento: cliente.dataNascimento || '',
-            dataInclusao: calculo.createdAt || '',
+            dataInclusao: this.formatarData(calculo.createdAt),
             casos: [
                 {
                     casoId: calculo.id,
                     numeroProcesso: calculo.processo?.numeroProcesso || '',
                     status: statusCliente,
                     valorRestituicao: (totais.irpfTotalRestituir || 0) / 100, // centavos para reais
-                    dataCalculo: calculo.createdAt ? calculo.createdAt.split('T')[0] : ''
+                    dataCalculo: this.formatarDataCurta(calculo.createdAt)
                 }
             ],
             tipo: 'externo',
