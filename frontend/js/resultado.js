@@ -403,18 +403,27 @@ async function processarPagamento(plano) {
     
     const data = await response.json();
     
-    if (data.success && data.payment) {
+    if (data.success && data.paymentId) {
       // Salvar ID do pagamento
-      resultadoState.paymentId = data.payment.id;
+      resultadoState.paymentId = data.paymentId;
       
-      // Abrir link de pagamento do Asaas em nova aba
-      if (data.payment.invoiceUrl) {
-        window.open(data.payment.invoiceUrl, '_blank');
-      }
-      
-      // Fechar modal e mostrar área de confirmação
+      // Fechar modal de seleção de método
       fecharModalPagamento();
-      mostrarAreaConfirmacaoPagamento(plano, data.payment.id);
+      
+      // Se tiver dados do PIX, mostrar QR Code diretamente
+      if (data.pix && data.pix.qrCodeImage) {
+        mostrarQRCodePIX(plano, data.paymentId, data.pix, data.value);
+      } else if (data.invoiceUrl) {
+        // Fallback: abrir link do Asaas
+        window.open(data.invoiceUrl, '_blank');
+        mostrarAreaConfirmacaoPagamento(plano, data.paymentId);
+      } else {
+        // Construir link manualmente
+        const paymentIdClean = data.paymentId.replace('pay_', '');
+        const invoiceLink = `https://www.asaas.com/i/${paymentIdClean}`;
+        window.open(invoiceLink, '_blank');
+        mostrarAreaConfirmacaoPagamento(plano, data.paymentId);
+      }
       
     } else {
       throw new Error(data.error || 'Erro ao criar pagamento');
@@ -522,6 +531,90 @@ function formatarMoeda(valor) {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+/**
+ * Mostra o QR Code PIX diretamente na tela
+ */
+function mostrarQRCodePIX(plano, paymentId, pixData, valor) {
+  const container = document.getElementById('resultadoContainer');
+  
+  // Formatar valor
+  const valorFormatado = typeof valor === 'number' 
+    ? valor.toFixed(2).replace('.', ',') 
+    : valor;
+  
+  const pixHTML = `
+    <div class="pix-pagamento-section" id="pixSection">
+      <div class="pix-card">
+        <div class="pix-header">
+          <span class="pix-icone">◆</span>
+          <h3>Pagamento via PIX</h3>
+        </div>
+        
+        <p class="pix-valor">Valor: <strong>R$ ${valorFormatado}</strong></p>
+        
+        <div class="pix-qrcode-container">
+          <img src="data:image/png;base64,${pixData.qrCodeImage}" alt="QR Code PIX" class="pix-qrcode-img" />
+        </div>
+        
+        <p class="pix-instrucao">Escaneie o QR Code acima com o app do seu banco</p>
+        
+        <div class="pix-copiacola">
+          <p class="pix-copiacola-label">Ou copie o código PIX:</p>
+          <div class="pix-codigo-container">
+            <input type="text" id="codigoPix" value="${pixData.qrCodePayload}" readonly class="pix-codigo-input" />
+            <button type="button" class="btn-copiar-pix" onclick="copiarCodigoPIX()">
+              📋 Copiar
+            </button>
+          </div>
+        </div>
+        
+        <div class="pix-timer">
+          <p>⏱️ Este código expira em <strong>30 minutos</strong></p>
+        </div>
+        
+        <button class="btn-verificar-pagamento" onclick="verificarPagamento('${plano}', '${paymentId}')">
+          ✅ Já paguei - Verificar Pagamento
+        </button>
+        
+        <p class="pix-obs">
+          <small>Após o pagamento, clique no botão acima para liberar seu acesso.</small>
+        </p>
+      </div>
+    </div>
+  `;
+  
+  container.insertAdjacentHTML('beforeend', pixHTML);
+  
+  // Scroll para a seção do PIX
+  document.getElementById('pixSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+/**
+ * Copia o código PIX para a área de transferência
+ */
+function copiarCodigoPIX() {
+  const codigoInput = document.getElementById('codigoPix');
+  codigoInput.select();
+  codigoInput.setSelectionRange(0, 99999); // Para mobile
+  
+  try {
+    navigator.clipboard.writeText(codigoInput.value);
+    
+    // Feedback visual
+    const btnCopiar = document.querySelector('.btn-copiar-pix');
+    const textoOriginal = btnCopiar.innerHTML;
+    btnCopiar.innerHTML = '✅ Copiado!';
+    btnCopiar.style.background = '#28a745';
+    
+    setTimeout(() => {
+      btnCopiar.innerHTML = textoOriginal;
+      btnCopiar.style.background = '';
+    }, 2000);
+  } catch (err) {
+    alert('Código PIX copiado!');
+  }
+}
+
 // Expor funções globais
 window.exibirResultadoInicial = exibirResultadoInicial;
 window.exibirResultadoAposBasico = exibirResultadoAposBasico;
@@ -533,3 +626,5 @@ window.selecionarMetodo = selecionarMetodo;
 window.processarPagamento = processarPagamento;
 window.verificarPagamento = verificarPagamento;
 window.contatarEspecialista = contatarEspecialista;
+window.mostrarQRCodePIX = mostrarQRCodePIX;
+window.copiarCodigoPIX = copiarCodigoPIX;
