@@ -1,7 +1,7 @@
 /**
  * e-Restituição - Módulo de Resultado
  * Gerencia a exibição do resultado e fluxo de pagamento
- * Versão: 2.2.0 - CORREÇÃO PIX (Conexão Render)
+ * Versão: 2.3.0 - QR Code PIX na Tela + Copia-Cola
  */
 
 // Estado do resultado
