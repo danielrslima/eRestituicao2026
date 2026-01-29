@@ -1,0 +1,98 @@
+# ============================================
+# .gitignore - e-Restituição IA
+# PROTEGE ARQUIVOS SENSÍVEIS DO GITHUB
+# ============================================
+
+# ============================================
+# 🔒 ARQUIVOS DE CONFIGURAÇÃO SENSÍVEIS
+# NUNCA devem ir para o GitHub!
+# ============================================
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+*.env
+
+# Arquivos de configuração com senhas
+config.local.js
+config.local.php
+secrets.json
+credentials.json
+
+# ============================================
+# 🔑 CHAVES E CERTIFICADOS
+# ============================================
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+private_key.json
+service-account.json
+firebase-adminsdk*.json
+
+# ============================================
+# 📁 PASTAS DE DEPENDÊNCIAS
+# ============================================
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ============================================
+# 📝 LOGS E ARQUIVOS TEMPORÁRIOS
+# ============================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.swp
+*~
+
+# ============================================
+# 🏗️ ARQUIVOS DE BUILD
+# ============================================
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# ============================================
+# 💻 IDEs E EDITORES
+# ============================================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# 📦 ARQUIVOS GRANDES E BACKUPS
+# ============================================
+*.zip
+*.tar.gz
+*.rar
+*.bak
+*.backup
+
+# ============================================
+# ⚠️ ARQUIVOS ESPECÍFICOS DO PROJETO
+# QUE CONTÊM INFORMAÇÕES SENSÍVEIS
+# ============================================
+# Proxy de pagamento com chaves
+proxy_pagamento.py
+proxy_pagamento_*.py
+
+# Arquivos de servidor com chaves
+server/.env
+server/config.local.js
+
+# Arquivos de teste com dados reais
+test-data-real.json
+clientes-reais.json
