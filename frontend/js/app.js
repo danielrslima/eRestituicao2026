@@ -4,8 +4,8 @@
  */
 
 // Configuração da API
-const API_BASE_URL = 'https://3001-isl9mupqox510bpyveu4s-003b4b82.us1.manus.computer/api'; // URL pública do backend
-const ASAAS_URL = 'https://assas-payment-new-account.onrender.com/create-payment';
+const API_BASE_URL = 'https://api.restituicaoia.com.br/api'; // URL pública do backend
+const ASAAS_URL = 'https://api.restituicaoia.com.br/api/create-payment';
 
 // Estado da aplicação
 let state = {

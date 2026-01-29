@@ -338,7 +338,7 @@ function confirmarEncarte() {
 }
 
 // URL da API de PDFs
-const API_PDF_URL = 'https://5000-ipti0ag4an3ins0p9g3qh-5e68b988.us2.manus.computer/api';
+const API_PDF_URL = 'https://api.restituicaoia.com.br/api';
 
 async function usarDocumentoGerado() {
     if (!secaoEditando || !clienteSelecionadoKit) return;

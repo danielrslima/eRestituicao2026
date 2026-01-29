@@ -5,7 +5,7 @@
  */
 
 // Configuração da API de Cálculo
-const API_CALCULO_URL = 'https://3001-itfvrrs4m7492nauxpxq5-33c5d432.us2.manus.computer/api';
+const API_CALCULO_URL = 'https://api.restituicaoia.com.br/api';
 
 // Estado da página
 let clienteSelecionado = null;

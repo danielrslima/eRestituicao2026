@@ -82,9 +82,7 @@ const WHATSAPP_ESPECIALISTA = '5511941139391';
 // URL da API de Pagamento
 // No Manus: usa proxy local para contornar CORS
 // Em produção: usa a API do Render diretamente
-const API_URL = window.location.hostname.includes('manus.computer')
-  ? 'https://3001-isl9mupqox510bpyveu4s-003b4b82.us1.manus.computer/api'
-  : 'https://assas-payment-new-account.onrender.com';
+const API_URL = 'https://api.restituicaoia.com.br/api';
 
 /**
  * Exibe o resultado inicial (ANTES do pagamento do Plano Básico)
