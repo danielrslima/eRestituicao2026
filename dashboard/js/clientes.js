@@ -130,8 +130,11 @@ let CLIENTES = [
     }
 ];
 
+// Flag para indicar se estamos usando dados do Firebase
+let usandoFirebase = false;
+
 // Inicialização
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Verificar autenticação
     if (!auth.verificarAcesso()) {
         return;
@@ -140,7 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configurar interface baseada no nível de acesso
     configurarInterface();
     
-    // Carregar clientes
+    // Tentar carregar clientes do Firebase
+    await carregarClientesFirebase();
+    
+    // Carregar clientes na tabela
     carregarClientes();
     
     // Configurar tabs
@@ -2103,3 +2109,80 @@ window.enviarPDFs = enviarPDFs;
 window.enviarAoCliente = enviarAoCliente;
 window.fecharModalEnviar = fecharModalEnviar;
 window.confirmarEnvio = confirmarEnvio;
+
+
+// ============================================
+// INTEGRAÇÃO COM FIREBASE
+// ============================================
+
+/**
+ * Carrega clientes do Firebase Firestore
+ * Substitui os dados mock pelos dados reais
+ */
+async function carregarClientesFirebase() {
+    try {
+        // Verificar se FirebaseService está disponível
+        if (typeof FirebaseService === 'undefined') {
+            console.warn('⚠️ FirebaseService não disponível, usando dados mock');
+            return;
+        }
+
+        console.log('🔄 Carregando clientes do Firebase...');
+        
+        // Buscar clientes do Firebase
+        const clientesFirebase = await FirebaseService.buscarTodosClientes();
+        
+        if (clientesFirebase && clientesFirebase.length > 0) {
+            // Substituir dados mock pelos dados reais
+            CLIENTES = clientesFirebase;
+            usandoFirebase = true;
+            console.log(`✅ ${clientesFirebase.length} clientes carregados do Firebase`);
+            
+            // Mostrar indicador de dados reais
+            mostrarIndicadorFirebase(true);
+        } else {
+            console.warn('⚠️ Nenhum cliente encontrado no Firebase, usando dados mock');
+            mostrarIndicadorFirebase(false);
+        }
+    } catch (error) {
+        console.error('❌ Erro ao carregar clientes do Firebase:', error);
+        mostrarIndicadorFirebase(false);
+    }
+}
+
+/**
+ * Mostra indicador visual se está usando dados do Firebase ou mock
+ */
+function mostrarIndicadorFirebase(usandoFirebase) {
+    // Criar ou atualizar indicador
+    let indicador = document.getElementById('indicadorDados');
+    
+    if (!indicador) {
+        indicador = document.createElement('div');
+        indicador.id = 'indicadorDados';
+        indicador.style.cssText = 'position: fixed; bottom: 20px; right: 20px; padding: 10px 15px; border-radius: 8px; font-size: 12px; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.2);';
+        document.body.appendChild(indicador);
+    }
+    
+    if (usandoFirebase) {
+        indicador.style.backgroundColor = '#10b981';
+        indicador.style.color = 'white';
+        indicador.innerHTML = '🔥 Dados do Firebase (Produção)';
+    } else {
+        indicador.style.backgroundColor = '#f59e0b';
+        indicador.style.color = 'white';
+        indicador.innerHTML = '⚠️ Dados Mock (Desenvolvimento)';
+    }
+}
+
+/**
+ * Recarrega clientes do Firebase
+ */
+async function recarregarClientes() {
+    await carregarClientesFirebase();
+    carregarClientes();
+}
+
+// Exportar funções
+window.carregarClientesFirebase = carregarClientesFirebase;
+window.recarregarClientes = recarregarClientes;
