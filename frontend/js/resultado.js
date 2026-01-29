@@ -1,7 +1,7 @@
 /**
  * e-Restituição - Módulo de Resultado
  * Gerencia a exibição do resultado e fluxo de pagamento
- * Versão: 2.3.0 - QR Code PIX na Tela + Copia-Cola
+ * Versão: 2.4.0 - QR Code PIX + DIAGNÓSTICO
  */
 
 // Estado do resultado
@@ -402,6 +402,14 @@ async function processarPagamento(plano) {
     });
     
     const data = await response.json();
+    
+    // ===== DIAGNÓSTICO =====
+    console.log('🔍 O QUE A API ENTREGOU:', data);
+    console.log('🔍 data.success:', data.success);
+    console.log('🔍 data.paymentId:', data.paymentId);
+    console.log('🔍 data.pix:', data.pix);
+    console.log('🔍 data.pix?.qrCodeImage existe?', !!(data.pix && data.pix.qrCodeImage));
+    // ===== FIM DIAGNÓSTICO =====
     
     if (data.success && data.paymentId) {
       // Salvar ID do pagamento
