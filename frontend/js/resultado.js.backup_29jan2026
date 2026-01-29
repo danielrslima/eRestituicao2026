@@ -367,62 +367,53 @@ async function processarPagamento(plano) {
     // Obter dados do formulário do state global
     const dadosFormulario = window.state?.dadosFormulario || {};
     
-    // Calcular valor do pagamento
-    let valorPagamento = plano === 'basico' ? PRECO_BASICO : PRECO_COMPLETO;
-    
-    // Se for plano completo e já pagou básico, aplica abatimento
+    // Calcular valor com abatimento se for plano completo
+    let valorPagamento = null;
     if (plano === 'completo' && resultadoState.planoBasicoPago) {
-      valorPagamento = PRECO_COMPLETO - PRECO_BASICO;
+      // Aplica abatimento: valor completo - valor já pago
+      valorPagamento = Math.round((PRECO_COMPLETO - PRECO_BASICO) * 100); // Em centavos
     }
     
-    // Descrição do pagamento
-    const descricaoPagamento = plano === 'basico' 
-      ? 'e-Restituicao - Descubra seu Valor' 
-      : 'e-Restituicao - Kit IR Completo';
-    
-    // Tipo de pagamento para Asaas
-    const billingType = metodoPagamento === 'pix' ? 'PIX' : 'CREDIT_CARD';
-    
-    // Chamar API de pagamento com campos corretos
+    // Chamar API de pagamento
     const response = await fetch(`${API_URL}/create-payment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: dadosFormulario.nome || 'Cliente',
+        nome: dadosFormulario.nome || 'Cliente',
         email: dadosFormulario.email || 'cliente@email.com',
-        cpfCnpj: (dadosFormulario.cpf || '00000000000').replace(/\D/g, ''),
-        phone: (dadosFormulario.telefone || '').replace(/\D/g, ''),
-        value: valorPagamento,
-        description: descricaoPagamento,
-        billingType: billingType,
-        accessCode: window.state?.accessCode || ''
+        cpf: dadosFormulario.cpf || '00000000000',
+        telefone: dadosFormulario.telefone || '',
+        plano: plano,
+        metodoPagamento: metodoPagamento,
+        accessCode: window.state?.accessCode || '',
+        valorComAbatimento: valorPagamento // Valor em centavos com abatimento
       })
     });
     
     const data = await response.json();
     
-    if (data.success && data.payment) {
+    if (data.sucesso && data.pagamento) {
       // Salvar ID do pagamento
-      resultadoState.paymentId = data.payment.id;
+      resultadoState.paymentId = data.pagamento.id;
       
       // Abrir link de pagamento do Asaas em nova aba
-      if (data.payment.invoiceUrl) {
-        window.open(data.payment.invoiceUrl, '_blank');
+      if (data.pagamento.invoiceUrl) {
+        window.open(data.pagamento.invoiceUrl, '_blank');
       }
       
       // Fechar modal e mostrar área de confirmação
       fecharModalPagamento();
-      mostrarAreaConfirmacaoPagamento(plano, data.payment.id);
+      mostrarAreaConfirmacaoPagamento(plano, data.pagamento.id);
       
     } else {
-      throw new Error(data.error || 'Erro ao criar pagamento');
+      throw new Error(data.erro || 'Erro ao criar pagamento');
     }
     
   } catch (error) {
     console.error('Erro ao processar pagamento:', error);
-    alert('Erro ao gerar link de pagamento. Tente novamente.');
+    alert('Erro ao processar pagamento: ' + error.message);
     btnPagar.innerHTML = 'Pagar →';
     btnPagar.disabled = false;
   }
